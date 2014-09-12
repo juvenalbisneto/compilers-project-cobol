@@ -1,5 +1,5 @@
 package scanner;
-
+//this is just me testing. Arthur
 import compiler.Properties;
 import compiler.Compiler;
 
