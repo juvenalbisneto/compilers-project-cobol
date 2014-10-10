@@ -184,8 +184,32 @@ public class Scanner {
 					if (this.currentChar == '.') {
 						this.getNextChar();
 						return TokenType.POINT;
-					} else {
-						
+					} else if (this.currentChar == ','){
+						this.getNextChar();
+						return TokenType.COMMA;
+					} else if (this.currentChar == '('){
+						this.getNextChar();
+						return TokenType.L_PAR;
+					} else if (this.currentChar == ')'){
+						this.getNextChar();
+						return TokenType.R_PAR;
+					} else if (this.currentChar == '+' || this.currentChar == '-'){
+						this.getNextChar();
+						return TokenType.OP_ADD;
+					} else if (this.currentChar == '*' || this.currentChar == '/'){
+						this.getNextChar();
+						return TokenType.OP_MULT;
+					} else if (this.currentChar == '='){
+						this.getNextChar();
+						return TokenType.EQUALS;
+					} else if (this.currentChar == '>'){
+						s = TokenType.MAJOR;
+						this.getNextChar();
+						break;
+					} else if (this.currentChar == '<'){
+						s = TokenType.MINOR;
+						this.getNextChar();
+						break;
 					}
 				} else {
 					throw new LexicalException("Erro lexico no estado 0!", this.currentChar, this.line, this.column);
@@ -263,17 +287,27 @@ public class Scanner {
 				} else {
 					return TokenType.NUMBER;
 				}
-			case 3:
-				break;
-			case 4:
-				break;
-			case TokenType.L_PAR:
-				break;
-				
+			case TokenType.MAJOR:
+				if (this.currentChar == '='){
+					this.getNextChar();
+					return TokenType.MAJOREQ;
+				} else {
+					return TokenType.MAJOR;
+				}
+			case TokenType.MINOR:
+				if (this.currentChar == '='){
+					this.getNextChar();
+					return TokenType.MINOREQ;
+				} else if (this.currentChar == '>') {
+					this.getNextChar();
+					return TokenType.DIFFERENT;
+				} else {
+					return TokenType.MINOR;
+				}
 			}
 		}
 		
-		return 0;
+		return s;
 	}
 	
 	
