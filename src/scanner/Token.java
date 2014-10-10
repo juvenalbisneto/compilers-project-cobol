@@ -64,6 +64,7 @@ public class Token {
 	
 	public final static byte 
 			EOF = 0, IDENTIFIER = 1, NUMBER = 2, BOOL_VALUE = 3, PIC9_TYPE = 4, PICBOOL_TYPE = 5, VOID_TYPE = 6,
+			
 			OP_RELACIONAL = 10, OP_ADD = 11, OP_MULT = 12, L_PAR = 13, R_PAR = 14, POINT = 15,
 			MAJOR = 20, MAJOREQ = 21, MINOR = 22, MINOREQ = 23, DIFFERENT = 24,
 			

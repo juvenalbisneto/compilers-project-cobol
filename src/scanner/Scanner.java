@@ -1,8 +1,7 @@
 package scanner;
-//this is just me testing. Arthur
+
 import compiler.Properties;
 import compiler.Compiler;
-
 import parser.GrammarSymbols;
 import util.Arquivo;
 
@@ -39,14 +38,19 @@ public class Scanner {
 	/**
 	 * Returns the next token
 	 * @return
+	 * @throws LexicalException
 	 */ //TODO
-	public Token getNextToken() {
-			// Initializes the string buffer
-			// Ignores separators
-			// Clears the string buffer
-			// Scans the next token
-		// Creates and returns a token for the lexema identified
-		return null;
+	public Token getNextToken() throws LexicalException {
+		this.currentSpelling = new StringBuffer("");
+		
+		while(isSeparator(currentChar)){
+			this.scanSeparator();
+		}
+		
+		this.currentSpelling.delete(0, this.currentSpelling.length()); //Pode tb apagar o conteudo do buffer
+		this.currentKind = this.scanToken();
+		
+		return new Token(this.currentKind, this.currentSpelling.toString(), this.line, this.column);
 	}
 	
 	/**
@@ -65,12 +69,25 @@ public class Scanner {
 	/**
 	 * Reads (and ignores) a separator
 	 * @throws LexicalException
-	 */ //TODO
+	 */
 	private void scanSeparator() throws LexicalException {
 		// If it is a comment line
 			// Gets next char
 			// Reads characters while they are graphics or '\t'
 			// A command line should finish with a \n
+		if ( this.currentChar == '#' ) { 
+			this.getNextChar(); 
+			while ( this.isGraphic(this.currentChar) || this.currentChar == '\t') { 
+				this.getNextChar(); 
+			} if(this.currentChar == '\n') {
+				this.getNextToken();  
+			}else{
+				throw new LexicalException("Erro lexico no scanSeparator! Token esperado e '\\n'", this.currentChar, this.line, this.column);
+			}
+		} 
+		else { 
+			this.getNextChar(); 
+		} 
 	}
 	
 	/**
@@ -151,9 +168,11 @@ public class Scanner {
 	 * @throws LexicalException
 	 */ //TODO
 	private int scanToken() throws LexicalException {
-		// The initial automata state is 0
-		// While loop to simulate the automata
-		return -1;
+		int s = 0;
+		
+		
+		
+		return 0;
 	}
 	
 	
