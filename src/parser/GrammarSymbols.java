@@ -11,44 +11,21 @@ package parser;
 public class GrammarSymbols {
 
 	// Language terminals (starts from 0)
-	public static final int ID = 0, 
-	 NUMBER =1,
-	 OPRELACIONAL=2,
-	 OPADD=3,
-	 OPMULT=4,
-	 DOT=5,
-	 LB=6,
-	 RB=7,
-	 IF=8,
-	 THEN=9,
-	 ELSE=10,
-	 END-IF=11,
-	 PERFORM=12,
-	 UNTIL=13,
-	 END-PERFORM =14,
-	 VALUE =15,
-	 PROGRAM=16,
-	 GLOBALDATA=17,
-	 DIVISION =18,
-	 VOID =19,
-	 CALL =20,
-	 MAIN =21,
-	 USING =22,
-	 END-MAIN =23,
-	 END-FUNCTION=24 ,
-	 DISPLAY =25,
-	 ACCEPT =26,
-	 FROM=27,
-	 COMPUTE=28,
-	 RETURN=29,
-	 BREAK=30,
-	 CONTINUE=31 ,
-	 EOF=32;
+	public static final int EOF = 0, IDENTIFIER = 1, NUMBER = 2, BOOL_VALUE = 3, PIC9_TYPE = 4, PICBOOL_TYPE = 5, VOID = 6,
+			OP_RELACIONAL = 10, OP_ADD = 11, OP_MULT = 12, L_PAR = 13, R_PAR = 14, POINT = 15,
+			MAJOR = 20, MAJOREQ = 21, MINOR = 22, MINOREQ = 23, NOT = 24, DIFFERENT = 25,
+			
+			ACCEPT = 30, FROM = 31, COMPUTE = 32, VALUE = 33, CALL = 34, USING = 35, DISPLAY = 36, RETURN = 37,
+			
+			IF = 40, THEN = 41, ELSE = 42, END_IF = 43,
+			PERFORM = 50, UNTIL = 51, END_PERFORM = 52, BREAK = 53, CONTINUE = 54,
+			GLOBALDATA = 60, PROGRAM = 61, DIVISION = 62, MAIN = 63, END_MAIN = 64, END_FUNCTION = 65;
+
 
 
 
 
 	//TODO
-	public static final int EOT = 1000;
+	//public static final int EOT = 1000;
 	
 }
