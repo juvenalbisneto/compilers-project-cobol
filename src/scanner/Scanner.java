@@ -1,8 +1,7 @@
 package scanner;
 
 import compiler.Properties;
-import compiler.Compiler;
-import parser.GrammarSymbols;
+import scanner.Token.TokenType;
 import util.Arquivo;
 
 /**
@@ -170,7 +169,109 @@ public class Scanner {
 	private int scanToken() throws LexicalException {
 		int s = 0;
 		
-		
+		while (this.currentChar != '\000') { //enquanto EOF
+			switch(s){
+			case 0:
+				if(this.isLetter(this.currentChar)) {
+					s = TokenType.IDENTIFIER;
+					this.getNextChar();
+					break;
+				} else if (this.isDigit(this.currentChar)) {
+					s = TokenType.NUMBER;
+					this.getNextChar();
+					break;
+				} else if (this.isGraphic(this.currentChar)) {
+					if (this.currentChar == '.') {
+						this.getNextChar();
+						return TokenType.POINT;
+					} else {
+						
+					}
+				} else {
+					throw new LexicalException("Erro lexico no estado 0!", this.currentChar, this.line, this.column);
+				}
+				break;
+			case TokenType.IDENTIFIER:
+				if (this.isLetter(this.currentChar) || this.isDigit(this.currentChar)){
+					s = TokenType.IDENTIFIER;
+					this.getNextChar();
+					break;
+				} else {
+					if (this.currentSpelling.toString().equals("IF")){
+						return TokenType.IF;
+					} else if (this.currentSpelling.toString().equals("THEN")){
+						return TokenType.THEN;
+					} else if (this.currentSpelling.toString().equals("ELSE")){
+						return TokenType.ELSE;
+					} else if (this.currentSpelling.toString().equals("ENDIF")){
+						return TokenType.END_IF;
+					} else if (this.currentSpelling.toString().equals("PERFORM")){
+						return TokenType.PERFORM;
+					} else if (this.currentSpelling.toString().equals("UNTIL")){
+						return TokenType.UNTIL;
+					} else if (this.currentSpelling.toString().equals("ENDPERFORM")){
+						return TokenType.END_PERFORM;
+					} else if (this.currentSpelling.toString().equals("BREAK")){
+						return TokenType.BREAK;
+					} else if (this.currentSpelling.toString().equals("CONTINUE")){
+						return TokenType.CONTINUE;
+					} else if (this.currentSpelling.toString().equals("ACCEPT")){
+						return TokenType.ACCEPT;
+					} else if (this.currentSpelling.toString().equals("FROM")){
+						return TokenType.FROM;
+					} else if (this.currentSpelling.toString().equals("COMPUTE")){
+						return TokenType.COMPUTE;
+					} else if (this.currentSpelling.toString().equals("VALUE")){
+						return TokenType.VALUE;
+					} else if (this.currentSpelling.toString().equals("CALL")){
+						return TokenType.CALL;
+					} else if (this.currentSpelling.toString().equals("USING")){
+						return TokenType.USING;
+					} else if (this.currentSpelling.toString().equals("DISPLAY")){
+						return TokenType.DISPLAY;
+					} else if (this.currentSpelling.toString().equals("RETURN")){
+						return TokenType.RETURN;
+					} else if (this.currentSpelling.toString().equals("GLOBALDATA")){
+						return TokenType.GLOBALDATA;
+					} else if (this.currentSpelling.toString().equals("PROGRAM")){
+						return TokenType.PROGRAM;
+					} else if (this.currentSpelling.toString().equals("DIVISION")){
+						return TokenType.DIVISION;
+					} else if (this.currentSpelling.toString().equals("MAIN")){
+						return TokenType.MAIN;
+					} else if (this.currentSpelling.toString().equals("ENDMAIN")){
+						return TokenType.END_MAIN;
+					} else if (this.currentSpelling.toString().equals("ENDFUNCTION")){
+						return TokenType.END_FUNCTION;
+					} else if (this.currentSpelling.toString().equals("PIC9")){
+						return TokenType.PIC9_TYPE;
+					} else if (this.currentSpelling.toString().equals("PICBOOL")){
+						return TokenType.PICBOOL_TYPE;
+					} else if (this.currentSpelling.toString().equals("VOID")){
+						return TokenType.VOID_TYPE;
+					} else if (this.currentSpelling.toString().equals("TRUE") || this.currentSpelling.toString().equals("FALSE")){
+						return TokenType.BOOL_VALUE;
+					} else {
+						return TokenType.IDENTIFIER;
+					}
+				}
+			case TokenType.NUMBER:
+				if (this.isDigit(this.currentChar)) {
+					s = TokenType.NUMBER;
+					this.getNextChar();
+					break;
+				} else {
+					return TokenType.NUMBER;
+				}
+			case 3:
+				break;
+			case 4:
+				break;
+			case TokenType.L_PAR:
+				break;
+				
+			}
+		}
 		
 		return 0;
 	}
