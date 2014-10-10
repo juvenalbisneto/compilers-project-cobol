@@ -12,33 +12,38 @@ public class GrammarSymbols {
 
 	// Language terminals (starts from 0)
 	public static final int ID = 0, 
-		CONTINUE =1, 
-		BREAK=2, 
-		DISPLAY=3,
-		END-IF=4,
-		END-PERFORM=5,
-		PERFORM-UNTIL=6,//VAI FICAR C ESPACO MSM ? TERIA Q MUDAR NA GRAMATICA
-		IF=7,
-		THEN=8, 
-		ACCEPT =9,
-		FORM=10,
-		ELSE=11, 
-		COMPUTE=12, 
-		CALL=13, 
-		END-FUNCTION=14, 
-		MAIN=15, 
-		END-MAIN=16,
-		PICBOOL=17, 
-		PIC9=18,
-		PROGRAM DIVISION=19,
-		GLOBALDATA DIVISION=20,
-		
-
-
-
-
-
-		;
+	 NUMBER =1,
+	 OPRELACIONAL=2,
+	 OPADD=3,
+	 OPMULT=4,
+	 DOT=5,
+	 LB=6,
+	 RB=7,
+	 IF=8,
+	 THEN=9,
+	 ELSE=10,
+	 END-IF=11,
+	 PERFORM=12,
+	 UNTIL=13,
+	 END-PERFORM =14,
+	 VALUE =15,
+	 PROGRAM=16,
+	 GLOBALDATA=17,
+	 DIVISION =18,
+	 VOID =19,
+	 CALL =20,
+	 MAIN =21,
+	 USING =22,
+	 END-MAIN =23,
+	 END-FUNCTION=24 ,
+	 DISPLAY =25,
+	 ACCEPT =26,
+	 FROM=27,
+	 COMPUTE=28,
+	 RETURN=29,
+	 BREAK=30,
+	 CONTINUE=31 ,
+	 EOF=32;
 
 
 
