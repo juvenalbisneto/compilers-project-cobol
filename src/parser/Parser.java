@@ -1,5 +1,6 @@
 package parser;
 
+import scanner.LexicalException;
 import scanner.Scanner;
 import scanner.Token;
 import util.AST.AST;
@@ -20,19 +21,21 @@ public class Parser {
 	
 	/**
 	 * Parser constructor
+	 * @throws LexicalException 
 	 */
-	public Parser() {
+	public Parser() throws LexicalException {
 		// Initializes the scanner object
 		this.scanner = new Scanner();
-		this.scanner = this.scanner.getNextToken();
+		this.currentToken = this.scanner.getNextToken();
 	}
 	
 	/**
-	 * Veririfes if the current token kind is the expected one
+	 * Verifies if the current token kind is the expected one
 	 * @param kind
 	 * @throws SyntacticException
+	 * @throws LexicalException 
 	 */ //TODO
-	private void accept(int kind) throws SyntacticException {
+	private void accept(int kind) throws SyntacticException, LexicalException {
 		// If the current token kind is equal to the expected
 			// Gets next token
 		// If not
@@ -47,8 +50,9 @@ public class Parser {
 	
 	/**
 	 * Gets next token
+	 * @throws LexicalException 
 	 */ //TODO
-	private void acceptIt() {
+	private void acceptIt() throws LexicalException {
 		this.currentToken = this.scanner.getNextToken();
 	}
 
