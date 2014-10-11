@@ -70,17 +70,14 @@ public class Scanner {
 	 * @throws LexicalException
 	 */
 	private void scanSeparator() throws LexicalException {
-		// If it is a comment line
-			// Gets next char
-			// Reads characters while they are graphics or '\t'
-			// A command line should finish with a \n
 		if ( this.currentChar == '#' ) { 
 			this.getNextChar(); 
 			while ( this.isGraphic(this.currentChar) || this.currentChar == '\t') { 
 				this.getNextChar(); 
-			} if(this.currentChar == '\n') {
-				this.getNextToken();  
-			}else{
+			} 
+			if (this.currentChar == '\n') {
+				this.getNextChar();  
+			} else {
 				throw new LexicalException("Erro lexico no scanSeparator! Token esperado e '\\n'", this.currentChar, this.line, this.column);
 			}
 		} 
