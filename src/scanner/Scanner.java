@@ -166,7 +166,7 @@ public class Scanner {
 	private int scanToken() throws LexicalException {
 		int s = 0;
 		
-		while (this.currentChar != '\000') { //enquanto EOF
+		while (this.currentChar != '\000') { //enquanto !EOF
 			switch(s){
 			case 0:
 				if(this.isLetter(this.currentChar)) {

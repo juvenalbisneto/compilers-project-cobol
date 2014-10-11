@@ -40,10 +40,10 @@ public class Parser {
 			// Gets next token
 		// If not
 			// Raises an exception
-		if (this.currentToken.getKind()== kind){
-			this.currentToken=this.scanner.getNextToken();
+		if (this.currentToken.getKind() == kind){
+			this.currentToken = this.scanner.getNextToken();
 		}else {
-			throw new SyntacticException("Erro em accept", this.currentToken);
+			throw new SyntacticException("Accept ERROR in currentToken= " + this.currentToken.getSpelling(), this.currentToken);
 		}
 
 	}
