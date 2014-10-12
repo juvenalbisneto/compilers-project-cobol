@@ -62,6 +62,55 @@ public class Token {
 		return column;
 	}
 	
+	public static String kindName(int kind){
+		switch (kind){
+		case TokenType.EOF: return "EOF";
+		case TokenType.IDENTIFIER: return"IDENTIFIER";
+		case TokenType.NUMBER: return"NUMBER";
+		case TokenType.BOOL_VALUE: return"BOOL_VALUE";
+		case TokenType.PIC9_TYPE: return"PIC9_TYPE";
+		case TokenType.PICBOOL_TYPE: return"PICBOOL_TYPE";
+		case TokenType.VOID_TYPE: return"VOID_TYPE";
+		case TokenType.OP_RELACIONAL: return"OP_RELACIONAL";
+		case TokenType.OP_ADD: return"OP_ADD";
+		case TokenType.OP_MULT: return"OP_MULT";
+		case TokenType.L_PAR: return"L_PAR";
+		case TokenType.R_PAR: return"R_PAR";
+		case TokenType.POINT: return"POINT";
+		case TokenType.COMMA: return"COMMA";
+		case TokenType.MAJOR: return"MAJOR";
+		case TokenType.MAJOREQ: return"MAJOREQ";
+		case TokenType.MINOR: return"MINOR";
+		case TokenType.MINOREQ: return"MINOREQ";
+		case TokenType.DIFFERENT: return"DIFFERENT";
+		case TokenType.EQUALS: return"EQUALS";
+		case TokenType.ACCEPT: return"ACCEPT";
+		case TokenType.FROM: return"FROM";
+		case TokenType.COMPUTE: return"COMPUTE";
+		case TokenType.VALUE: return"VALUE";
+		case TokenType.CALL: return"CALL";
+		case TokenType.USING: return"USING";
+		case TokenType.DISPLAY: return"DISPLAY";
+		case TokenType.RETURN: return"RETURN";
+		case TokenType.IF: return"IF";
+		case TokenType.THEN: return"THEN";
+		case TokenType.ELSE: return"ELSE";
+		case TokenType.END_IF: return"END_IF";
+		case TokenType.PERFORM: return"PERFORM";
+		case TokenType.UNTIL: return"UNTIL";
+		case TokenType.END_PERFORM: return"END_PERFORM";
+		case TokenType.BREAK: return"BREAK";
+		case TokenType.CONTINUE: return"CONTINUE";
+		case TokenType.GLOBALDATA: return"GLOBALDATA";
+		case TokenType.PROGRAM: return"PROGRAM";
+		case TokenType.DIVISION: return"DIVISION";
+		case TokenType.MAIN: return"MAIN";
+		case TokenType.END_MAIN: return"END_MAIN";
+		case TokenType.END_FUNCTION: return"END_FUNCTION";
+		default: return "";
+		}
+	}
+	
 	public interface TokenType {
 		public final static byte 
 		EOF = 0, IDENTIFIER = 1, NUMBER = 2, BOOL_VALUE = 3, PIC9_TYPE = 4, PICBOOL_TYPE = 5, VOID_TYPE = 6,
