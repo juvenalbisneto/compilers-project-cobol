@@ -227,21 +227,45 @@ public class Parser {
 		}
 	}
 
-	//******************************************************************
-	// FALTA TUDO DE EXPRESSION PQ N SEI O Q O PROF VAI SUGERIR MUDAR...
-	//******************************************************************
-	//TODO EXPRESSIONS
-	public void parseExpression(){
-
+	public void parseExpression() throws SyntacticException, LexicalException{
+		if(this.currentToken.getKind() == TokenType.COMPUTE){
+			parseArithmeticExpression();
+		} else {
+			parseBooleanExpression();
+		}
 	}
-	public void parseBooleanExpression(){
-
+	
+	public void parseBooleanExpression() throws LexicalException, SyntacticException{
+		if(this.currentToken.getKind() == TokenType.BOOL_VALUE){
+			acceptIt();
+		} else {
+			accept(TokenType.L_PAR);
+			parseBooleanParcel();
+			accept(TokenType.OP_RELACIONAL);
+			parseBooleanParcel();
+			accept(TokenType.R_PAR);
+		}
 	}
-	public void parseBooleanParcel(){
-
+	
+	public void parseBooleanParcel() throws LexicalException, SyntacticException{
+		if(this.currentToken.getKind() == TokenType.BOOL_VALUE){
+			acceptIt();
+		} if(this.currentToken.getKind() == TokenType.IDENTIFIER){
+			acceptIt();
+		} if(this.currentToken.getKind() == TokenType.NUMBER){
+			acceptIt();
+		} if(this.currentToken.getKind() == TokenType.COMPUTE){
+			parseArithmeticExpression();
+		} else {
+			parseBooleanExpression();
+		}
 	}
-	public void parseArithmeticExpression(){
-
+	
+	public void parseArithmeticExpression() throws SyntacticException, LexicalException{
+		accept(TokenType.COMPUTE);
+		accept(TokenType.L_PAR);
+		parseArithmeticParcel();
+		accept(TokenType.R_PAR);
 	}
 
 	public void parseArithmeticParcel() throws LexicalException, SyntacticException{
