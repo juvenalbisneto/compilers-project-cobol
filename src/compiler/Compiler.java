@@ -2,6 +2,10 @@ package compiler;
 
 import parser.Parser;
 import parser.SyntacticException;
+import scanner.LexicalException;
+import scanner.Scanner;
+import scanner.Token;
+import scanner.Token.TokenType;
 import util.AST.AST;
 import util.symbolsTable.IdentificationTable;
 
@@ -20,28 +24,30 @@ public class Compiler {
 	/**
 	 * Compiler start point
 	 * @param args - none
+	 * @throws LexicalException 
 	 */
-	public static void main(String[] args) {
-		// Initializes the identification table with the reserved words 
-		Compiler.initIdentificationTable();
-		
-		// Creates the parser object
-		Parser p = new Parser();
-		
-		// Creates the AST object
-		AST astRoot = null;
-		
-		try {
-			// Parses the source code
-			astRoot = p.parse();
-			System.out.println("\n-- AST STRUCTURE --");
-			if ( astRoot != null ) {
-				System.out.println(astRoot.toString(0));
-			}
-		} catch (SyntacticException e) {
-			// Shows the syntactic/lexical error stack trace 
-			e.printStackTrace();
-		}
+	public static void main(String[] args) throws LexicalException {
+		testScanner();
+//		// Initializes the identification table with the reserved words 
+//		Compiler.initIdentificationTable();
+//		
+//		// Creates the parser object
+//		Parser p = new Parser();
+//		
+//		// Creates the AST object
+//		AST astRoot = null;
+//		
+//		try {
+//			// Parses the source code
+//			astRoot = p.parse();
+//			System.out.println("\n-- AST STRUCTURE --");
+//			if ( astRoot != null ) {
+//				System.out.println(astRoot.toString(0));
+//			}
+//		} catch (SyntacticException e) {
+//			// Shows the syntactic/lexical error stack trace 
+//			e.printStackTrace();
+//		}
 	}
 	
 	/**
@@ -52,4 +58,15 @@ public class Compiler {
 		Compiler.identificationTable = new IdentificationTable();
 	}
 	
+	private static void testScanner() throws LexicalException{
+		System.out.println("-- INICIO ANALISE LEXICA --");
+		Scanner scanner = new Scanner();
+		Token t = new Token(1, "", 0, 0);
+		while(t.getKind() != TokenType.EOF){
+			t = scanner.getNextToken();
+			
+			System.out.println("Token: " + t.getSpelling() + "\t(" + t.getKind() + " - " + Token.kindName(t.getKind()) + ")");
+		}
+		System.out.println("-- FIM ANALISE LEXICA --");
+	}
 }

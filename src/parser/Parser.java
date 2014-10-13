@@ -19,7 +19,7 @@ public class Parser {
 	private Token currentToken = null;
 	// The scanner
 	private Scanner scanner = null;
-	
+
 	/**
 	 * Parser constructor
 	 * @throws LexicalException 
@@ -29,7 +29,7 @@ public class Parser {
 		this.scanner = new Scanner();
 		this.currentToken = this.scanner.getNextToken();
 	}
-	
+
 	/**
 	 * Verifies if the current token kind is the expected one
 	 * @param kind
@@ -38,9 +38,9 @@ public class Parser {
 	 */
 	private void accept(int kind) throws SyntacticException, LexicalException {
 		// If the current token kind is equal to the expected
-			// Gets next token
+		// Gets next token
 		// If not
-			// Raises an exception
+		// Raises an exception
 		if (this.currentToken.getKind() == kind){
 			this.currentToken = this.scanner.getNextToken();
 		} else {
@@ -48,7 +48,7 @@ public class Parser {
 		}
 
 	}
-	
+
 	/**
 	 * Gets next token
 	 * @throws LexicalException 
@@ -62,35 +62,31 @@ public class Parser {
 	 * @throws SyntacticException
 	 */
 	public AST parse() throws SyntacticException {
-		return null;
+		AST code = null;//parseCode();
+		return code;
 	}
 
 	public void parseCode() throws SyntacticException, LexicalException{
-		while(this.currentToken.getKind() != TokenType.EOF ){
-			if (this.currentToken.getKind() == TokenType.GLOBALDATA){
-				parseGlobalDataDiv();
-			} else {
-				parseProgramDiv();
-			}
+		if (this.currentToken.getKind() == TokenType.GLOBALDATA){
+			parseGlobalDataDiv();
 		}
+		parseProgramDiv();
+		accept(TokenType.EOF);
 	}
 
 	public void parseGlobalDataDiv() throws SyntacticException, LexicalException{
 		accept(TokenType.GLOBALDATA);
 		accept(TokenType.DIVISION);
 		accept(TokenType.POINT);
-		
+
 		if(this.currentToken.getKind() == TokenType.PIC9_TYPE || this.currentToken.getKind() == TokenType.PICBOOL_TYPE){
 			do{
 				parseVarDeclaration();
 			} while (this.currentToken.getKind() != TokenType.PROGRAM);
-
 		}
-		
 	}
 
 	public void parseProgramDiv() throws SyntacticException, LexicalException{
-
 		accept(TokenType.PROGRAM);
 		accept(TokenType.DIVISION);
 		accept(TokenType.POINT);
@@ -102,7 +98,6 @@ public class Parser {
 		}
 		parseMainProc();
 	}
-	
 
 	public void parseVarDeclaration() throws SyntacticException, LexicalException{
 		if(this.currentToken.getKind() == TokenType.PIC9_TYPE){
@@ -112,13 +107,12 @@ public class Parser {
 		}
 	}
 
-
 	public void parseVarPIC9Declaration() throws SyntacticException, LexicalException{
 		accept(TokenType.PIC9_TYPE);
 		accept(TokenType.IDENTIFIER);
-		
+
 		if(this.currentToken.getKind() == TokenType.VALUE){
-			accept(TokenType.VALUE);
+			acceptIt();
 			accept(TokenType.NUMBER);			
 		}
 		accept(TokenType.POINT);
@@ -127,37 +121,34 @@ public class Parser {
 	public void parseVarPICBOOLDeclaration() throws SyntacticException, LexicalException{
 		accept(TokenType.PICBOOL_TYPE);
 		accept(TokenType.IDENTIFIER);
+
 		if(this.currentToken.getKind() == TokenType.VALUE){
-			accept(TokenType.VALUE);
+			acceptIt();
 			accept(TokenType.BOOL_VALUE);			
 		}
 		accept(TokenType.POINT);
 	}
 
-
 	public void parseMainProc() throws SyntacticException, LexicalException{
 		accept(TokenType.MAIN);
 		accept(TokenType.POINT);		
-				
+
 		while(this.currentToken.getKind() == TokenType.PIC9_TYPE ||this.currentToken.getKind() == TokenType.PICBOOL_TYPE){
-				parseVarDeclaration();
+			parseVarDeclaration();
 		}
 
-		if(this.currentToken.getKind() == TokenType.END_MAIN){
-			accept(TokenType.END_MAIN);
-		} else {
+		while(this.currentToken.getKind() != TokenType.END_MAIN){
 			parseCommand();
-			accept(TokenType.END_MAIN);
 		}
+		accept(TokenType.END_MAIN);
 	}
-
 
 	public void parseFunction() throws SyntacticException, LexicalException{
 		accept(TokenType.IDENTIFIER);
 
 		if(this.currentToken.getKind() == TokenType.VOID_TYPE){
 			acceptIt();
-		}else if(this.currentToken.getKind() == TokenType.PIC9_TYPE){
+		} else if(this.currentToken.getKind() == TokenType.PIC9_TYPE){
 			acceptIt();
 		} else {
 			accept(TokenType.PICBOOL_TYPE);
@@ -165,6 +156,7 @@ public class Parser {
 
 		if(this.currentToken.getKind() == TokenType.USING){
 			acceptIt();
+
 			if(this.currentToken.getKind() == TokenType.PIC9_TYPE){
 				acceptIt();
 			} else {
@@ -173,30 +165,30 @@ public class Parser {
 			accept(TokenType.IDENTIFIER);
 
 			while(this.currentToken.getKind() != TokenType.POINT){
-
 				if(this.currentToken.getKind() == TokenType.COMMA){
-						acceptIt();
+					acceptIt();
+					
 					if(this.currentToken.getKind() == TokenType.PIC9_TYPE){
 						acceptIt();
 					} else {
 						accept(TokenType.PICBOOL_TYPE);
 					}
-						accept(TokenType.IDENTIFIER);
+					
+					accept(TokenType.IDENTIFIER);
 				}
 			}
-			accept(TokenType.POINT);
-
 		}
+		accept(TokenType.POINT);
 
-		while(this.currentToken.getKind() == TokenType.PIC9_TYPE ||this.currentToken.getKind() == TokenType.PICBOOL_TYPE){
+		while(this.currentToken.getKind() == TokenType.PIC9_TYPE || this.currentToken.getKind() == TokenType.PICBOOL_TYPE){
 			parseVarDeclaration();
 		}
 
-		if(this.currentToken.getKind() != TokenType.END_FUNCTION){
+		while(this.currentToken.getKind() != TokenType.END_FUNCTION){
 			parseCommand();
-		} else {
-			accept(TokenType.END_FUNCTION);
-		}		
+		}
+		
+		accept(TokenType.END_FUNCTION);
 	}
 
 	public void parseFunctionCall() throws SyntacticException, LexicalException{
@@ -204,6 +196,7 @@ public class Parser {
 		accept(TokenType.IDENTIFIER);
 
 		if(this.currentToken.getKind() == TokenType.USING){
+			acceptIt();
 			accept(TokenType.IDENTIFIER);
 
 			while(this.currentToken.getKind() == TokenType.COMMA){
@@ -214,9 +207,9 @@ public class Parser {
 		accept(TokenType.POINT);
 	}
 
-	public void parseCommand(){
+	public void parseCommand() throws SyntacticException, LexicalException{
 		if(this.currentToken.getKind() == TokenType.IF){
-			parseIf();
+			parseIfStatment();
 		}else if(this.currentToken.getKind() == TokenType.PERFORM){
 			parseUntil();
 		}else if(this.currentToken.getKind() == TokenType.ACCEPT){
@@ -239,13 +232,18 @@ public class Parser {
 	//******************************************************************
 	//TODO EXPRESSIONS
 	public void parseExpression(){
-		
-	};
+
+	}
 	public void parseBooleanExpression(){
-		
-	};
-	
-	
+
+	}
+	public void parseBooleanParcel(){
+
+	}
+	public void parseArithmeticExpression(){
+
+	}
+
 	public void parseArithmeticParcel() throws LexicalException, SyntacticException{
 		parseArithmeticTerm();
 		if(this.currentToken.getKind() == TokenType.OP_ADD){
@@ -264,9 +262,9 @@ public class Parser {
 	}
 
 	public void parseArithmeticFactor() throws LexicalException, SyntacticException{
-		if(this.currentToken.getKind() == TokenType.NUMBER){
+		if(this.currentToken.getKind() == TokenType.IDENTIFIER){
 			acceptIt();
-		}else if(this.currentToken.getKind() == TokenType.IDENTIFIER){
+		} else if(this.currentToken.getKind() == TokenType.NUMBER){
 			acceptIt();
 		} else {
 			accept(TokenType.L_PAR);
@@ -296,7 +294,7 @@ public class Parser {
 
 		do{
 			parseCommand();
-		} while(this.currentToken.getKind() != TokenType.ELSE || this.currentToken.getKind() != TokenType.END_IF);
+		} while(this.currentToken.getKind() != TokenType.ELSE && this.currentToken.getKind() != TokenType.END_IF);
 
 		if(this.currentToken.getKind() == TokenType.ELSE){
 			acceptIt();
@@ -317,7 +315,8 @@ public class Parser {
 		do{
 			parseCommand();
 		} while(this.currentToken.getKind() != TokenType.END_PERFORM);
-
+		
+		accept(TokenType.END_PERFORM);
 	}
 
 	public void parseDisplay() throws SyntacticException, LexicalException{
@@ -351,14 +350,7 @@ public class Parser {
 		accept(TokenType.CONTINUE);
 		accept(TokenType.POINT);
 	}
-
-
-
-
-
-
-
-
+	
 }
 
 
