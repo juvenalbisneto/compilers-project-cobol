@@ -1,16 +1,21 @@
 package util.AST;
 
-import java.util.*;
-
 public class ArithmeticExpression extends Expression {
 	ArithmeticParcel aparcel = null;
+	Number number = null;
 
 	public ArithmeticExpression(ArithmeticParcel aparcel){
 		this.aparcel = aparcel;
 	}
+	public ArithmeticExpression(Number number){
+		this.number = number;
+	}
 
 	public ArithmeticParcel getArithmeticParcel(){
 		return this.aparcel;
+	}
+	public Number getNumber(){
+		return this.number;
 	}
 	
 	@Override
