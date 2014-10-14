@@ -26,4 +26,10 @@ public class IfStatement extends Command {
 	public ArrayList<Command> getCommandElse(){
 		return this.cmd_else;
 	}
+	
+	@Override
+	public String toString(int level) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }
