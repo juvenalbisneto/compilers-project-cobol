@@ -240,24 +240,30 @@ public class Parser {
 			acceptIt();
 		} else {
 			accept(TokenType.L_PAR);
-			parseBooleanParcel();
+			
+			if(this.currentToken.getKind() == TokenType.IDENTIFIER){
+				acceptIt();
+			} if(this.currentToken.getKind() == TokenType.NUMBER){
+				acceptIt();
+			} if(this.currentToken.getKind() == TokenType.COMPUTE){
+				parseArithmeticExpression();
+			} else {
+				parseBooleanExpression();
+			}
+			
 			accept(TokenType.OP_RELACIONAL);
-			parseBooleanParcel();
+			
+			if(this.currentToken.getKind() == TokenType.IDENTIFIER){
+				acceptIt();
+			} if(this.currentToken.getKind() == TokenType.NUMBER){
+				acceptIt();
+			} if(this.currentToken.getKind() == TokenType.COMPUTE){
+				parseArithmeticExpression();
+			} else {
+				parseBooleanExpression();
+			}
+			
 			accept(TokenType.R_PAR);
-		}
-	}
-	
-	public void parseBooleanParcel() throws LexicalException, SyntacticException{
-		if(this.currentToken.getKind() == TokenType.BOOL_VALUE){
-			acceptIt();
-		} if(this.currentToken.getKind() == TokenType.IDENTIFIER){
-			acceptIt();
-		} if(this.currentToken.getKind() == TokenType.NUMBER){
-			acceptIt();
-		} if(this.currentToken.getKind() == TokenType.COMPUTE){
-			parseArithmeticExpression();
-		} else {
-			parseBooleanExpression();
 		}
 	}
 	
