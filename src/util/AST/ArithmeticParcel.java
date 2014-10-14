@@ -1,7 +1,5 @@
 package util.AST;
 
-import java.util.*;
-
 public class ArithmeticParcel extends ArithmeticFactor {
 
 	ArithmeticTerm aterm = null;
@@ -11,23 +9,25 @@ public class ArithmeticParcel extends ArithmeticFactor {
 	public ArithmeticParcel(ArithmeticTerm aterm){
 		this.aterm = aterm;
 	}
-
 	public ArithmeticParcel(ArithmeticTerm aterm, OpAdd op, ArithmeticParcel aparcel){
 		this.aterm = aterm;
 		this.op = op;
 		this.aparcel = aparcel;
 	}
 
-
-
-	public ArithmeticTerm getArithmeticTerm()){
+	public ArithmeticTerm getArithmeticTerm(){
 		return this.aterm;
 	}
 	public OpAdd getOpAdd(){
 		return this.op;
 	}
-	public ArithmeticParcel(){
+	public ArithmeticParcel getArithmeticParcel(){
 		return this.aparcel;
 	}
-
+	
+	@Override
+	public String toString(int level) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }
