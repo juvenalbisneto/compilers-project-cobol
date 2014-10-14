@@ -18,6 +18,7 @@ public class BooleanExpression extends Expression {
 	Number numero_r;
 
 
+
 	public BooleanExpression(BooleanExpression bexpression_l,OpRelational opr, BooleanExpression bexpression_r){
 		this.bexpression_l=bexpression_l;
 		this.opr=opr;
@@ -112,6 +113,36 @@ public class BooleanExpression extends Expression {
 
 
 
-//nem sei se ta certo e faltam gets
+	public OpRelational getOpRelational(){
+		return this.opr;
+	}
+	public BoolValue getBooleanValue(){
+		return this.bvalue;
+	}
+	public BooleanExpression getBooleanExpression_l(){
+		return this.bexpression_l;
+	}
+	public BooleanExpression getBooleanExpression_r(){
+		return this.bexpression_r;
+	}
+	public ArithmeticExpression getArithmeticExpression_l(){
+		return this.aexpression_l;
+	}
+	public ArithmeticExpression getArithmeticExpression_r(){
+		return this.aexpression_r;
+	}
+	public Identifier getIdentifier_l(){
+		return this.id_l;
+	}
+	public Identifier getIdentifier_r(){
+		return this.id_r;
+	}
+	public Number getNumber_l(){
+		return this.numero_l;
+	}
+	public Number getNumber_r(){
+		return this.numero_r;
+	}
+
 	
 }
