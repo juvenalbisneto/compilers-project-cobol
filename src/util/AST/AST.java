@@ -20,4 +20,8 @@ public abstract class AST {
 	
 	public abstract String toString(int level);
 	
+	public interface Types {
+		public static final int VARIAVEL = 0, FUNCAO = 1, PARAMETRO = 2;
+		public static final int GLOBAL = 0, LOCAL = 1;
+	}
 }

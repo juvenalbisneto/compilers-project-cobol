@@ -1,11 +1,8 @@
 package util.AST;
 
-public  class Identifier extends Terminal {
-	public static final int VARIAVEL = 0, FUNCAO = 1, PARAMETRO = 2;
-	public static final int GLOBAL = 0, LOCAL = 1;
-	
-	public int type = VARIAVEL;
-	public int local = LOCAL;
+public  class Identifier extends Terminal {	
+	public int type = Types.VARIAVEL;
+	public int local = Types.LOCAL;
 
 	public Identifier(String spelling) { 
 		super(spelling); 
@@ -13,11 +10,11 @@ public  class Identifier extends Terminal {
 	
 	public String getType(){
 		String type = "";
-		if(this.type == VARIAVEL){
+		if(this.type == Types.VARIAVEL){
 			type = "variavel";
-		} else if(this.type == FUNCAO){
+		} else if(this.type == Types.FUNCAO){
 			type = "funcao";
-		} else if(this.type == PARAMETRO){
+		} else if(this.type == Types.PARAMETRO){
 			type = "parametro";
 		}
 		return type;
