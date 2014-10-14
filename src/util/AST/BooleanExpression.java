@@ -1,7 +1,5 @@
 package util.AST;
 
-import java.util.*;
-
 public class BooleanExpression extends Expression {
 		
 	OpRelational opr = null;	
@@ -142,6 +140,12 @@ public class BooleanExpression extends Expression {
 	}
 	public Number getNumber_r(){
 		return this.numero_r;
+	}
+	
+	@Override
+	public String toString(int level) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 	
