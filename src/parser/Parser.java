@@ -308,7 +308,10 @@ public class Parser {
 		accept(TokenType.ACCEPT);
 		accept(TokenType.IDENTIFIER);
 		accept(TokenType.FROM);
-		if(this.currentToken.getKind() == TokenType.CALL){
+		
+		if(this.currentToken.getKind() == TokenType.NUMBER){
+			acceptIt();
+		} else if(this.currentToken.getKind() == TokenType.CALL){
 			parseFunctionCall();
 		} else {
 			parseExpression();
