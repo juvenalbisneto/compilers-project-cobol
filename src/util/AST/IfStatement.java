@@ -2,16 +2,16 @@ package util.AST;
 
 import java.util.*;
 
-public class IfStatment extends Command {
+public class IfStatement extends Command {
 	BooleanExpression bexpression = null;
 	ArrayList<Command> cmd_if = null;
 	ArrayList<Command> cmd_else = null;
 
-	public IfStatment(BooleanExpression bexpression, ArrayList<Command> cmd_if){
+	public IfStatement(BooleanExpression bexpression, ArrayList<Command> cmd_if){
 		this.cmd_if = cmd_if;
 		this.bexpression = bexpression;
 	}
-	public IfStatment(BooleanExpression bexpression, ArrayList<Command> cmd_if, ArrayList<Command> cmd_else){
+	public IfStatement(BooleanExpression bexpression, ArrayList<Command> cmd_if, ArrayList<Command> cmd_else){
 		this.cmd_if = cmd_if;
 		this.bexpression = bexpression;
 		this.cmd_else = cmd_else;
