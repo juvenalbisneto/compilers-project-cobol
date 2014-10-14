@@ -19,9 +19,9 @@ public class BooleanExpression extends Expression {
 
 
 	public BooleanExpression(BooleanExpression bexpression_l,OpRelational opr, BooleanExpression bexpression_r){
-		this.bparcel_l=bparcel_l;
+		this.bexpression_l=bexpression_l;
 		this.opr=opr;
-		this.bparcel_r=bparcel_r;
+		this.bexpression_r=bexpression_r;
 	}
 
 	public BooleanExpression(BoolValue bvalue){
