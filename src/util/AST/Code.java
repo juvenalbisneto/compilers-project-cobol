@@ -1,20 +1,19 @@
 package util.AST;
 
-import java.util.*;
-
 public class Code extends AST {
-
+	String token = "Code";
+	
 	GlobalDataDiv gbl;
 	ProgramDiv pgrm;
 
 
 	public Code(GlobalDataDiv gbl, ProgramDiv pgrm){
-		this.gbl=gbl;
-		this.pgrm=pgrm;
+		this.gbl = gbl;
+		this.pgrm = pgrm;
 	}
 	
 	public Code(ProgramDiv pgrm){
-		this.pgrm=pgrm;
+		this.pgrm = pgrm;
 	}
 
 	public GlobalDataDiv getGlobalDataDiv(){
@@ -25,5 +24,8 @@ public class Code extends AST {
 		return this.pgrm;
 	}
 
-
+	@Override
+	public String toString(int level){
+		return (super.getSpaces(level) + token);
+	}
 }
