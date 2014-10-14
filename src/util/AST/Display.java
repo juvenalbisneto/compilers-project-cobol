@@ -1,7 +1,5 @@
 package util.AST;
 
-import java.util.*;
-
 public class Display extends Command {
 	Identifier id = null;
 	Expression exp = null;
@@ -18,5 +16,11 @@ public class Display extends Command {
 	}
 	public Expression getExpression(){
 		return this.exp;
+	}
+	
+	@Override
+	public String toString(int level) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }
