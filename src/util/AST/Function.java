@@ -5,9 +5,9 @@ import java.util.*;
 public class Function extends AST {	
 	String tipoRetorno;
 	Identifier id;
-	ArrayList<Identifier> params;
-	ArrayList<VarDeclaration> declarations;
-	ArrayList<Command> cmds;
+	ArrayList<Identifier> params = new ArrayList<Identifier>();
+	ArrayList<VarDeclaration> declarations = new ArrayList<VarDeclaration>();
+	ArrayList<Command> cmds = new ArrayList<Command>();
 	
 	public Function(String tipoRetorno, Identifier id, ArrayList<Identifier> params, ArrayList<VarDeclaration> declarations, ArrayList<Command> cmds) {
 		super();
