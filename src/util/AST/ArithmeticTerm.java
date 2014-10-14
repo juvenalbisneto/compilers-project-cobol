@@ -1,7 +1,5 @@
 package util.AST;
 
-import java.util.*;
-
 public class ArithmeticTerm extends Expression {
 	ArithmeticFactor afactor = null;
 	OpMult op = null;
@@ -11,23 +9,25 @@ public class ArithmeticTerm extends Expression {
 		this.afactor = afactor;
 	}
 
-	public ArithmeticParcel(ArithmeticFactor afactor, OpMult op, ArithmeticTerm aterm){
+	public ArithmeticTerm(ArithmeticFactor afactor, OpMult op, ArithmeticTerm aterm){
 		this.aterm = aterm;
 		this.op = op;
 		this.afactor = afactor;
 	}
 
-
-
-	public ArithmeticFactor getArithmeticFactor()){
+	public ArithmeticFactor getArithmeticFactor(){
 		return this.afactor;
 	}
-	public OpAdd getOpMult(){
+	public OpMult getOpMult(){
 		return this.op;
 	}
-	public ArithmeticTerm(){
+	public ArithmeticTerm getArithmeticTerm(){
 		return this.aterm;
 	}
 
-
+	@Override
+	public String toString(int level) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }
