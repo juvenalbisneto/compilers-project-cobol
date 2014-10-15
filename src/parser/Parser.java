@@ -1,14 +1,10 @@
 package parser;
 
 import java.util.ArrayList;
-
 import scanner.LexicalException;
 import scanner.Scanner;
 import scanner.Token;
 import scanner.Token.TokenType;
-import sun.org.mozilla.javascript.internal.ast.BreakStatement;
-import sun.org.mozilla.javascript.internal.ast.ContinueStatement;
-import sun.org.mozilla.javascript.internal.ast.ReturnStatement;
 import util.AST.*;
 import util.AST.Number;
 
@@ -345,32 +341,92 @@ public class Parser {
 			BoolValue bvalue = new BoolValue(this.currentToken.getSpelling());
 			acceptIt();
 			return new BooleanExpression(bvalue);
-		} else {
+		} else {	
+			BooleanExpression bexpression_l = null;
+			ArithmeticExpression aexpression_l = null;
+			Identifier id_l = null;
+			Number numero_l = null;
+			OpRelational opr = null;
+			BooleanExpression bexpression_r = null;
+			ArithmeticExpression aexpression_r = null;
+			Identifier id_r = null;
+			Number numero_r = null;
+			
 			accept(TokenType.L_PAR);
 			
 			if(this.currentToken.getKind() == TokenType.IDENTIFIER){
+				id_l = new Identifier(this.currentToken.getSpelling());
 				acceptIt();
 			} if(this.currentToken.getKind() == TokenType.NUMBER){
+				numero_l = new Number(this.currentToken.getSpelling());
 				acceptIt();
 			} if(this.currentToken.getKind() == TokenType.COMPUTE){
-				parseArithmeticExpression();
+				aexpression_l = parseArithmeticExpression();
 			} else {
-				parseBooleanExpression();
+				bexpression_l = parseBooleanExpression();
 			}
 			
-			accept(TokenType.OP_RELACIONAL);
+			if(this.currentToken.getKind() == TokenType.OP_RELACIONAL){
+				opr = new OpRelational(this.currentToken.getSpelling());
+				acceptIt();
+			}
 			
 			if(this.currentToken.getKind() == TokenType.IDENTIFIER){
+				id_r = new Identifier(this.currentToken.getSpelling());
 				acceptIt();
 			} if(this.currentToken.getKind() == TokenType.NUMBER){
+				numero_r = new Number(this.currentToken.getSpelling());
 				acceptIt();
 			} if(this.currentToken.getKind() == TokenType.COMPUTE){
-				parseArithmeticExpression();
+				aexpression_r = parseArithmeticExpression();
 			} else {
-				parseBooleanExpression();
+				bexpression_r = parseBooleanExpression();
 			}
-			
+
 			accept(TokenType.R_PAR);
+			
+			//Returns
+			if(bexpression_r != null){
+				if(bexpression_l != null){
+					return new BooleanExpression(bexpression_l, opr, bexpression_r);
+				} else if(aexpression_l != null){
+					return new BooleanExpression(aexpression_l, opr, bexpression_r);
+				} else if(id_l != null){
+					return new BooleanExpression(id_l, opr, bexpression_r);
+				} else{
+					return new BooleanExpression(numero_l, opr, bexpression_r);
+				} 
+			} else if(aexpression_r != null){
+				if(bexpression_l != null){
+					return new BooleanExpression(bexpression_l, opr, aexpression_r);
+				} else if(aexpression_l != null){
+					return new BooleanExpression(aexpression_l, opr, aexpression_r);
+				} else if(id_l != null){
+					return new BooleanExpression(id_l, opr, aexpression_r);
+				} else{
+					return new BooleanExpression(numero_l, opr, aexpression_r);
+				} 
+			} else if(id_r != null){
+				if(bexpression_l != null){
+					return new BooleanExpression(bexpression_l, opr, id_r);
+				} else if(aexpression_l != null){
+					return new BooleanExpression(aexpression_l, opr, id_r);
+				} else if(id_l != null){
+					return new BooleanExpression(id_l, opr, id_r);
+				} else{
+					return new BooleanExpression(numero_l, opr, id_r);
+				} 
+			} else{
+				if(bexpression_l != null){
+					return new BooleanExpression(bexpression_l, opr, numero_r);
+				} else if(aexpression_l != null){
+					return new BooleanExpression(aexpression_l, opr, numero_r);
+				} else if(id_l != null){
+					return new BooleanExpression(id_l, opr, numero_r);
+				} else{
+					return new BooleanExpression(numero_l, opr, numero_r);
+				} 
+			} 
 		}
 	}
 	
