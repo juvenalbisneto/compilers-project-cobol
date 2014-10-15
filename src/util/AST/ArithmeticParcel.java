@@ -6,13 +6,13 @@ public class ArithmeticParcel extends AST {
 	OpAdd op = null;
 	ArithmeticParcel aParcel = null;
 
-	public ArithmeticParcel(ArithmeticTerm aterm){
-		this.aTerm = aterm;
+	public ArithmeticParcel(ArithmeticTerm aTerm){
+		this.aTerm = aTerm;
 	}
-	public ArithmeticParcel(ArithmeticTerm aterm, OpAdd op, ArithmeticParcel aparcel){
-		this.aTerm = aterm;
+	public ArithmeticParcel(ArithmeticTerm aTerm, OpAdd op, ArithmeticParcel aParcel){
+		this.aTerm = aTerm;
 		this.op = op;
-		this.aParcel = aparcel;
+		this.aParcel = aParcel;
 	}
 
 	public ArithmeticTerm getArithmeticTerm(){
