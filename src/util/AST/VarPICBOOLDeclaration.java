@@ -4,14 +4,14 @@ public class VarPICBOOLDeclaration extends VarDeclaration {
 	
 	BoolValue bool = null;
 
-	public VarPICBOOLDeclaration(int local, String type, Identifier id){
+	public VarPICBOOLDeclaration(int local, Identifier id){
 		this.local = local;
-		this.type = type;
+		this.type = "PICBOOL";
 		this.id = id;
 	}
-	public VarPICBOOLDeclaration(int local, String type, Identifier id, BoolValue bool){
+	public VarPICBOOLDeclaration(int local, Identifier id, BoolValue bool){
 		this.local = local;
-		this.type = type;
+		this.type = "PICBOOL";
 		this.id = id;
 		this.bool = bool;
 	}
