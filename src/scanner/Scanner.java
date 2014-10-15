@@ -207,11 +207,12 @@ public class Scanner {
 						s = TokenType.MINOR;
 						this.getNextChar();
 						break;
+					} else {
+						throw new LexicalException("Lexical ERROR on state 0", this.currentChar, this.line, this.column);
 					}
 				} else {
-					throw new LexicalException("Erro lexico no estado 0!", this.currentChar, this.line, this.column);
+					throw new LexicalException("Lexical ERROR on state 0", this.currentChar, this.line, this.column);
 				}
-				break;
 			case TokenType.IDENTIFIER:
 				if (this.isLetter(this.currentChar) || this.isDigit(this.currentChar)){
 					s = TokenType.IDENTIFIER;
@@ -301,6 +302,8 @@ public class Scanner {
 				} else {
 					return TokenType.OP_RELACIONAL;//TokenType.MINOR;
 				}
+			default:
+				throw new LexicalException("Lexical ERROR: unknown state", this.currentChar, this.line, this.column);
 			}
 		}
 		
