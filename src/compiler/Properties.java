@@ -10,6 +10,6 @@ package compiler;
 public interface Properties {
 
 	// The source code file
-	public static final String sourceCodeLocation = "/Users/juvenalbisneto/Documents/Copy/UPE/[2014.2] Compiladores/Projeto/tests/Test1";
+	public static final String sourceCodeLocation = "C:/Users/Arthur/Documents/compilers-project-cobol/tests/teste_while_erro";
 	
 }
