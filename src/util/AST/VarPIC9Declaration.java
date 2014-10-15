@@ -1,9 +1,6 @@
 package util.AST;
 
 public class VarPIC9Declaration extends VarDeclaration {
-	int local;
-	String type;
-	Identifier id;
 	Number num = null;
 
 	public VarPIC9Declaration(int local, String type, Identifier id){
@@ -17,16 +14,7 @@ public class VarPIC9Declaration extends VarDeclaration {
 		this.id = id;
 		this.num = num;
 	}
-
-	public int getLocal(){
-		return this.local;
-	}
-	public String getType(){
-		return this.type;
-	}
-	public Identifier getIdentifier(){
-		return this.id;
-	}
+	
 	public Number getNumber(){
 		return this.num;
 	}

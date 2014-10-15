@@ -1,34 +1,23 @@
 package util.AST;
 
 public class VarPICBOOLDeclaration extends VarDeclaration {
-	int local;
-	String type;
-	Identifier id;
-	Number num = null;
+	
+	BoolValue bool = null;
 
 	public VarPICBOOLDeclaration(int local, String type, Identifier id){
 		this.local = local;
 		this.type = type;
 		this.id = id;
 	}
-	public VarPICBOOLDeclaration(int local, String type, Identifier id, Number num){
+	public VarPICBOOLDeclaration(int local, String type, Identifier id, BoolValue bool){
 		this.local = local;
 		this.type = type;
 		this.id = id;
-		this.num = num;
+		this.bool = bool;
 	}
 
-	public int getLocal(){
-		return this.local;
-	}
-	public String getType(){
-		return this.type;
-	}
-	public Identifier getIdentifier(){
-		return this.id;
-	}
-	public Number getNumber(){
-		return this.num;
+	public BoolValue getBoolValue(){
+		return this.bool;
 	}
 
 	@Override
