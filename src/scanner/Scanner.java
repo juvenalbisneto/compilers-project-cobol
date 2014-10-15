@@ -150,7 +150,7 @@ public class Scanner {
 	 * @return
 	 */
 	private boolean isGraphic(char c) {
-		if ( c >= ' ' && c <= '~' ) {
+		if (c >= ' ' && c <= '~') {
 			return true;
 		} else {
 			return false;
