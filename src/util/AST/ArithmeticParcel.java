@@ -1,28 +1,28 @@
 package util.AST;
 
-public class ArithmeticParcel extends ArithmeticFactor {
+public class ArithmeticParcel extends AST {
 
-	ArithmeticTerm aterm = null;
+	ArithmeticTerm aTerm = null;
 	OpAdd op = null;
-	ArithmeticParcel aparcel = null;
+	ArithmeticParcel aParcel = null;
 
 	public ArithmeticParcel(ArithmeticTerm aterm){
-		this.aterm = aterm;
+		this.aTerm = aterm;
 	}
 	public ArithmeticParcel(ArithmeticTerm aterm, OpAdd op, ArithmeticParcel aparcel){
-		this.aterm = aterm;
+		this.aTerm = aterm;
 		this.op = op;
-		this.aparcel = aparcel;
+		this.aParcel = aparcel;
 	}
 
 	public ArithmeticTerm getArithmeticTerm(){
-		return this.aterm;
+		return this.aTerm;
 	}
 	public OpAdd getOpAdd(){
 		return this.op;
 	}
 	public ArithmeticParcel getArithmeticParcel(){
-		return this.aparcel;
+		return this.aParcel;
 	}
 	
 	@Override

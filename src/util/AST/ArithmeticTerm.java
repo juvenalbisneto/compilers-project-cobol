@@ -1,6 +1,6 @@
 package util.AST;
 
-public class ArithmeticTerm extends Expression {
+public class ArithmeticTerm extends AST {
 	ArithmeticFactor afactor = null;
 	OpMult op = null;
 	ArithmeticTerm aterm = null;
