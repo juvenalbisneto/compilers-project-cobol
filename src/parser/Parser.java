@@ -342,7 +342,8 @@ public class Parser {
 		accept(TokenType.PERFORM);
 		accept(TokenType.UNTIL);
 		parseBooleanExpression();
-
+		accept(TokenType.POINT);
+		
 		do{
 			parseCommand();
 		} while(this.currentToken.getKind() != TokenType.END_PERFORM);
