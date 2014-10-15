@@ -372,10 +372,10 @@ public class Parser {
 			if(this.currentToken.getKind() == TokenType.IDENTIFIER){
 				id_l = new Identifier(this.currentToken.getSpelling());
 				acceptIt();
-			} if(this.currentToken.getKind() == TokenType.NUMBER){
+			} else if(this.currentToken.getKind() == TokenType.NUMBER){
 				numero_l = new Number(this.currentToken.getSpelling());
 				acceptIt();
-			} if(this.currentToken.getKind() == TokenType.COMPUTE){
+			} else if(this.currentToken.getKind() == TokenType.COMPUTE){
 				aexpression_l = parseArithmeticExpression();
 			} else {
 				bexpression_l = parseBooleanExpression();
@@ -384,15 +384,17 @@ public class Parser {
 			if(this.currentToken.getKind() == TokenType.OP_RELACIONAL){
 				opr = new OpRelational(this.currentToken.getSpelling());
 				acceptIt();
+			} else {
+				throw new SyntacticException("Accept ERROR: missing OP_RELACIONAL", this.currentToken);
 			}
 			
 			if(this.currentToken.getKind() == TokenType.IDENTIFIER){
 				id_r = new Identifier(this.currentToken.getSpelling());
 				acceptIt();
-			} if(this.currentToken.getKind() == TokenType.NUMBER){
+			} else if(this.currentToken.getKind() == TokenType.NUMBER){
 				numero_r = new Number(this.currentToken.getSpelling());
 				acceptIt();
-			} if(this.currentToken.getKind() == TokenType.COMPUTE){
+			} else if(this.currentToken.getKind() == TokenType.COMPUTE){
 				aexpression_r = parseArithmeticExpression();
 			} else {
 				bexpression_r = parseBooleanExpression();
