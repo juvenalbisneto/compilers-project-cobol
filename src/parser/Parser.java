@@ -336,7 +336,7 @@ public class Parser {
 			return parseBreakStatment();
 		}else if(this.currentToken.getKind() == TokenType.CONTINUE){
 			return parseContinueStatment();
-		} else if(this.currentToken.getKind() == TokenType.CONTINUE){
+		} else if(this.currentToken.getKind() == TokenType.RETURN){
 			return parseReturn();
 		} else {
 			throw new SyntacticException("ERROR: Any Command found", this.currentToken);
