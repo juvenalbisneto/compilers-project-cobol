@@ -4,12 +4,10 @@ public class VarPIC9Declaration extends VarDeclaration {
 	Number num = null;
 
 	public VarPIC9Declaration(int local, Identifier id){
-		this.local = local;
 		this.type = "PIC9";
 		this.id = id;
 	}
 	public VarPIC9Declaration(int local, Identifier id, Number num){
-		this.local = local;
 		this.type = "PIC9";
 		this.id = id;
 		this.num = num;
