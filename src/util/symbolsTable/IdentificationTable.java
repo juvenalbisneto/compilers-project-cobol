@@ -29,19 +29,34 @@ public class IdentificationTable {
 		this.table = new HashMap<Key, Attribute>();
 
 		// Puts in the table each language reserved word
-		this.table.put(new Key(0, "void"), null);
-		this.table.put(new Key(0, "int"), null);
-		this.table.put(new Key(0, "double"), null);
-		this.table.put(new Key(0, "boolean"), null);
-		this.table.put(new Key(0, "if"), null);
-		this.table.put(new Key(0, "else"), null);
-		this.table.put(new Key(0, "while"), null);
-		this.table.put(new Key(0, "return"), null);
-		this.table.put(new Key(0, "break"), null);
-		this.table.put(new Key(0, "continue"), null);
-		this.table.put(new Key(0, "println"), null);
-		this.table.put(new Key(0, "false"), null);
-		this.table.put(new Key(0, "true"), null);
+		this.table.put(new Key(0, "PIC9"), null);
+		this.table.put(new Key(0, "PICBOOL"), null);
+		this.table.put(new Key(0, "VOID"), null);
+		this.table.put(new Key(0, "TRUE"), null);
+		this.table.put(new Key(0, "FALSE"), null);
+		this.table.put(new Key(0, "IF"), null);
+		this.table.put(new Key(0, "THEN"), null);
+		this.table.put(new Key(0, "ELSE"), null);
+		this.table.put(new Key(0, "ENDIF"), null);
+		this.table.put(new Key(0, "PERFORM"), null);
+		this.table.put(new Key(0, "UNTIL"), null);
+		this.table.put(new Key(0, "ENDPERFORM"), null);
+		this.table.put(new Key(0, "VALUE"), null);
+		this.table.put(new Key(0, "PROGRAM"), null);
+		this.table.put(new Key(0, "GLOBALDATA"), null);
+		this.table.put(new Key(0, "DIVISION"), null);
+		this.table.put(new Key(0, "CALL"), null);
+		this.table.put(new Key(0, "MAIN"), null);
+		this.table.put(new Key(0, "USING"), null);
+		this.table.put(new Key(0, "ENDMAIN"), null);
+		this.table.put(new Key(0, "ENDFUNCTION"), null);
+		this.table.put(new Key(0, "DISPLAY"), null);
+		this.table.put(new Key(0, "ACCEPT"), null);
+		this.table.put(new Key(0, "FROM"), null);
+		this.table.put(new Key(0, "COMPUTE"), null);
+		this.table.put(new Key(0, "RETURN"), null);
+		this.table.put(new Key(0, "BREAK"), null);
+		this.table.put(new Key(0, "CONTINUE"), null);
 
 		// Initializes currentScope to 0 (global)
 		this.currentScope = 0;
