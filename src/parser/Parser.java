@@ -1,10 +1,13 @@
 package parser;
 
+import java.util.ArrayList;
+
 import scanner.LexicalException;
 import scanner.Scanner;
 import scanner.Token;
 import scanner.Token.TokenType;
-import util.AST.AST;
+import util.AST.*;
+import util.AST.Number;
 
 /**
  * Parser class
@@ -60,76 +63,116 @@ public class Parser {
 	/**
 	 * Verifies if the source program is syntactically correct
 	 * @throws SyntacticException
+	 * @throws LexicalException 
 	 */
-	public AST parse() throws SyntacticException {
-		AST code = null;//parseCode();
+	public AST parse() throws SyntacticException, LexicalException {
+		AST code = parseCode();
 		return code;
 	}
 
-	public void parseCode() throws SyntacticException, LexicalException{
+	public Code parseCode() throws SyntacticException, LexicalException{
+		GlobalDataDiv gdiv = null;
 		if (this.currentToken.getKind() == TokenType.GLOBALDATA){
-			parseGlobalDataDiv();
+			gdiv = parseGlobalDataDiv();
 		}
-		parseProgramDiv();
+		ProgramDiv pdiv = parseProgramDiv();
 		accept(TokenType.EOF);
+		return new Code(gdiv, pdiv);
 	}
 
-	public void parseGlobalDataDiv() throws SyntacticException, LexicalException{
+	public GlobalDataDiv parseGlobalDataDiv() throws SyntacticException, LexicalException{
 		accept(TokenType.GLOBALDATA);
 		accept(TokenType.DIVISION);
 		accept(TokenType.POINT);
-
+		
+		ArrayList<VarDeclaration> aVar = new ArrayList<VarDeclaration>();
 		if(this.currentToken.getKind() == TokenType.PIC9_TYPE || this.currentToken.getKind() == TokenType.PICBOOL_TYPE){
 			do{
-				parseVarDeclaration();
+				aVar.add(parseVarDeclaration());
 			} while (this.currentToken.getKind() != TokenType.PROGRAM);
 		}
+		
+		return new GlobalDataDiv(aVar);
 	}
 
-	public void parseProgramDiv() throws SyntacticException, LexicalException{
+	public ProgramDiv parseProgramDiv() throws SyntacticException, LexicalException{
 		accept(TokenType.PROGRAM);
 		accept(TokenType.DIVISION);
 		accept(TokenType.POINT);
-
+		
+		ArrayList<Function> aFunc = new ArrayList<Function>();
 		if(this.currentToken.getKind() == TokenType.IDENTIFIER){
 			do{
-				parseFunction();
+				aFunc.add(parseFunction());
 			} while (this.currentToken.getKind() != TokenType.MAIN);
 		}
-		parseMainProc();
+		MainProc mProc = parseMainProc();
+		
+		return new ProgramDiv(aFunc, mProc);
 	}
 
-	public void parseVarDeclaration() throws SyntacticException, LexicalException{
+	public VarDeclaration parseVarDeclaration() throws SyntacticException, LexicalException{
+		VarDeclaration vDecl = null;
 		if(this.currentToken.getKind() == TokenType.PIC9_TYPE){
-			parseVarPIC9Declaration();
+			vDecl = parseVarPIC9Declaration();
 		} else {
-			parseVarPICBOOLDeclaration();
+			vDecl = parseVarPICBOOLDeclaration();
 		}
+		
+		return vDecl;
 	}
 
-	public void parseVarPIC9Declaration() throws SyntacticException, LexicalException{
+	public VarPIC9Declaration parseVarPIC9Declaration() throws SyntacticException, LexicalException{
 		accept(TokenType.PIC9_TYPE);
-		accept(TokenType.IDENTIFIER);
-
+		Identifier id = null;
+		if(this.currentToken.getKind() == TokenType.IDENTIFIER){
+			id = new Identifier(this.currentToken.getSpelling());
+			acceptIt();
+		} else {
+			throw new SyntacticException("Accept ERROR: missing IDENTIFIER", this.currentToken);
+		}
+		
+		Number num = null;
 		if(this.currentToken.getKind() == TokenType.VALUE){
 			acceptIt();
-			accept(TokenType.NUMBER);			
+			if(this.currentToken.getKind() == TokenType.NUMBER){
+				num = new Number(this.currentToken.getSpelling());
+				acceptIt();
+			} else {
+				throw new SyntacticException("Accept ERROR: missing NUMBER", this.currentToken);
+			}
+						
 		}
 		accept(TokenType.POINT);
+		return new VarPIC9Declaration(id, num);
 	}
 
-	public void parseVarPICBOOLDeclaration() throws SyntacticException, LexicalException{
+	public VarPICBOOLDeclaration parseVarPICBOOLDeclaration() throws SyntacticException, LexicalException{
 		accept(TokenType.PICBOOL_TYPE);
-		accept(TokenType.IDENTIFIER);
-
+		Identifier id = null;
+		if(this.currentToken.getKind() == TokenType.IDENTIFIER){
+			id = new Identifier(this.currentToken.getSpelling());
+			accept(TokenType.IDENTIFIER);
+		} else {
+			throw new SyntacticException("Accept ERROR: missing IDENTIFIER", this.currentToken);
+		}
+		
+		BoolValue bValue = null;
 		if(this.currentToken.getKind() == TokenType.VALUE){
 			acceptIt();
-			accept(TokenType.BOOL_VALUE);			
+			accept(TokenType.BOOL_VALUE);
+			if(this.currentToken.getKind() == TokenType.BOOL_VALUE){
+				bValue = new BoolValue(this.currentToken.getSpelling());
+				acceptIt();
+			} else {
+				throw new SyntacticException("Accept ERROR: missing BOOL_VALUE", this.currentToken);
+			}
 		}
 		accept(TokenType.POINT);
+		return new VarPICBOOLDeclaration(id, bValue);
 	}
 
-	public void parseMainProc() throws SyntacticException, LexicalException{
+	public MainProc parseMainProc() throws SyntacticException, LexicalException{
 		accept(TokenType.MAIN);
 		accept(TokenType.POINT);		
 
@@ -143,7 +186,7 @@ public class Parser {
 		accept(TokenType.END_MAIN);
 	}
 
-	public void parseFunction() throws SyntacticException, LexicalException{
+	public Function parseFunction() throws SyntacticException, LexicalException{
 		accept(TokenType.IDENTIFIER);
 
 		if(this.currentToken.getKind() == TokenType.VOID_TYPE){
