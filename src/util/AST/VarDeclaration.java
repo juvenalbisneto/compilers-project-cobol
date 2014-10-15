@@ -2,7 +2,11 @@ package util.AST;
 
 public abstract class VarDeclaration extends AST {
 	String type;
-	Identifier id;
+	Identifier id = null;
+	
+	public VarDeclaration(String type){
+		this.type = type;
+	}
 	
 	public String getType(){
 		return this.type;

@@ -3,9 +3,12 @@ package util.AST;
 import java.util.ArrayList;
 
 public class FunctionCall extends Command {
-	Identifier id;
-	ArrayList<Identifier> ids = new ArrayList<Identifier>();
+	Identifier id = null;
+	ArrayList<Identifier> ids = null;
 	
+	public FunctionCall (Identifier nome){
+		this.id = nome;
+	}
 	public FunctionCall (Identifier nome, ArrayList<Identifier> ids){
 		this.id = nome;
 		this.ids = ids;

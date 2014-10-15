@@ -3,8 +3,8 @@ package util.AST;
 import java.util.*;
 
 public class MainProc extends AST {
-	ArrayList<VarDeclaration> varD = new ArrayList<VarDeclaration>();
-	ArrayList<Command> cmds = new ArrayList<Command>();
+	ArrayList<VarDeclaration> varD = null;
+	ArrayList<Command> cmds = null;
 
 
 	public MainProc(ArrayList<VarDeclaration> varD, ArrayList<Command> cmds){

@@ -7,13 +7,13 @@ public class BooleanExpression extends Expression {
 	
 	BooleanExpression bexpression_l = null;
 	ArithmeticExpression aexpression_l = null;
-	Identifier id_l;
-	Number numero_l;
+	Identifier id_l = null;
+	Number numero_l = null;
 
 	BooleanExpression bexpression_r = null;
 	ArithmeticExpression aexpression_r = null;
-	Identifier id_r;
-	Number numero_r;
+	Identifier id_r = null;
+	Number numero_r = null;
 
 
 

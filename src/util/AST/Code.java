@@ -3,8 +3,8 @@ package util.AST;
 public class Code extends AST {
 	String token = "Code";
 	
-	GlobalDataDiv gbl;
-	ProgramDiv pgrm;
+	GlobalDataDiv gbl = null;
+	ProgramDiv pgrm = null;
 
 
 	public Code(GlobalDataDiv gbl, ProgramDiv pgrm){

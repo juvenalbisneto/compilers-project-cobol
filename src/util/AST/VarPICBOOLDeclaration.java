@@ -1,15 +1,14 @@
 package util.AST;
 
 public class VarPICBOOLDeclaration extends VarDeclaration {
-	
 	BoolValue bool = null;
 
 	public VarPICBOOLDeclaration(Identifier id){
-		this.type = "PICBOOL";
+		super("PICBOOL");
 		this.id = id;
 	}
 	public VarPICBOOLDeclaration(Identifier id, BoolValue bool){
-		this.type = "PICBOOL";
+		super("PICBOOL");
 		this.id = id;
 		this.bool = bool;
 	}

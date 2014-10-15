@@ -4,11 +4,11 @@ public class VarPIC9Declaration extends VarDeclaration {
 	Number num = null;
 
 	public VarPIC9Declaration(Identifier id){
-		this.type = "PIC9";
+		super("PIC9");
 		this.id = id;
 	}
 	public VarPIC9Declaration(Identifier id, Number num){
-		this.type = "PIC9";
+		super("PIC9");
 		this.id = id;
 		this.num = num;
 	}
