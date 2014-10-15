@@ -6,14 +6,16 @@ public class Function extends AST {
 	String tipoRetorno;
 	Identifier id = null;
 	ArrayList<Identifier> params = null;
+	ArrayList<String> paramTypes = null;
 	ArrayList<VarDeclaration> declarations = null;
 	ArrayList<Command> cmds = null;
 	
-	public Function(String tipoRetorno, Identifier id, ArrayList<Identifier> params, ArrayList<VarDeclaration> declarations, ArrayList<Command> cmds) {
+	public Function(String tipoRetorno, Identifier id, ArrayList<Identifier> params, ArrayList<String> paramTypes, ArrayList<VarDeclaration> declarations, ArrayList<Command> cmds) {
 		super();
 		this.tipoRetorno = tipoRetorno;
 		this.id = id;
 		this.params = params;
+		this.paramTypes = paramTypes;
 		this.declarations = declarations;
 		this.cmds = cmds;
 	}

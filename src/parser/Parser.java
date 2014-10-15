@@ -201,11 +201,12 @@ public class Parser {
 	}
 
 	public Function parseFunction() throws SyntacticException, LexicalException{
-		Identifier id;
+		Identifier id = null;
 		String tipoRetorno;
-		ArrayList<Identifier> params = new ArrayList<Identifier>();
-		ArrayList<VarDeclaration> declarations = new ArrayList<VarDeclaration>();
-		ArrayList<Command> cmds = new ArrayList<Command>();
+		ArrayList<Identifier> params = null;
+		ArrayList<String> paramTypes = null;
+		ArrayList<VarDeclaration> declarations = null;
+		ArrayList<Command> cmds = null;
 		
 		if(this.currentToken.getKind() == TokenType.IDENTIFIER){
 			id = new Identifier(this.currentToken.getSpelling());
@@ -222,14 +223,21 @@ public class Parser {
 		}
 
 		if(this.currentToken.getKind() == TokenType.USING){
+			params = new ArrayList<Identifier>();
+			paramTypes = new ArrayList<String>();
 			acceptIt();
-
+			
+			paramTypes.add(this.currentToken.getSpelling());
 			if(this.currentToken.getKind() == TokenType.PIC9_TYPE){
 				acceptIt();
 			} else {
 				accept(TokenType.PICBOOL_TYPE);
 			}
-			accept(TokenType.IDENTIFIER);
+			
+			if(this.currentToken.getKind() == TokenType.IDENTIFIER){
+				params.add(new Identifier(this.currentToken.getSpelling()));
+				acceptIt();
+			}
 
 			while(this.currentToken.getKind() != TokenType.POINT){
 				if(this.currentToken.getKind() == TokenType.COMMA){
@@ -241,21 +249,32 @@ public class Parser {
 						accept(TokenType.PICBOOL_TYPE);
 					}
 					
-					accept(TokenType.IDENTIFIER);
+					if(this.currentToken.getKind() == TokenType.IDENTIFIER){
+						params.add(new Identifier(this.currentToken.getSpelling()));
+						acceptIt();
+					}
 				}
 			}
 		}
 		accept(TokenType.POINT);
-
-		while(this.currentToken.getKind() == TokenType.PIC9_TYPE || this.currentToken.getKind() == TokenType.PICBOOL_TYPE){
-			parseVarDeclaration();
+		
+		if(this.currentToken.getKind() == TokenType.PIC9_TYPE || this.currentToken.getKind() == TokenType.PICBOOL_TYPE){
+			declarations = new ArrayList<VarDeclaration>();
+			while(this.currentToken.getKind() == TokenType.PIC9_TYPE || this.currentToken.getKind() == TokenType.PICBOOL_TYPE){
+				declarations.add(parseVarDeclaration());
+			}
 		}
-
-		while(this.currentToken.getKind() != TokenType.END_FUNCTION){
-			parseCommand();
+		
+		if(this.currentToken.getKind() != TokenType.END_FUNCTION){
+			cmds = new ArrayList<Command>();
+			while(this.currentToken.getKind() != TokenType.END_FUNCTION){
+				cmds.add(parseCommand());
+			}
 		}
 		
 		accept(TokenType.END_FUNCTION);
+		
+		return new Function(tipoRetorno, id, params, paramTypes, declarations, cmds);
 	}
 
 	public FunctionCall parseFunctionCall() throws SyntacticException, LexicalException{
