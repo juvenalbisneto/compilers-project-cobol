@@ -12,7 +12,7 @@ PIC9 Y.
 PICBOOL verdade.
 PICBOOL falso FALSE.
 
-ACCEPT X FROM (7 * 6).
+ACCEPT X FROM COMPUTE(7 * 6).
 ACCEPT Y FROM CALL Funcao.
 ACCEPT verdade FROM falso.
 
