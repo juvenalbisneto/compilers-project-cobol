@@ -4,7 +4,7 @@ GLOBALDATA DIVISION.
 PROGRAM DIVISION.
 #testando comentario
 
-MAIN.
+MAIN.#Teste de comentario na mesma linha
 #testando comentario 943875o32`~!@#$%^&*()_+=[]\{}|;':",./<>?
 
 ENDMAIN
