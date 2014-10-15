@@ -198,7 +198,7 @@ public class Scanner {
 						return TokenType.OP_MULT;
 					} else if (this.currentChar == '='){
 						this.getNextChar();
-						return TokenType.EQUALS;
+						return TokenType.OP_RELACIONAL;//TokenType.EQUALS;
 					} else if (this.currentChar == '>'){
 						s = TokenType.MAJOR;
 						this.getNextChar();
@@ -287,19 +287,19 @@ public class Scanner {
 			case TokenType.MAJOR:
 				if (this.currentChar == '='){
 					this.getNextChar();
-					return TokenType.MAJOREQ;
+					return TokenType.OP_RELACIONAL;//TokenType.MAJOREQ;
 				} else {
-					return TokenType.MAJOR;
+					return TokenType.OP_RELACIONAL;//TokenType.MAJOR;
 				}
 			case TokenType.MINOR:
 				if (this.currentChar == '='){
 					this.getNextChar();
-					return TokenType.MINOREQ;
+					return TokenType.OP_RELACIONAL;//TokenType.MINOREQ;
 				} else if (this.currentChar == '>') {
 					this.getNextChar();
-					return TokenType.DIFFERENT;
+					return TokenType.OP_RELACIONAL;//TokenType.DIFFERENT;
 				} else {
-					return TokenType.MINOR;
+					return TokenType.OP_RELACIONAL;//TokenType.MINOR;
 				}
 			}
 		}
