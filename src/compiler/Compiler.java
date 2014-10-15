@@ -28,26 +28,26 @@ public class Compiler {
 	 */
 	public static void main(String[] args) throws LexicalException {
 		testScanner();
-//		// Initializes the identification table with the reserved words 
-//		Compiler.initIdentificationTable();
-//		
-//		// Creates the parser object
-//		Parser p = new Parser();
-//		
-//		// Creates the AST object
-//		AST astRoot = null;
-//		
-//		try {
-//			// Parses the source code
-//			astRoot = p.parse();
-//			System.out.println("\n-- AST STRUCTURE --");
-//			if ( astRoot != null ) {
-//				System.out.println(astRoot.toString(0));
-//			}
-//		} catch (SyntacticException e) {
-//			// Shows the syntactic/lexical error stack trace 
-//			e.printStackTrace();
-//		}
+		// Initializes the identification table with the reserved words 
+		Compiler.initIdentificationTable();
+		
+		// Creates the parser object
+		Parser p = new Parser();
+		
+		// Creates the AST object
+		AST astRoot = null;
+		
+		try {
+			// Parses the source code
+			astRoot = p.parse();
+			System.out.println("\n-- AST STRUCTURE --");
+			if ( astRoot != null ) {
+				System.out.println(astRoot.toString(0));
+			}
+		} catch (SyntacticException e) {
+			// Shows the syntactic/lexical error stack trace 
+			e.printStackTrace();
+		}
 	}
 	
 	/**

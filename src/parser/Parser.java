@@ -46,7 +46,7 @@ public class Parser {
 		if (this.currentToken.getKind() == kind){
 			this.currentToken = this.scanner.getNextToken();
 		} else {
-			throw new SyntacticException("Accept ERROR in currentToken= " + this.currentToken.getSpelling() + " | expectedToken = " + Token.kindName(kind), this.currentToken);
+			throw new SyntacticException("Accept ERROR: expectedToken = " + Token.kindName(kind), this.currentToken);
 		}
 
 	}
@@ -179,8 +179,8 @@ public class Parser {
 		accept(TokenType.POINT);		
 		
 		aVar = new ArrayList<VarDeclaration>();
-		if(this.currentToken.getKind() == TokenType.PIC9_TYPE ||this.currentToken.getKind() == TokenType.PICBOOL_TYPE){
-			while(this.currentToken.getKind() == TokenType.PIC9_TYPE ||this.currentToken.getKind() == TokenType.PICBOOL_TYPE){
+		if(this.currentToken.getKind() == TokenType.PIC9_TYPE || this.currentToken.getKind() == TokenType.PICBOOL_TYPE){
+			while(this.currentToken.getKind() == TokenType.PIC9_TYPE || this.currentToken.getKind() == TokenType.PICBOOL_TYPE){
 				aVar.add(parseVarDeclaration());
 			}
 		}
@@ -314,7 +314,7 @@ public class Parser {
 		}else if(this.currentToken.getKind() == TokenType.PERFORM){
 			return parseUntil();
 		}else if(this.currentToken.getKind() == TokenType.ACCEPT){
-			return parseAssigment();
+			return parseAccept();
 		}else if(this.currentToken.getKind() == TokenType.DISPLAY){
 			return parseDisplay();
 		}else if(this.currentToken.getKind() == TokenType.CALL){
@@ -323,8 +323,10 @@ public class Parser {
 			return parseBreakStatment();
 		}else if(this.currentToken.getKind() == TokenType.CONTINUE){
 			return parseContinueStatment();
-		} else {
+		} else if(this.currentToken.getKind() == TokenType.CONTINUE){
 			return parseReturn();
+		} else {
+			throw new SyntacticException("ERROR: Any Command found", this.currentToken);
 		}
 	}
 
@@ -485,15 +487,17 @@ public class Parser {
 	}
 
 
-	public Assignment parseAssigment() throws SyntacticException, LexicalException{
+	public Accept parseAccept() throws SyntacticException, LexicalException{
 		Identifier id = null;
 		Expression exp = null;
 		FunctionCall func = null;
 		
 		accept(TokenType.ACCEPT);
-		if(this.currentToken.getKind() == TokenType.CALL){
+		if(this.currentToken.getKind() == TokenType.IDENTIFIER){
 			id = new Identifier(this.currentToken.getSpelling());
 			acceptIt();
+		} else {
+			throw new SyntacticException("Accept ERROR: expectedToken = " + Token.kindName(TokenType.IDENTIFIER), this.currentToken);
 		}
 		
 		accept(TokenType.FROM);
@@ -506,9 +510,9 @@ public class Parser {
 		accept(TokenType.POINT);
 		
 		if(func != null){
-			return new Assignment(id, func);
+			return new Accept(id, func);
 		} else {
-			return new Assignment(id, exp);
+			return new Accept(id, exp);
 		}
 	}
 
