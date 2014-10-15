@@ -159,7 +159,6 @@ public class Parser {
 		BoolValue bValue = null;
 		if(this.currentToken.getKind() == TokenType.VALUE){
 			acceptIt();
-			accept(TokenType.BOOL_VALUE);
 			if(this.currentToken.getKind() == TokenType.BOOL_VALUE){
 				bValue = new BoolValue(this.currentToken.getSpelling());
 				acceptIt();
