@@ -207,6 +207,8 @@ public class Parser {
 		if(this.currentToken.getKind() == TokenType.IDENTIFIER){
 			id = new Identifier(this.currentToken.getSpelling());
 			acceptIt();
+		} else {
+			throw new SyntacticException("Accept ERROR: missing IDENTIFIER", this.currentToken);
 		}
 		
 		tipoRetorno = this.currentToken.getSpelling();
@@ -233,6 +235,8 @@ public class Parser {
 			if(this.currentToken.getKind() == TokenType.IDENTIFIER){
 				params.add(new Identifier(this.currentToken.getSpelling()));
 				acceptIt();
+			} else {
+				throw new SyntacticException("Accept ERROR: missing IDENTIFIER", this.currentToken);
 			}
 
 			while(this.currentToken.getKind() != TokenType.POINT){
@@ -248,7 +252,11 @@ public class Parser {
 					if(this.currentToken.getKind() == TokenType.IDENTIFIER){
 						params.add(new Identifier(this.currentToken.getSpelling()));
 						acceptIt();
+					} else {
+						throw new SyntacticException("Accept ERROR: missing IDENTIFIER", this.currentToken);
 					}
+				} else {
+					throw new SyntacticException("Accept ERROR: missing COMMA", this.currentToken);
 				}
 			}
 		}
@@ -281,6 +289,8 @@ public class Parser {
 		if(this.currentToken.getKind() == TokenType.IDENTIFIER){
 			id = new Identifier(this.currentToken.getSpelling());
 			acceptIt();
+		} else {
+			throw new SyntacticException("Accept ERROR: missing IDENTIFIER", this.currentToken);
 		}
 
 		if(this.currentToken.getKind() == TokenType.USING){
@@ -289,6 +299,8 @@ public class Parser {
 			if(this.currentToken.getKind() == TokenType.IDENTIFIER){
 				ids.add(new Identifier(this.currentToken.getSpelling()));
 				acceptIt();
+			} else {
+				throw new SyntacticException("Accept ERROR: missing IDENTIFIER", this.currentToken);
 			}
 
 			while(this.currentToken.getKind() == TokenType.COMMA){
@@ -296,6 +308,8 @@ public class Parser {
 				if(this.currentToken.getKind() == TokenType.IDENTIFIER){
 					ids.add(new Identifier(this.currentToken.getSpelling()));
 					acceptIt();
+				} else {
+					throw new SyntacticException("Accept ERROR: missing IDENTIFIER", this.currentToken);
 				}
 			}			
 		}
@@ -497,7 +511,7 @@ public class Parser {
 			id = new Identifier(this.currentToken.getSpelling());
 			acceptIt();
 		} else {
-			throw new SyntacticException("Accept ERROR: expectedToken = " + Token.kindName(TokenType.IDENTIFIER), this.currentToken);
+			throw new SyntacticException("Accept ERROR: missing IDENTIFIER", this.currentToken);
 		}
 		
 		accept(TokenType.FROM);
@@ -520,7 +534,7 @@ public class Parser {
 	public IfStatement parseIfStatment() throws SyntacticException, LexicalException{
 		BooleanExpression bExpression = null;
 		ArrayList<Command> cmd_if = new ArrayList<Command>();
-		ArrayList<Command> cmd_else = new ArrayList<Command>();
+		ArrayList<Command> cmd_else = null;
 		
 		accept(TokenType.IF);
 		bExpression = parseBooleanExpression();
@@ -531,6 +545,7 @@ public class Parser {
 		} while(this.currentToken.getKind() != TokenType.ELSE && this.currentToken.getKind() != TokenType.END_IF);
 
 		if(this.currentToken.getKind() == TokenType.ELSE){
+			cmd_else = new ArrayList<Command>();
 			acceptIt();
 			do{
 				cmd_else.add(parseCommand());
@@ -539,7 +554,7 @@ public class Parser {
 		}
 		accept(TokenType.END_IF);
 		
-		if(cmd_else.size() == 0){
+		if(cmd_else == null){
 			return new IfStatement(bExpression, cmd_if);
 		} else {
 			return new IfStatement(bExpression, cmd_if, cmd_else);
@@ -620,20 +635,4 @@ public class Parser {
 	}
 	
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+//END of PARSER
