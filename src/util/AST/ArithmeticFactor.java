@@ -1,6 +1,6 @@
 package util.AST;
 
-public abstract class ArithmeticFactor extends AST {
+public class ArithmeticFactor extends AST {
 	Identifier id = null;
 	Number num = null;
 	ArithmeticParcel aParcel = null;
@@ -23,5 +23,11 @@ public abstract class ArithmeticFactor extends AST {
 	}
 	public ArithmeticParcel getArithmeticParcel(){
 		return this.aParcel;
+	}
+	
+	@Override
+	public String toString(int level) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }
