@@ -8,7 +8,7 @@ PIC9 Y VALUE 6.
 
 
 DISPLAY (x>y).
-DISPLAY (X==Y).
+DISPLAY (X==Y). # == ao inves de =
 DISPLAY (X<>Y).
 DISPLAY (X<Y).
 DISPLAY (X<=Y).

@@ -4,7 +4,7 @@ PROGRAM DIVISION.
 MAIN.
 
 PIC9 x.
-PIC9 valor 42.
+PIC9 valor 42. #Faltando VALUE
 PICBOOL log VALUE FALSE.
 PICBOOL log2.
 

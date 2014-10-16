@@ -13,7 +13,7 @@ PICBOOL verdade.
 PICBOOL falso VALUE FALSE.
 
 ACCEPT X FROM COMPUTE(7 * 6).
-Y FROM CALL Funcao.
+Y FROM CALL Funcao. #Faltando ACCEPT no inicio
 ACCEPT verdade FROM falso.
 
 ENDMAIN
