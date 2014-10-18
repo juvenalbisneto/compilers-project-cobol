@@ -344,7 +344,7 @@ public class Parser {
 	}
 
 	public Expression parseExpression() throws SyntacticException, LexicalException{
-		if(this.currentToken.getKind() == TokenType.COMPUTE){
+		if(this.currentToken.getKind() == TokenType.COMPUTE || this.currentToken.getKind() == TokenType.NUMBER){
 			return parseArithmeticExpression();
 		} else {
 			return parseBooleanExpression();
