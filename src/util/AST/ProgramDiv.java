@@ -2,6 +2,8 @@ package util.AST;
 
 import java.util.*;
 
+import checker.SemanticException;
+
 public class ProgramDiv extends AST {
 	ArrayList<Function> func = null;
 	MainProc main = null;
@@ -22,5 +24,10 @@ public class ProgramDiv extends AST {
 	public String toString(int level) {
 		// TODO Auto-generated method stub
 		return null;
+	}
+	
+	@Override
+	public Object visit(Visitor v, Object args) throws SemanticException{
+		return v.visitProgramDiv(this, args);
 	}
 }

@@ -2,6 +2,8 @@ package util.AST;
 
 import java.util.*;
 
+import checker.SemanticException;
+
 public class MainProc extends AST {
 	ArrayList<VarDeclaration> varD = null;
 	ArrayList<Command> cmds = null;
@@ -25,4 +27,8 @@ public class MainProc extends AST {
 		return null;
 	}
 
+	@Override
+	public Object visit(Visitor v, Object args) throws SemanticException{
+		return v.visitMainProc(this, args);
+	}
 }

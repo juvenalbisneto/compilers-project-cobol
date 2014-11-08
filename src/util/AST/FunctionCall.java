@@ -2,6 +2,8 @@ package util.AST;
 
 import java.util.ArrayList;
 
+import checker.SemanticException;
+
 public class FunctionCall extends Command {
 	Identifier id = null;
 	ArrayList<Identifier> ids = null;
@@ -27,5 +29,9 @@ public class FunctionCall extends Command {
 		// TODO Auto-generated method stub
 		return null;
 	}
-
+	
+	@Override
+	public Object visit(Visitor v, Object args) throws SemanticException{
+		return v.visitFunctionCall(this, args);
+	}
 }

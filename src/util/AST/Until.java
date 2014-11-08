@@ -2,6 +2,8 @@ package util.AST;
 
 import java.util.ArrayList;
 
+import checker.SemanticException;
+
 public class Until extends Command {
 	BooleanExpression bexpression = null;
 	ArrayList<Command> cmd = null;
@@ -21,5 +23,10 @@ public class Until extends Command {
 	public String toString(int level) {
 		// TODO Auto-generated method stub
 		return null;
+	}
+	
+	@Override
+	public Object visit(Visitor v, Object args) throws SemanticException{
+		return v.visitUntil(this, args);
 	}
 }

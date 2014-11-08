@@ -2,6 +2,8 @@ package util.AST;
 
 import java.util.*;
 
+import checker.SemanticException;
+
 public class IfStatement extends Command {
 	BooleanExpression bexpression = null;
 	ArrayList<Command> cmd_if = null;
@@ -31,5 +33,10 @@ public class IfStatement extends Command {
 	public String toString(int level) {
 		// TODO Auto-generated method stub
 		return null;
+	}
+	
+	@Override
+	public Object visit(Visitor v, Object args) throws SemanticException{
+		return v.visitIfStatement(this, args);
 	}
 }

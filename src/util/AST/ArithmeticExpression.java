@@ -1,5 +1,7 @@
 package util.AST;
 
+import checker.SemanticException;
+
 public class ArithmeticExpression extends Expression {
 	ArithmeticParcel aparcel = null;
 	Number number = null;
@@ -22,5 +24,10 @@ public class ArithmeticExpression extends Expression {
 	public String toString(int level) {
 		// TODO Auto-generated method stub
 		return null;
+	}
+	
+	@Override
+	public Object visit(Visitor v, Object args) throws SemanticException{
+		return v.visitArithmeticExpression(this, args);
 	}
 }

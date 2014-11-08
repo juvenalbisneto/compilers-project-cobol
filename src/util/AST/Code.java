@@ -1,5 +1,7 @@
 package util.AST;
 
+import checker.SemanticException;
+
 public class Code extends AST {
 	String token = "Code";
 	
@@ -27,5 +29,10 @@ public class Code extends AST {
 	@Override
 	public String toString(int level){
 		return (super.getSpaces(level) + token);
+	}
+	
+	@Override
+	public Object visit(Visitor v, Object args) throws SemanticException{
+		return v.visitCode(this, args);
 	}
 }

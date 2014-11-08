@@ -2,6 +2,8 @@ package util.AST;
 
 import java.util.*;
 
+import checker.SemanticException;
+
 public class Function extends AST {	
 	String tipoRetorno;
 	Identifier id = null;
@@ -24,5 +26,10 @@ public class Function extends AST {
 	public String toString(int level) {
 		// TODO Auto-generated method stub
 		return null;
+	}
+	
+	@Override
+	public Object visit(Visitor v, Object args) throws SemanticException{
+		return v.visitFunction(this, args);
 	}
 }

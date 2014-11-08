@@ -1,5 +1,7 @@
 package util.AST;
 
+import checker.SemanticException;
+
 public class ArithmeticParcel extends AST {
 
 	ArithmeticTerm aTerm = null;
@@ -29,5 +31,10 @@ public class ArithmeticParcel extends AST {
 	public String toString(int level) {
 		// TODO Auto-generated method stub
 		return null;
+	}
+	
+	@Override
+	public Object visit(Visitor v, Object args) throws SemanticException{
+		return v.visitArithmeticParcel(this, args);
 	}
 }

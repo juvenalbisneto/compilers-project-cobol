@@ -1,5 +1,7 @@
 package util.AST;
 
+import checker.SemanticException;
+
 public class ArithmeticFactor extends AST {
 	Identifier id = null;
 	Number num = null;
@@ -29,5 +31,10 @@ public class ArithmeticFactor extends AST {
 	public String toString(int level) {
 		// TODO Auto-generated method stub
 		return null;
+	}
+	
+	@Override
+	public Object visit(Visitor v, Object args) throws SemanticException{
+		return v.visitArithmeticFactor(this, args);
 	}
 }

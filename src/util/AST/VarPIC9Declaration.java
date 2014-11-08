@@ -1,5 +1,7 @@
 package util.AST;
 
+import checker.SemanticException;
+
 public class VarPIC9Declaration extends VarDeclaration {
 	Number num = null;
 
@@ -21,5 +23,9 @@ public class VarPIC9Declaration extends VarDeclaration {
 	public String toString(int level) {
 		// TODO Auto-generated method stub
 		return null;
+	}
+	@Override
+	public Object visit(Visitor v, Object args) throws SemanticException{
+		return v.visitVarPIC9Declaration(this, args);
 	}
 }

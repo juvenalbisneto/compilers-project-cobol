@@ -1,5 +1,7 @@
 package util.AST;
 
+import checker.SemanticException;
+
 public class BooleanExpression extends Expression {
 		
 	OpRelational opr = null;	
@@ -148,5 +150,8 @@ public class BooleanExpression extends Expression {
 		return null;
 	}
 
-	
+	@Override
+	public Object visit(Visitor v, Object args) throws SemanticException{
+		return v.visitBooleanExpression(this, args);
+	}
 }
