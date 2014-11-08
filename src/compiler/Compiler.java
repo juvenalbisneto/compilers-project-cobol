@@ -65,7 +65,7 @@ public class Compiler {
 		while(t.getKind() != TokenType.EOF){
 			t = scanner.getNextToken();
 			
-			System.out.println("Token: " + t.getSpelling() + "\t(" + t.getKind() + " - " + Token.kindName(t.getKind()) + ")");
+			System.out.println(t.getSpelling() + "\t(" + t.getKind() + " - " + Token.kindName(t.getKind()) + ")");
 		}
 		System.out.println("-- FIM ANALISE LEXICA --");
 	}

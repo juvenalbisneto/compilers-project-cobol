@@ -1,5 +1,7 @@
 package util.AST;
 
+import checker.SemanticException;
+
 /**
  * AST class
  * @version 2010-september-04
@@ -19,6 +21,7 @@ public abstract class AST {
 	}
 	
 	public abstract String toString(int level);
+	public abstract Object visit(Visitor v, Object arg) throws SemanticException;
 	
 	public interface Types {
 		public static final int VARIAVEL = 0, FUNCAO = 1, PARAMETRO = 2;
