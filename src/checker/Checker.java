@@ -61,6 +61,11 @@ public class Checker implements Visitor{
 	}
 
 	public Object visitCode(Code code, Object args) throws SemanticException {
+		if (code.getGlobalDataDiv() != null) {
+			code.getGlobalDataDiv().visit(this, args);
+		}
+		
+		code.getProgramDiv().visit(this, args);
 		
 		return null;
 	}
