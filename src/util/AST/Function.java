@@ -22,6 +22,10 @@ public class Function extends AST {
 		this.cmds = cmds;
 	}
 	
+	public String getTipoRetorno(){
+		return this.tipoRetorno;
+	}
+	
 	@Override
 	public String toString(int level) {
 		// TODO Auto-generated method stub

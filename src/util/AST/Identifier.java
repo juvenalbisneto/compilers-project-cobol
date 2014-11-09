@@ -3,6 +3,8 @@ package util.AST;
 public  class Identifier extends Terminal {	
 	public int type = Types.VARIAVEL;
 	public int local = Types.LOCAL;
+	public Object declaration;
+	public String tipo;
 
 	public Identifier(String spelling) { 
 		super(spelling); 
