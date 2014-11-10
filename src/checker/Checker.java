@@ -259,15 +259,25 @@ public class Checker implements Visitor{
 		return null;
 	}
 
+	//OK
 	public Object visitVarPIC9Declaration(VarPIC9Declaration var9, Object args)
 			throws SemanticException {
-		
+		if(idTable.retrieve(var9.getIdentifier().spelling) != null){
+			throw new SemanticException("Variavel " + var9.getIdentifier().spelling + " ja foi declarada");
+		} else {
+			var9.getIdentifier().visit(this, args);
+		}
 		return null;
 	}
 
+	//OK
 	public Object visitVarPICBOOLDeclaration(VarPICBOOLDeclaration varBool,
 			Object args) throws SemanticException {
-		
+		if(idTable.retrieve(varBool.getIdentifier().spelling) != null){
+			throw new SemanticException("Variavel " + varBool.getIdentifier().spelling + " ja foi declarada");
+		} else {
+			varBool.getIdentifier().visit(this, args);
+		}
 		return null;
 	}
 }
