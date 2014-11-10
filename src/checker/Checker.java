@@ -220,7 +220,13 @@ public class Checker implements Visitor{
 	}
 
 	public Object visitReturn(Return rtn, Object args) throws SemanticException {
-		
+		if (args instanceof Function) {
+			if (((Function) args).getTipoRetorno().equals("VOID")) {
+				throw new SemanticException("Funcao VOID nao tem retorno");
+			} else if (true) {
+				
+			}
+		}
 		return null;
 	}
 
