@@ -250,9 +250,14 @@ public class Checker implements Visitor{
 		return null;
 	}
 
+	//OK
 	public Object visitVarDeclaration(VarDeclaration var, Object args)
 			throws SemanticException {
-		
+		if (var instanceof VarPIC9Declaration) {
+			return ((VarPIC9Declaration) var).visit(this, args);
+		} else if (var instanceof VarPICBOOLDeclaration) {
+			return ((VarPICBOOLDeclaration) var).visit(this, args);
+		}
 		return null;
 	}
 
