@@ -232,9 +232,7 @@ public class Checker implements Visitor{
 
 	//OK
 	public Object visitUntil(Until until, Object args) throws SemanticException {
-		if (until.getBooleanExpression().visit(this, args).equals("PIC9")) {
-			throw new SemanticException("Expressao invalida. A expressao deve ser booleana");
-		}
+		until.getBooleanExpression().visit(this, args);
 		
 		idTable.openScope();
 		for(Command cmd : until.getCommand()){
