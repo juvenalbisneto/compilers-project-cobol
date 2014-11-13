@@ -242,6 +242,7 @@ public class Parser {
 				if(this.currentToken.getKind() == TokenType.COMMA){
 					acceptIt();
 					
+					paramTypes.add(this.currentToken.getSpelling());
 					if(this.currentToken.getKind() == TokenType.PIC9_TYPE){
 						acceptIt();
 					} else {
