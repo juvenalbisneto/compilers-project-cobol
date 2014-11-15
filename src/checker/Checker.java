@@ -1,5 +1,7 @@
 package checker;
 
+import java.util.ArrayList;
+
 import util.AST.*;
 import util.AST.AST.Types;
 import util.AST.Number;
@@ -133,9 +135,34 @@ public class Checker implements Visitor{
 		return null;
 	}
 
+	//OK
 	public Object visitFunctionCall(FunctionCall fcall, Object args)
 			throws SemanticException {
-		
+		if (idTable.retrieve(fcall.getId().spelling) == null) {
+			throw new SemanticException("A funcao " 
+					+ fcall.getId().spelling
+					+ " nao foi declarada!");
+		} else {
+			AST temp = idTable.retrieve(fcall.getId().spelling);
+			if (!(temp instanceof Function)) {
+				throw new SemanticException("Identificador "
+						+ fcall.getId().spelling
+						+ " nao representa uma Funcao!");
+			} else {
+				if (((Function) temp).getParamsTypes().size() != fcall.getParams().size()) {
+					throw new SemanticException(
+							"Quantidade de parametros passada diferente da quantidade de parametros requeridas pela Funcao!");
+				} else {
+					ArrayList<String> params = ((Function) temp).getParamsTypes();
+					for (int i = 0; i < params.size(); i++) {
+						if (!params.get(i).equals(fcall.getParams().get(i).type)) {
+							throw new SemanticException(
+									"Tipo dos parametros informados não correspondem ao tipo esperado");
+						}
+					}
+				}
+			}
+		}
 		return null;
 	}
 
@@ -150,13 +177,13 @@ public class Checker implements Visitor{
 			throws SemanticException {
 		if (args instanceof VarDeclaration) { 
 			//TODO Verificar se tem que separar os tipos de declaracao
-			id.type = Types.VARIAVEL;
-			id.tipo = ((VarDeclaration) args).getType();
+			id.kind = Types.VARIAVEL;
+			id.type = ((VarDeclaration) args).getType();
 			id.declaration = args;
 			idTable.enter(id.spelling, (AST)args); 
 		} else if (args instanceof Function) {
-			id.type = Types.FUNCAO;
-			id.tipo = ((Function) args).getTipoRetorno();
+			id.kind = Types.FUNCAO;
+			id.type = ((Function) args).getTipoRetorno();
 			id.declaration = args;
 			this.contadorParametros++;
 			idTable.enter(id.spelling, (AST) args);
@@ -167,12 +194,12 @@ public class Checker implements Visitor{
 					+ ((ArithmeticFactor) args).getId().spelling
 					+ " nao foi declarada!");
 			} else {
-				return ((ArithmeticFactor) args).getId().tipo;
+				return ((ArithmeticFactor) args).getId().type;
 			}
 		} else {
-			id.type = Types.PARAMETRO;
+			id.kind = Types.PARAMETRO;
 			id.declaration = args;
-			id.tipo = ((VarDeclaration) args).getType();
+			id.type = ((VarDeclaration) args).getType();
 			idTable.enter(id.spelling, (AST) args);
 		}
 		return null;

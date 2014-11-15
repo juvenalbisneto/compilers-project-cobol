@@ -1,11 +1,13 @@
 package parser;
 
 import java.util.ArrayList;
+
 import scanner.LexicalException;
 import scanner.Scanner;
 import scanner.Token;
 import scanner.Token.TokenType;
 import util.AST.*;
+import util.AST.AST.Types;
 import util.AST.Number;
 
 /**

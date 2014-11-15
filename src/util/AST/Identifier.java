@@ -1,10 +1,9 @@
 package util.AST;
 
 public  class Identifier extends Terminal {	
-	public int type = Types.VARIAVEL;
-	public int local = Types.LOCAL;
+	public int kind = Types.VARIAVEL;
 	public Object declaration;
-	public String tipo;
+	public String type;
 
 	public Identifier(String spelling) { 
 		super(spelling); 
@@ -12,12 +11,10 @@ public  class Identifier extends Terminal {
 	
 	public String getType(){
 		String type = "";
-		if(this.type == Types.VARIAVEL){
+		if(this.kind == Types.VARIAVEL){
 			type = "variavel";
-		} else if(this.type == Types.FUNCAO){
+		} else if(this.kind == Types.FUNCAO){
 			type = "funcao";
-		} else if(this.type == Types.PARAMETRO){
-			type = "parametro";
 		}
 		return type;
 	}
