@@ -25,6 +25,21 @@ public class Function extends AST {
 	public String getTipoRetorno(){
 		return this.tipoRetorno;
 	}
+	public Identifier getID(){
+		return this.id;
+	}
+	public ArrayList<Identifier> getParams(){
+		return this.params;
+	}
+	public ArrayList<String> getParamsTypes(){
+		return this.paramTypes;
+	}
+	public ArrayList<VarDeclaration> getVarDeclarations(){
+		return this.declarations;
+	}
+	public ArrayList<Command> getCommands(){
+		return this.cmds;
+	}
 	
 	@Override
 	public String toString(int level) {
