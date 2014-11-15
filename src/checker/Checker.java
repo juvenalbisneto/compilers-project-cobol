@@ -53,7 +53,6 @@ public class Checker implements Visitor{
 		return null;
 	}
 
-	//OK
 	public Object visitBoolValue(BoolValue bool, Object args)
 			throws SemanticException {
 		return "PICBOOL";
@@ -235,8 +234,33 @@ public class Checker implements Visitor{
 
 	public Object visitIfStatement(IfStatement ifStatement, Object args)
 			throws SemanticException {
-		//TODO
-		return null;
+		
+		Object temp = null;
+		
+		if(ifStatement.getBooleanExpression() instanceof BooleanExpression){
+			((BooleanExpression) ifStatement.getBooleanExpression()).visit(this, args);
+			idTable.openScope();
+			for (Command ifCmd : ifStatement.getCommandIF()) {
+				if (ifCmd instanceof Break) {
+					break;
+				} else
+					temp = ifCmd.visit(this, args);
+			}
+			idTable.closeScope();
+			
+			for (Command elseCmd : ifStatement.getCommandElse()) {
+				if (elseCmd instanceof Break) {
+					break;
+				} else {
+					elseCmd.visit(this, args);
+				}
+			}
+			idTable.closeScope();
+		} else {
+			throw new SemanticException("Expressao da condicao do IF nao e booleana!");
+		}
+		
+		return temp;
 	}
 
 	public Object visitMainProc(MainProc main, Object args)
@@ -245,24 +269,20 @@ public class Checker implements Visitor{
 		return null;
 	}
 
-	//OK
 	public Object visitNumber(Number number, Object args)
 			throws SemanticException {
 		return "PIC9";
 	}
 
-	//OK
 	public Object visitOpAdd(OpAdd opAdd, Object args) throws SemanticException {
 		return null;
 	}
 
-	//OK
 	public Object visitOpMult(OpMult opMult, Object args)
 			throws SemanticException {
 		return null;
 	}
 
-	//OK
 	public Object visitOpRelational(OpRelational opRel, Object args)
 			throws SemanticException {
 		return null;
@@ -308,7 +328,6 @@ public class Checker implements Visitor{
 		return null;
 	}
 
-	//OK
 	public Object visitUntil(Until until, Object args) throws SemanticException {
 		until.getBooleanExpression().visit(this, args);
 		
@@ -326,7 +345,6 @@ public class Checker implements Visitor{
 		return null;
 	}
 
-	//OK
 	public Object visitVarDeclaration(VarDeclaration var, Object args)
 			throws SemanticException {
 		if (var instanceof VarPIC9Declaration) {
@@ -337,7 +355,6 @@ public class Checker implements Visitor{
 		return null;
 	}
 
-	//OK
 	public Object visitVarPIC9Declaration(VarPIC9Declaration var9, Object args)
 			throws SemanticException {
 		if(idTable.retrieve(var9.getIdentifier().spelling) != null){
@@ -348,7 +365,6 @@ public class Checker implements Visitor{
 		return null;
 	}
 
-	//OK
 	public Object visitVarPICBOOLDeclaration(VarPICBOOLDeclaration varBool,
 			Object args) throws SemanticException {
 		if(idTable.retrieve(varBool.getIdentifier().spelling) != null){
