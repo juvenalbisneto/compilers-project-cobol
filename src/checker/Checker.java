@@ -294,10 +294,10 @@ public class Checker implements Visitor{
 			} else if (!(rtn.getExpression().visit(this, args).equals(((Function) args).getTipoRetorno()))) {
 				throw new SemanticException(
 						"Valor retornado incompativel com o tipo de retorno da funcao!");
-			} else {
-				throw new SemanticException(
-						"Comando de retorno deve estar dentro de uma funcao!");
 			}
+		} else {
+			throw new SemanticException(
+					"Comando de retorno deve estar dentro de uma funcao!");
 		}
 		return null;
 	}
