@@ -19,37 +19,37 @@ public class Checker implements Visitor{
 	
 	public Object visitAccept(Accept accept, Object args)
 			throws SemanticException {
-		
+		//TODO
 		return null;
 	}
 
 	public Object visitArithmeticExpression(ArithmeticExpression expression,
 			Object args) throws SemanticException {
-		
+		//TODO
 		return null;
 	}
 
 	public Object visitArithmeticFactor(ArithmeticFactor factor, Object args)
 			throws SemanticException {
-		
+		//TODO
 		return null;
 	}
 	
 	public Object visitArithmeticParcel(ArithmeticParcel parcel, Object args)
 			throws SemanticException {
-		
+		//TODO
 		return null;
 	}
 
 	public Object visitArithmeticTerm(ArithmeticTerm term, Object args)
 			throws SemanticException {
-		
+		//TODO
 		return null;
 	}
 
 	public Object visitBooleanExpression(BooleanExpression expression,
 			Object args) throws SemanticException {
-		
+		//TODO
 		return null;
 	}
 
@@ -59,7 +59,6 @@ public class Checker implements Visitor{
 		return "PICBOOL";
 	}
 
-	//OK
 	public Object visitBreak(Break brk, Object args) throws SemanticException {
 		if (!(args instanceof Until)) {
 			throw new SemanticException("O comando BREAK só deve ser utilizado em loops");
@@ -67,7 +66,6 @@ public class Checker implements Visitor{
 		return null;
 	}
 
-	//OK
 	public Object visitCode(Code code, Object args) throws SemanticException {
 		if (code.getGlobalDataDiv() != null) {
 			code.getGlobalDataDiv().visit(this, args);
@@ -77,7 +75,6 @@ public class Checker implements Visitor{
 		return null;
 	}
 
-	//OK
 	public Object visitCommand(Command cmd, Object args)
 			throws SemanticException {
 		
@@ -102,7 +99,6 @@ public class Checker implements Visitor{
 		return null;
 	}
 
-	//OK
 	public Object visitContinue(Continue cont, Object args)
 			throws SemanticException {
 		if (!(args instanceof Until)) {
@@ -111,7 +107,6 @@ public class Checker implements Visitor{
 		return null;
 	}
 
-	//OK
 	public Object visitDisplay(Display display, Object args)
 			throws SemanticException {
 		if (display.getIdentifier() != null) {
@@ -125,17 +120,52 @@ public class Checker implements Visitor{
 
 	public Object visitExpression(Expression expression, Object args)
 			throws SemanticException {
-		
+		//TODO
 		return null;
 	}
 
 	public Object visitFunction(Function function, Object args)
 			throws SemanticException {
+		function.getID().visit(this, function);
+		idTable.openScope();
 		
+		for (Identifier param : function.getParams()) {
+			param.visit(this, args);
+		}
+		Object temp = null;
+		ArrayList<Command> cmds = new ArrayList<Command>();
+		for (Command cmd : function.getCommands()) {
+			if (cmd instanceof Return) {
+				temp = cmd;
+				cmds.add(cmd);
+				break;
+			} else
+				cmds.add(cmd);
+		}
+
+		if (cmds.size() != function.getCommands().size())
+			throw new SemanticException(
+					"Regra extra! Nao deve haver comandos apos o retorno do procedimentos ou funcoes!");
+		for (Command cmd : function.getCommands()) {
+			if (temp != null) {
+				if (temp instanceof Return)
+					cmd.visit(this, function);
+				else
+					temp = cmd.visit(this, function);
+			} else
+				temp = cmd.visit(this, function);
+		}
+
+		if (temp == null && ((!function.getTipoRetorno().equals("VOID")))) {
+			throw new SemanticException("A Funcao " + function.getID().spelling
+					+ " precisa retornar um valor do tipo "
+					+ function.getTipoRetorno());
+		}
+		
+		idTable.closeScope();
 		return null;
 	}
 
-	//OK
 	public Object visitFunctionCall(FunctionCall fcall, Object args)
 			throws SemanticException {
 		if (idTable.retrieve(fcall.getId().spelling) == null) {
@@ -168,15 +198,13 @@ public class Checker implements Visitor{
 
 	public Object visitGlobalDataDiv(GlobalDataDiv gdd, Object args)
 			throws SemanticException {
-		
+		//TODO
 		return null;
 	}
 	
-	//OK
 	public Object visitIdentifier(Identifier id, Object args)
 			throws SemanticException {
 		if (args instanceof VarDeclaration) { 
-			//TODO Verificar se tem que separar os tipos de declaracao
 			id.kind = Types.VARIAVEL;
 			id.type = ((VarDeclaration) args).getType();
 			id.declaration = args;
@@ -207,13 +235,13 @@ public class Checker implements Visitor{
 
 	public Object visitIfStatement(IfStatement ifStatement, Object args)
 			throws SemanticException {
-		
+		//TODO
 		return null;
 	}
 
 	public Object visitMainProc(MainProc main, Object args)
 			throws SemanticException {
-		
+		//TODO
 		return null;
 	}
 
@@ -242,7 +270,7 @@ public class Checker implements Visitor{
 
 	public Object visitProgramDiv(ProgramDiv pdiv, Object args)
 			throws SemanticException {
-		
+		//TODO
 		return null;
 	}
 
@@ -251,7 +279,7 @@ public class Checker implements Visitor{
 			if (((Function) args).getTipoRetorno().equals("VOID")) {
 				throw new SemanticException("Funcao VOID nao tem retorno");
 			} else if (true) {
-				
+				//TODO
 			}
 		}
 		return null;
@@ -259,7 +287,7 @@ public class Checker implements Visitor{
 
 	public Object visitTerminal(Terminal term, Object args)
 			throws SemanticException {
-		
+		//TODO
 		return null;
 	}
 

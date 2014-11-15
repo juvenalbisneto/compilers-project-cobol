@@ -15,6 +15,8 @@ public  class Identifier extends Terminal {
 			type = "variavel";
 		} else if(this.kind == Types.FUNCAO){
 			type = "funcao";
+		} else if(this.kind == Types.PARAMETRO){
+			type = "parametro";
 		}
 		return type;
 	}
