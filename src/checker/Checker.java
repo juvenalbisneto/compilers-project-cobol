@@ -278,8 +278,25 @@ public class Checker implements Visitor{
 		if (args instanceof Function) {
 			if (((Function) args).getTipoRetorno().equals("VOID")) {
 				throw new SemanticException("Funcao VOID nao tem retorno");
-			} else if (true) {
-				//TODO
+			} else if (args instanceof Function && ((ArithmeticExpression) args).getArithmeticParcel() == null) {
+				if (!(rtn.getExpression().visit(this, args).equals(((Function) args).getTipoRetorno()))) {
+					throw new SemanticException(
+							"Valor retornado incompativel com o tipo de retorno da funcao!");
+				} else {
+					Identifier id = ((ArithmeticParcel) args).getArithmeticTerm().getArithmeticFactor()
+							.getId();
+					AST temp = idTable.retrieve(id.spelling);
+					if (temp == null) {
+						throw new SemanticException("A variavel " + id.spelling
+								+ " nao foi declarada!");
+					}
+				}
+			} else if (!(rtn.getExpression().visit(this, args).equals(((Function) args).getTipoRetorno()))) {
+				throw new SemanticException(
+						"Valor retornado incompativel com o tipo de retorno da funcao!");
+			} else {
+				throw new SemanticException(
+						"Comando de retorno deve estar dentro de uma funcao!");
 			}
 		}
 		return null;
