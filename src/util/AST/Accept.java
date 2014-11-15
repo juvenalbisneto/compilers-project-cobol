@@ -6,6 +6,7 @@ public class Accept extends Command {
 		Identifier id = null;
 		Expression exp = null;
 		FunctionCall func = null;
+		Identifier idIn = null;
 
 		public Accept(Identifier id, Expression exp){
 			this.id = id;
@@ -14,6 +15,10 @@ public class Accept extends Command {
 		public Accept(Identifier id, FunctionCall func){
 			this.id = id;
 			this.func = func;
+		}
+		public Accept(Identifier id, Identifier idIn){
+			this.id = id;
+			this.idIn = idIn;
 		}
 
 		public Identifier getIdentifier(){
@@ -24,6 +29,9 @@ public class Accept extends Command {
 		}
 		public FunctionCall getFunctionCall(){
 			return this.func;
+		}
+		public Identifier getIdIn(){
+			return this.id;
 		}
 		
 		@Override

@@ -507,6 +507,7 @@ public class Parser {
 		Identifier id = null;
 		Expression exp = null;
 		FunctionCall func = null;
+		Identifier idIn = null;
 		
 		accept(TokenType.ACCEPT);
 		if(this.currentToken.getKind() == TokenType.IDENTIFIER){
@@ -520,6 +521,9 @@ public class Parser {
 		
 		if(this.currentToken.getKind() == TokenType.CALL){
 			func = parseFunctionCall();
+		} else if(this.currentToken.getKind() == TokenType.IDENTIFIER){
+			idIn = new Identifier(this.currentToken.getSpelling());
+			acceptIt();
 		} else {
 			exp = parseExpression();
 		}
@@ -527,6 +531,8 @@ public class Parser {
 		
 		if(func != null){
 			return new Accept(id, func);
+		} else if(idIn != null){
+			return new Accept(id, idIn);
 		} else {
 			return new Accept(id, exp);
 		}
