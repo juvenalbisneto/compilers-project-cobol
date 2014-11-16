@@ -10,15 +10,12 @@ public class BooleanExpression extends Expression {
 	BooleanExpression bexpression_l = null;
 	ArithmeticExpression aexpression_l = null;
 	Identifier id_l = null;
-	Number numero_l = null;
 
 	BooleanExpression bexpression_r = null;
 	ArithmeticExpression aexpression_r = null;
 	Identifier id_r = null;
-	Number numero_r = null;
 
-
-
+	
 	public BooleanExpression(BooleanExpression bexpression_l,OpRelational opr, BooleanExpression bexpression_r){
 		this.bexpression_l=bexpression_l;
 		this.opr=opr;
@@ -33,11 +30,6 @@ public class BooleanExpression extends Expression {
 		this.bexpression_l=bexpression_l;
 		this.opr=opr;
 		this.id_r=id_r;
-	}
-	public BooleanExpression(BooleanExpression bexpression_l,OpRelational opr, Number numero_r){
-		this.bexpression_l=bexpression_l;
-		this.opr=opr;
-		this.numero_r=numero_r;
 	}
 
 	public BooleanExpression(ArithmeticExpression aexpression_l,OpRelational opr, BooleanExpression bexpression_r){
@@ -56,11 +48,6 @@ public class BooleanExpression extends Expression {
 		this.opr=opr;
 		this.id_r=id_r;
 	}
-	public BooleanExpression(ArithmeticExpression aexpression_l,OpRelational opr, Number numero_r){
-		this.aexpression_l=aexpression_l;
-		this.opr=opr;
-		this.numero_r=numero_r;
-	}
 
 
 	public BooleanExpression(Identifier id_l,OpRelational opr, BooleanExpression bexpression_r){
@@ -78,40 +65,11 @@ public class BooleanExpression extends Expression {
 		this.opr=opr;
 		this.id_r=id_r;
 	}
-	public BooleanExpression(Identifier id_l,OpRelational opr, Number numero_r){
-		this.id_l=id_l;
-		this.opr=opr;
-		this.numero_r=numero_r;
-	}
-
-
-	public BooleanExpression(Number numero_l,OpRelational opr, BooleanExpression bexpression_r){
-		this.numero_l=numero_l;
-		this.opr=opr;
-		this.bexpression_r=bexpression_r;
-	}
-	public BooleanExpression(Number numero_l,OpRelational opr, ArithmeticExpression aexpression_r){
-		this.numero_l=numero_l;
-		this.opr=opr;
-		this.aexpression_r=aexpression_r;
-	}
-	public BooleanExpression(Number numero_l,OpRelational opr, Identifier id_r){
-		this.numero_l=numero_l;
-		this.opr=opr;
-		this.id_r=id_r;
-	}
-	public BooleanExpression(Number numero_l,OpRelational opr, Number numero_r){
-		this.numero_l=numero_l;
-		this.opr=opr;
-		this.numero_r=numero_r;
-	}
 
 
 	public BooleanExpression(BoolValue bvalue){
 		this.bvalue=bvalue;
 	}
-
-
 
 	public OpRelational getOpRelational(){
 		return this.opr;
@@ -136,12 +94,6 @@ public class BooleanExpression extends Expression {
 	}
 	public Identifier getIdentifier_r(){
 		return this.id_r;
-	}
-	public Number getNumber_l(){
-		return this.numero_l;
-	}
-	public Number getNumber_r(){
-		return this.numero_r;
 	}
 	
 	@Override

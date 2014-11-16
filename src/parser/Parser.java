@@ -411,42 +411,26 @@ public class Parser {
 					return new BooleanExpression(bexpression_l, opr, bexpression_r);
 				} else if(aexpression_l != null){
 					return new BooleanExpression(aexpression_l, opr, bexpression_r);
-				} else if(id_l != null){
+				} else {
 					return new BooleanExpression(id_l, opr, bexpression_r);
-				} else{
-					return new BooleanExpression(numero_l, opr, bexpression_r);
-				} 
+				}
 			} else if(aexpression_r != null){
 				if(bexpression_l != null){
 					return new BooleanExpression(bexpression_l, opr, aexpression_r);
 				} else if(aexpression_l != null){
 					return new BooleanExpression(aexpression_l, opr, aexpression_r);
-				} else if(id_l != null){
+				} else {
 					return new BooleanExpression(id_l, opr, aexpression_r);
-				} else{
-					return new BooleanExpression(numero_l, opr, aexpression_r);
-				} 
-			} else if(id_r != null){
+				}
+			} else {
 				if(bexpression_l != null){
 					return new BooleanExpression(bexpression_l, opr, id_r);
 				} else if(aexpression_l != null){
 					return new BooleanExpression(aexpression_l, opr, id_r);
-				} else if(id_l != null){
+				} else {
 					return new BooleanExpression(id_l, opr, id_r);
-				} else{
-					return new BooleanExpression(numero_l, opr, id_r);
-				} 
-			} else{
-				if(bexpression_l != null){
-					return new BooleanExpression(bexpression_l, opr, numero_r);
-				} else if(aexpression_l != null){
-					return new BooleanExpression(aexpression_l, opr, numero_r);
-				} else if(id_l != null){
-					return new BooleanExpression(id_l, opr, numero_r);
-				} else{
-					return new BooleanExpression(numero_l, opr, numero_r);
-				} 
-			} 
+				}
+			}
 		}
 	}
 	
