@@ -171,13 +171,6 @@ public class Checker implements Visitor{
 		return null;
 	}
 
-
-	public Object visitExpression(Expression expression, Object args)
-			throws SemanticException {
-		//TODO
-		return null;
-	}
-
 	//TODO Analisar parte comentada pra ver se quer essa regra
 	public Object visitFunction(Function function, Object args)
 			throws SemanticException {

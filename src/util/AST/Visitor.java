@@ -15,7 +15,6 @@ public interface Visitor {
 	public Object visitCommand				(Command cmd, Object args)						throws SemanticException;
 	public Object visitContinue				(Continue cont, Object args)					throws SemanticException;
 	public Object visitDisplay				(Display display, Object args)					throws SemanticException;
-	public Object visitExpression			(Expression expression, Object args)			throws SemanticException;
 	public Object visitFunction				(Function function, Object args)				throws SemanticException;
 	public Object visitFunctionCall			(FunctionCall fcall, Object args)				throws SemanticException;
 	public Object visitGlobalDataDiv		(GlobalDataDiv gdd, Object args)				throws SemanticException;
