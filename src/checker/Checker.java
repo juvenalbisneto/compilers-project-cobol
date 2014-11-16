@@ -212,15 +212,15 @@ public class Checker implements Visitor{
 		}
 		
 		Object temp = null;
-		ArrayList<Command> cmds = new ArrayList<Command>();
-		for (Command cmd : function.getCommands()) {
-			if (cmd instanceof Return) {
-				temp = cmd;
-				cmds.add(cmd);
+//		ArrayList<Command> cmds = new ArrayList<Command>();
+//		for (Command cmd : function.getCommands()) {
+//			if (cmd instanceof Return) {
+//				temp = cmd;
+//				cmds.add(cmd);
 //				break;
-			} else
-				cmds.add(cmd);
-		}
+//			} else
+//				cmds.add(cmd);
+//		}
 
 //		if (cmds.size() != function.getCommands().size())
 //			throw new SemanticException(
@@ -346,7 +346,21 @@ public class Checker implements Visitor{
 
 	public Object visitMainProc(MainProc main, Object args)
 			throws SemanticException {
-		//TODO
+		idTable.openScope();
+		
+		for (VarDeclaration vDec : main.getVarDeclarations()) {
+			vDec.visit(this, main);
+		}
+		
+		for (Command cmd : main.getCommands()) {
+			if (cmd instanceof Return) {
+				throw new SemanticException("Erro! A Main nao deve possuir retorno");
+			} else {
+				cmd.visit(this, main);
+			}
+		}
+		
+		idTable.closeScope();
 		return null;
 	}
 

@@ -14,11 +14,11 @@ public class MainProc extends AST {
 		this.cmds = cmds;
 	}
 
-	public ArrayList<VarDeclaration> getArrayVarDeclarations(){
+	public ArrayList<VarDeclaration> getVarDeclarations(){
 		return this.varD;
 	}
 
-	public ArrayList<Command> getArrayCommands(){
+	public ArrayList<Command> getCommands(){
 		return this.cmds;
 	}
 
