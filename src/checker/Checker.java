@@ -198,7 +198,7 @@ public class Checker implements Visitor{
 		return null;
 	}
 
-	//TODO Analisar parte comentada pra ver se quer essa regra
+	//TODO Analisar parte comentada pra ver se quer essa regra (nao ter comandos apos um retorno)
 	public Object visitFunction(Function function, Object args)
 			throws SemanticException {
 		function.getID().visit(this, function);
