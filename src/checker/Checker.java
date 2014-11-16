@@ -16,10 +16,32 @@ public class Checker implements Visitor{
 		code.visit(this, null);
 	}
 	
-	
 	public Object visitAccept(Accept accept, Object args)
 			throws SemanticException {
-		//TODO
+		if(idTable.retrieve(accept.getIdentifier().spelling) == null){
+			throw new SemanticException("Variavel " + accept.getIdentifier().spelling + " nao declarada!");
+		} else {
+			if (accept.getIdIn() != null) {
+				if(!accept.getIdIn().visit(this, args).equals(accept.getIdentifier().type)){
+					throw new SemanticException(
+							"Tipos incompativeis. O valor atribuido nao eh do tipo da variavel!");
+				}
+			} else if (accept.getFunctionCall() != null) {
+				if(!accept.getFunctionCall().visit(this, args).equals(accept.getIdentifier().type)){
+					throw new SemanticException(
+							"Tipos incompativeis. O valor atribuido nao eh do tipo da variavel!");
+				}
+			} else if (accept.getExpression() != null) {
+				if(!accept.getFunctionCall().visit(this, args).equals(accept.getIdentifier().type)){
+					throw new SemanticException(
+							"Tipos incompativeis. O valor atribuido nao eh do tipo da variavel!");
+				}
+			} else {
+				throw new SemanticException("Valor nao informado!");
+			}
+			
+		}
+		
 		return null;
 	}
 
@@ -123,6 +145,7 @@ public class Checker implements Visitor{
 		return null;
 	}
 
+	//TODO Analisar parte comentada pra ver se quer essa regra
 	public Object visitFunction(Function function, Object args)
 			throws SemanticException {
 		function.getID().visit(this, function);
@@ -137,14 +160,14 @@ public class Checker implements Visitor{
 			if (cmd instanceof Return) {
 				temp = cmd;
 				cmds.add(cmd);
-				break;
+//				break;
 			} else
 				cmds.add(cmd);
 		}
 
-		if (cmds.size() != function.getCommands().size())
-			throw new SemanticException(
-					"Regra extra! Nao deve haver comandos apos o retorno do procedimentos ou funcoes!");
+//		if (cmds.size() != function.getCommands().size())
+//			throw new SemanticException(
+//					"Nao deve haver comandos apos o retorno do procedimentos ou funcoes! [Regra extra]");
 		for (Command cmd : function.getCommands()) {
 			if (temp != null) {
 				if (temp instanceof Return)

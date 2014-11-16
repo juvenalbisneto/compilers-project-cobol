@@ -9,16 +9,16 @@ public  class Identifier extends Terminal {
 		super(spelling); 
 	}
 	
-	public String getType(){
-		String type = "";
+	public String getKind(){
+		String kind = "";
 		if(this.kind == Types.VARIAVEL){
-			type = "variavel";
+			kind = "variavel";
 		} else if(this.kind == Types.FUNCAO){
-			type = "funcao";
+			kind = "funcao";
 		} else if(this.kind == Types.PARAMETRO){
-			type = "parametro";
+			kind = "parametro";
 		}
-		return type;
+		return kind;
 	}
 
 

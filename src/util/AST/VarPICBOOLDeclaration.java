@@ -8,6 +8,7 @@ public class VarPICBOOLDeclaration extends VarDeclaration {
 	public VarPICBOOLDeclaration(Identifier id){
 		super("PICBOOL");
 		this.id = id;
+		this.bool = new BoolValue("FALSE");
 	}
 	public VarPICBOOLDeclaration(Identifier id, BoolValue bool){
 		super("PICBOOL");
