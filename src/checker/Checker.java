@@ -315,7 +315,11 @@ public class Checker implements Visitor{
 
 	public Object visitProgramDiv(ProgramDiv pdiv, Object args)
 			throws SemanticException {
-		//TODO
+		for (Function function : pdiv.getArrayFunction()) {
+			function.visit(this, null);
+		}
+		pdiv.getMainProc().visit(this, null);
+		
 		return null;
 	}
 
