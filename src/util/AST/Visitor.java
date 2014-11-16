@@ -6,8 +6,8 @@ public interface Visitor {
 	public Object visitAccept  				(Accept accept, Object args) 					throws SemanticException;
 	public Object visitArithmeticExpression	(ArithmeticExpression expression, Object args)	throws SemanticException;
 	public Object visitArithmeticParcel  	(ArithmeticParcel parcel, Object args) 			throws SemanticException;
-	public Object visitArithmeticFactor  	(ArithmeticFactor factor, Object args) 			throws SemanticException;
 	public Object visitArithmeticTerm  		(ArithmeticTerm term, Object args)				throws SemanticException;
+	public Object visitArithmeticFactor  	(ArithmeticFactor factor, Object args) 			throws SemanticException;
 	public Object visitBooleanExpression	(BooleanExpression expression, Object args)		throws SemanticException;
 	public Object visitBoolValue			(BoolValue bool, Object args)					throws SemanticException;
 	public Object visitBreak				(Break brk, Object args)						throws SemanticException;

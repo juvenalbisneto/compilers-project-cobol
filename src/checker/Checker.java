@@ -47,26 +47,59 @@ public class Checker implements Visitor{
 
 	public Object visitArithmeticExpression(ArithmeticExpression expression,
 			Object args) throws SemanticException {
-		//TODO
-		return null;
+		if (expression.getNumber() != null) {
+			return expression.getNumber().visit(this, args);
+		} else {
+			return expression.getArithmeticParcel().visit(this, args);
+		}
 	}
 	
 	public Object visitArithmeticParcel(ArithmeticParcel parcel, Object args)
 			throws SemanticException {
-		//TODO
-		return null;
-	}
-
-	public Object visitArithmeticFactor(ArithmeticFactor factor, Object args)
-			throws SemanticException {
-		//TODO
-		return null;
+		ArithmeticTerm term;
+		ArithmeticParcel aExp;
+		term = parcel.getArithmeticTerm();
+		aExp = parcel.getArithmeticParcel();
+		Object temp = term.visit(this, args);
+		if (aExp == null) {
+			return term.visit(this, args);
+		} else if (aExp.visit(this, args).equals(temp)) {
+			return temp;
+		} else
+			throw new SemanticException("Tipos incompativeis. Termo eh "
+					+ term.visit(this, args) + " e Expressao eh "
+					+ aExp.visit(this, args));
 	}
 
 	public Object visitArithmeticTerm(ArithmeticTerm term, Object args)
 			throws SemanticException {
-		//TODO
-		return null;
+		ArithmeticTerm termo;
+		ArithmeticFactor fac;
+		fac   = term.getArithmeticFactor();
+		termo = term.getArithmeticTerm();
+		Object temp = fac.visit(this, args);
+		if (termo == null) {
+			return fac.visit(this, args);
+		} else if (termo.visit(this, args).equals(temp)) {
+			return temp;
+		} else {
+			throw new SemanticException("Tipos incompativeis. Fator eh "
+					+ fac.visit(this, args) + " e Termo eh "
+					+ termo.visit(this, args));
+		}
+	}
+	
+	public Object visitArithmeticFactor(ArithmeticFactor factor, Object args)
+			throws SemanticException {
+		if (factor.getId() != null) {
+			return factor.getId().visit(this, factor);
+		} else if (factor.getNumber() != null) {
+			return "PIC9";
+		} else if (factor.getArithmeticParcel() != null) {
+			return factor.getArithmeticParcel().visit(this, args);
+		} else {
+			throw new SemanticException("Erro no visitArithmeticFactor");
+		}
 	}
 
 	public Object visitBooleanExpression(BooleanExpression expression,
