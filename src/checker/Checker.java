@@ -50,14 +50,14 @@ public class Checker implements Visitor{
 		//TODO
 		return null;
 	}
-
-	public Object visitArithmeticFactor(ArithmeticFactor factor, Object args)
+	
+	public Object visitArithmeticParcel(ArithmeticParcel parcel, Object args)
 			throws SemanticException {
 		//TODO
 		return null;
 	}
-	
-	public Object visitArithmeticParcel(ArithmeticParcel parcel, Object args)
+
+	public Object visitArithmeticFactor(ArithmeticFactor factor, Object args)
 			throws SemanticException {
 		//TODO
 		return null;
@@ -220,7 +220,9 @@ public class Checker implements Visitor{
 
 	public Object visitGlobalDataDiv(GlobalDataDiv gdd, Object args)
 			throws SemanticException {
-		//TODO
+		for (VarDeclaration vDec : gdd.getVarDeclaration()) {
+			vDec.visit(this, null);
+		}
 		return null;
 	}
 	
