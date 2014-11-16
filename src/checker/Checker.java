@@ -154,6 +154,10 @@ public class Checker implements Visitor{
 		for (Identifier param : function.getParams()) {
 			param.visit(this, args);
 		}
+		for (VarDeclaration vDec : function.getVarDeclarations()) {
+			vDec.visit(this, function);
+		}
+		
 		Object temp = null;
 		ArrayList<Command> cmds = new ArrayList<Command>();
 		for (Command cmd : function.getCommands()) {
