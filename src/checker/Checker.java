@@ -9,7 +9,6 @@ import util.symbolsTable.IdentificationTable;
 
 public class Checker implements Visitor{
 	private IdentificationTable idTable;
-	private int contadorParametros = 0;
 	
 	public void check(Code code) throws SemanticException {
 		idTable = new IdentificationTable();
@@ -104,8 +103,36 @@ public class Checker implements Visitor{
 
 	public Object visitBooleanExpression(BooleanExpression expression,
 			Object args) throws SemanticException {
-		//TODO
-		return null;
+		
+		String op = expression.getOpRelational().spelling;
+		if (expression.getBooleanExpression_l() != null || 
+				(expression.getIdentifier_l() != null && expression.getIdentifier_l().type.equals("PICBOOL"))) {
+			if(op.equals("=") || op.equals("<>")){
+				if (expression.getBooleanExpression_r() != null){
+					return "PICBOOL";
+				} else if (expression.getIdentifier_r() != null 
+						&& expression.getIdentifier_r().type.equals("PICBOOL")) {
+					return "PICBOOL";
+				} else {
+					throw new SemanticException("Erro! Nao se pode comparar um booleano com um numero");
+				}
+			} else {
+				throw new SemanticException("Erro! Tipo de operador invalido");
+			}
+		} else if (expression.getArithmeticExpression_l() != null || 
+				(expression.getIdentifier_l() != null && expression.getIdentifier_l().type.equals("PIC9"))) {
+			if (expression.getArithmeticExpression_r() != null
+				&& expression.getArithmeticExpression_r().visit(this, args).equals("PIC9")) {
+				return "PICBOOL";
+			} else if (expression.getIdentifier_r() != null 
+					&& expression.getIdentifier_r().type.equals("PIC9")) {
+				return "PICBOOL";
+			} else {
+				throw new SemanticException("Erro! Nao se pode comparar um numero com um booleano");
+			}
+		} else {
+			throw new SemanticException("Erro no visitBooleanExpression!");
+		}
 	}
 
 	public Object visitBoolValue(BoolValue bool, Object args)
@@ -267,7 +294,6 @@ public class Checker implements Visitor{
 			id.kind = Types.FUNCAO;
 			id.type = ((Function) args).getTipoRetorno();
 			id.declaration = args;
-			this.contadorParametros++;
 			idTable.enter(id.spelling, (AST) args);
 		} else if (args instanceof ArithmeticFactor){
 			if (idTable.retrieve(((ArithmeticFactor) args).getId().spelling) == null
@@ -378,12 +404,6 @@ public class Checker implements Visitor{
 			throw new SemanticException(
 					"Comando de retorno deve estar dentro de uma funcao!");
 		}
-		return null;
-	}
-
-	public Object visitTerminal(Terminal term, Object args)
-			throws SemanticException {
-		//TODO
 		return null;
 	}
 

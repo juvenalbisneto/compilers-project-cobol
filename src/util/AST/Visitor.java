@@ -27,7 +27,6 @@ public interface Visitor {
 	public Object visitOpRelational			(OpRelational opRel, Object args)				throws SemanticException;
 	public Object visitProgramDiv			(ProgramDiv pdiv, Object args)					throws SemanticException;
 	public Object visitReturn				(Return rtn, Object args)						throws SemanticException;
-	public Object visitTerminal				(Terminal term, Object args)					throws SemanticException;
 	public Object visitUntil				(Until until, Object args)						throws SemanticException;
 	public Object visitVarDeclaration		(VarDeclaration var, Object args)				throws SemanticException;
 	public Object visitVarPIC9Declaration	(VarPIC9Declaration var9, Object args)			throws SemanticException;
