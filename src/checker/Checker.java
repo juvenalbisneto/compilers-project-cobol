@@ -62,7 +62,7 @@ public class Checker implements Visitor{
 		Object temp = term.visit(this, args);
 		if (aExp == null) {
 			return term.visit(this, args);
-		} else if (aExp.visit(this, args).equals(temp)) {
+		} else if (aExp.visit(this, args) != null && aExp.visit(this, args).equals(temp)) {
 			return temp;
 		} else
 			throw new SemanticException("Tipos incompativeis. Termo eh "
@@ -79,7 +79,7 @@ public class Checker implements Visitor{
 		Object temp = fac.visit(this, args);
 		if (termo == null) {
 			return fac.visit(this, args);
-		} else if (termo.visit(this, args).equals(temp)) {
+		} else if (termo.visit(this, args) != null && termo.visit(this, args).equals(temp)) {
 			return temp;
 		} else {
 			throw new SemanticException("Tipos incompativeis. Fator eh "
@@ -238,7 +238,7 @@ public class Checker implements Visitor{
 					temp = cmd.visit(this, function);
 			}
 
-		if (temp == null && ((!function.getTipoRetorno().equals("VOID")))) {
+		if (temp == null && ((function.getTipoRetorno() != null && !function.getTipoRetorno().equals("VOID")))) {
 			throw new SemanticException("A Funcao " + function.getID().spelling
 					+ " precisa retornar um valor do tipo "
 					+ function.getTipoRetorno());
@@ -267,7 +267,7 @@ public class Checker implements Visitor{
 				} else {
 					ArrayList<String> params = ((Function) temp).getParamsTypes();
 					for (int i = 0; i < params.size(); i++) {
-						if (!params.get(i).equals(fcall.getParams().get(i).type)) {
+						if (params.get(i) != null && !params.get(i).equals(fcall.getParams().get(i).type)) {
 							throw new SemanticException(
 									"Tipo dos parametros informados não correspondem ao tipo esperado");
 						}
@@ -358,15 +358,15 @@ public class Checker implements Visitor{
 			for (VarDeclaration vDec : main.getVarDeclarations()) {
 				vDec.visit(this, main);
 			}
-		
+
 		if(main.getCommands() != null)
-		for (Command cmd : main.getCommands()) {
-			if (cmd instanceof Return) {
-				throw new SemanticException("Erro! A Main nao deve possuir retorno");
-			} else {
-				cmd.visit(this, main);
+			for (Command cmd : main.getCommands()) {
+				if (cmd instanceof Return) {
+					throw new SemanticException("Erro! A Main nao deve possuir retorno");
+				} else {
+					cmd.visit(this, main);
+				}
 			}
-		}
 		
 		idTable.closeScope();
 		return null;
@@ -405,10 +405,10 @@ public class Checker implements Visitor{
 
 	public Object visitReturn(Return rtn, Object args) throws SemanticException {
 		if (args instanceof Function) {
-			if (((Function) args).getTipoRetorno().equals("VOID")) {
+			if (((Function) args).getTipoRetorno() != null && ((Function) args).getTipoRetorno().equals("VOID")) {
 				throw new SemanticException("Funcao VOID nao tem retorno");
 			} else if (args instanceof Function && ((ArithmeticExpression) args).getArithmeticParcel() == null) {
-				if (!(rtn.getExpression().visit(this, args).equals(((Function) args).getTipoRetorno()))) {
+				if (rtn.getExpression().visit(this, args) != null && !(rtn.getExpression().visit(this, args).equals(((Function) args).getTipoRetorno()))) {
 					throw new SemanticException(
 							"Valor retornado incompativel com o tipo de retorno da funcao!");
 				} else {
@@ -420,7 +420,7 @@ public class Checker implements Visitor{
 								+ " nao foi declarada!");
 					}
 				}
-			} else if (!(rtn.getExpression().visit(this, args).equals(((Function) args).getTipoRetorno()))) {
+			} else if (rtn.getExpression().visit(this, args) != null && !(rtn.getExpression().visit(this, args).equals(((Function) args).getTipoRetorno()))) {
 				throw new SemanticException(
 						"Valor retornado incompativel com o tipo de retorno da funcao!");
 			}
@@ -433,17 +433,18 @@ public class Checker implements Visitor{
 
 	public Object visitUntil(Until until, Object args) throws SemanticException {
 		until.getBooleanExpression().visit(this, args);
-		
+
 		idTable.openScope();
-		for(Command cmd : until.getCommand()){
-			if (cmd instanceof Break) {
-				visitBreak((Break) cmd, args);
-			} else if (cmd instanceof Continue) {
-				visitContinue((Continue)cmd, args);
-			} else {
-				cmd.visit(this, until);
+		if(until.getCommand() != null)
+			for(Command cmd : until.getCommand()){
+				if (cmd instanceof Break) {
+					visitBreak((Break) cmd, args);
+				} else if (cmd instanceof Continue) {
+					visitContinue((Continue)cmd, args);
+				} else {
+					cmd.visit(this, until);
+				}
 			}
-		}
 		idTable.closeScope();
 		return null;
 	}
