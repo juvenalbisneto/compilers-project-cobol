@@ -204,12 +204,14 @@ public class Checker implements Visitor{
 		function.getID().visit(this, function);
 		idTable.openScope();
 		
-		for (Identifier param : function.getParams()) {
-			param.visit(this, args);
-		}
-		for (VarDeclaration vDec : function.getVarDeclarations()) {
-			vDec.visit(this, function);
-		}
+		if(function.getParams() != null)
+			for (Identifier param : function.getParams()) {
+				param.visit(this, args);
+			}
+		if(function.getVarDeclarations() != null)
+			for (VarDeclaration vDec : function.getVarDeclarations()) {
+				vDec.visit(this, function);
+			}
 		
 		Object temp = null;
 //		ArrayList<Command> cmds = new ArrayList<Command>();
@@ -225,15 +227,16 @@ public class Checker implements Visitor{
 //		if (cmds.size() != function.getCommands().size())
 //			throw new SemanticException(
 //					"Nao deve haver comandos apos o retorno do procedimentos ou funcoes! [Regra extra]");
-		for (Command cmd : function.getCommands()) {
-			if (temp != null) {
-				if (temp instanceof Return)
-					cmd.visit(this, function);
-				else
+		if(function.getCommands() != null)
+			for (Command cmd : function.getCommands()) {
+				if (temp != null) {
+					if (temp instanceof Return)
+						cmd.visit(this, function);
+					else
+						temp = cmd.visit(this, function);
+				} else
 					temp = cmd.visit(this, function);
-			} else
-				temp = cmd.visit(this, function);
-		}
+			}
 
 		if (temp == null && ((!function.getTipoRetorno().equals("VOID")))) {
 			throw new SemanticException("A Funcao " + function.getID().spelling
@@ -277,12 +280,13 @@ public class Checker implements Visitor{
 
 	public Object visitGlobalDataDiv(GlobalDataDiv gdd, Object args)
 			throws SemanticException {
-		for (VarDeclaration vDec : gdd.getVarDeclaration()) {
-			vDec.visit(this, null);
-		}
+		if(gdd.getVarDeclaration() != null)
+			for (VarDeclaration vDec : gdd.getVarDeclaration()) {
+				vDec.visit(this, null);
+			}
 		return null;
 	}
-	
+
 	public Object visitIdentifier(Identifier id, Object args)
 			throws SemanticException {
 		if (args instanceof VarDeclaration) { 
@@ -321,21 +325,23 @@ public class Checker implements Visitor{
 		if(ifStatement.getBooleanExpression() instanceof BooleanExpression){
 			((BooleanExpression) ifStatement.getBooleanExpression()).visit(this, args);
 			idTable.openScope();
-			for (Command ifCmd : ifStatement.getCommandIF()) {
-				if (ifCmd instanceof Break) {
-					break;
-				} else
-					temp = ifCmd.visit(this, args);
-			}
-			idTable.closeScope();
-			
-			for (Command elseCmd : ifStatement.getCommandElse()) {
-				if (elseCmd instanceof Break) {
-					break;
-				} else {
-					elseCmd.visit(this, args);
+			if(ifStatement.getCommandIF() != null)
+				for (Command ifCmd : ifStatement.getCommandIF()) {
+					if (ifCmd instanceof Break) {
+						break;
+					} else
+						temp = ifCmd.visit(this, args);
 				}
-			}
+			idTable.closeScope();
+			idTable.openScope();
+			if(ifStatement.getCommandElse() != null)
+				for (Command elseCmd : ifStatement.getCommandElse()) {
+					if (elseCmd instanceof Break) {
+						break;
+					} else {
+						elseCmd.visit(this, args);
+					}
+				}
 			idTable.closeScope();
 		} else {
 			throw new SemanticException("Expressao da condicao do IF nao e booleana!");
@@ -347,11 +353,13 @@ public class Checker implements Visitor{
 	public Object visitMainProc(MainProc main, Object args)
 			throws SemanticException {
 		idTable.openScope();
+
+		if(main.getVarDeclarations() != null)
+			for (VarDeclaration vDec : main.getVarDeclarations()) {
+				vDec.visit(this, main);
+			}
 		
-		for (VarDeclaration vDec : main.getVarDeclarations()) {
-			vDec.visit(this, main);
-		}
-		
+		if(main.getCommands() != null)
 		for (Command cmd : main.getCommands()) {
 			if (cmd instanceof Return) {
 				throw new SemanticException("Erro! A Main nao deve possuir retorno");
@@ -385,11 +393,13 @@ public class Checker implements Visitor{
 
 	public Object visitProgramDiv(ProgramDiv pdiv, Object args)
 			throws SemanticException {
-		for (Function function : pdiv.getArrayFunction()) {
-			function.visit(this, null);
+		if(pdiv.getArrayFunction() != null){
+			for (Function function : pdiv.getArrayFunction()) {
+				function.visit(this, null);
+			}
 		}
 		pdiv.getMainProc().visit(this, null);
-		
+
 		return null;
 	}
 
