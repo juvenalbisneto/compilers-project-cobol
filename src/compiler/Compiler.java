@@ -1,5 +1,6 @@
 package compiler;
-
+import checker.Checker;
+import checker.SemanticException;
 import parser.Parser;
 import parser.SyntacticException;
 import scanner.LexicalException;
@@ -7,6 +8,7 @@ import scanner.Scanner;
 import scanner.Token;
 import scanner.Token.TokenType;
 import util.AST.AST;
+import util.AST.Code;
 import util.symbolsTable.IdentificationTable;
 
 /**
@@ -25,8 +27,9 @@ public class Compiler {
 	 * Compiler start point
 	 * @param args - none
 	 * @throws LexicalException 
+	 * @throws SemanticException 
 	 */
-	public static void main(String[] args) throws LexicalException {
+	public static void main(String[] args) throws LexicalException, SemanticException {
 		testScanner();
 		// Initializes the identification table with the reserved words 
 		Compiler.initIdentificationTable();
@@ -48,6 +51,20 @@ public class Compiler {
 			// Shows the syntactic/lexical error stack trace 
 			e.printStackTrace();
 		}
+				
+		try {			
+			Checker ckr = new Checker();
+			ckr.check((Code) astRoot);			
+			
+			System.out.println("\n-- Checker--");
+			
+		} catch (SemanticException e) {
+			// Shows the syntactic/lexical error stack trace 
+			e.printStackTrace();
+		}
+		
+		
+		
 	}
 	
 	/**
