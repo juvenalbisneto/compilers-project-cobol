@@ -7,7 +7,6 @@ import scanner.Scanner;
 import scanner.Token;
 import scanner.Token.TokenType;
 import util.AST.*;
-import util.AST.AST.Types;
 import util.AST.Number;
 
 /**
@@ -363,20 +362,15 @@ public class Parser {
 			BooleanExpression bexpression_l = null;
 			ArithmeticExpression aexpression_l = null;
 			Identifier id_l = null;
-			Number numero_l = null;
 			OpRelational opr = null;
 			BooleanExpression bexpression_r = null;
 			ArithmeticExpression aexpression_r = null;
 			Identifier id_r = null;
-			Number numero_r = null;
 			
 			accept(TokenType.L_PAR);
 			
 			if(this.currentToken.getKind() == TokenType.IDENTIFIER){
 				id_l = new Identifier(this.currentToken.getSpelling());
-				acceptIt();
-			} else if(this.currentToken.getKind() == TokenType.NUMBER){
-				numero_l = new Number(this.currentToken.getSpelling());
 				acceptIt();
 			} else if(this.currentToken.getKind() == TokenType.COMPUTE){
 				aexpression_l = parseArithmeticExpression();
@@ -393,9 +387,6 @@ public class Parser {
 			
 			if(this.currentToken.getKind() == TokenType.IDENTIFIER){
 				id_r = new Identifier(this.currentToken.getSpelling());
-				acceptIt();
-			} else if(this.currentToken.getKind() == TokenType.NUMBER){
-				numero_r = new Number(this.currentToken.getSpelling());
 				acceptIt();
 			} else if(this.currentToken.getKind() == TokenType.COMPUTE){
 				aexpression_r = parseArithmeticExpression();
