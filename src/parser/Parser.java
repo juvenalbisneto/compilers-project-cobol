@@ -372,7 +372,7 @@ public class Parser {
 			if(this.currentToken.getKind() == TokenType.IDENTIFIER){
 				id_l = new Identifier(this.currentToken.getSpelling());
 				acceptIt();
-			} else if(this.currentToken.getKind() == TokenType.COMPUTE){
+			} else if(this.currentToken.getKind() == TokenType.COMPUTE || this.currentToken.getKind() == TokenType.NUMBER){
 				aexpression_l = parseArithmeticExpression();
 			} else {
 				bexpression_l = parseBooleanExpression();
@@ -388,7 +388,7 @@ public class Parser {
 			if(this.currentToken.getKind() == TokenType.IDENTIFIER){
 				id_r = new Identifier(this.currentToken.getSpelling());
 				acceptIt();
-			} else if(this.currentToken.getKind() == TokenType.COMPUTE){
+			} else if(this.currentToken.getKind() == TokenType.COMPUTE || this.currentToken.getKind() == TokenType.NUMBER){
 				aexpression_r = parseArithmeticExpression();
 			} else {
 				bexpression_r = parseBooleanExpression();
