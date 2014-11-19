@@ -55,36 +55,32 @@ public class Checker implements Visitor{
 	
 	public Object visitArithmeticParcel(ArithmeticParcel parcel, Object args)
 			throws SemanticException {
-		ArithmeticTerm term;
-		ArithmeticParcel aExp;
-		term = parcel.getArithmeticTerm();
-		aExp = parcel.getArithmeticParcel();
+		ArithmeticTerm term = parcel.getArithmeticTerm();
+		ArithmeticParcel aExp = parcel.getArithmeticParcel();
 		Object temp = term.visit(this, args);
 		if (aExp == null) {
 			return term.visit(this, args);
 		} else if (aExp.visit(this, args) != null && aExp.visit(this, args).equals(temp)) {
 			return temp;
 		} else
-			throw new SemanticException("Tipos incompativeis. Termo eh "
-					+ term.visit(this, args) + " e Expressao eh "
-					+ aExp.visit(this, args));
+			throw new SemanticException("Tipos incompativeis ( "
+					+ term.visit(this, args) + " - "
+					+ aExp.visit(this, args) + " )");
 	}
 
 	public Object visitArithmeticTerm(ArithmeticTerm term, Object args)
 			throws SemanticException {
-		ArithmeticTerm termo;
-		ArithmeticFactor fac;
-		fac   = term.getArithmeticFactor();
-		termo = term.getArithmeticTerm();
+		ArithmeticTerm termo = term.getArithmeticTerm();
+		ArithmeticFactor fac = term.getArithmeticFactor();
 		Object temp = fac.visit(this, args);
 		if (termo == null) {
 			return fac.visit(this, args);
 		} else if (termo.visit(this, args) != null && termo.visit(this, args).equals(temp)) {
 			return temp;
 		} else {
-			throw new SemanticException("Tipos incompativeis. Fator eh "
-					+ fac.visit(this, args) + " e Termo eh "
-					+ termo.visit(this, args));
+			throw new SemanticException("Tipos incompativeis ( "
+					+ fac.visit(this, args) + " - "
+					+ termo.visit(this, args) + " )");
 		}
 	}
 	
