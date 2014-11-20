@@ -296,20 +296,24 @@ public class Checker implements Visitor{
 			id.kind = Types.VARIAVEL;
 			id.type = ((VarDeclaration) args).getType();
 			id.declaration = args;
-			idTable.enter(id.spelling, (AST)args); 
+			idTable.enter(id.spelling, (AST)args);
 		} else if (args instanceof Function) {
 			id.kind = Types.FUNCAO;
 			id.type = ((Function) args).getTipoRetorno();
 			id.declaration = args;
 			idTable.enter(id.spelling, (AST) args);
 		} else if (args instanceof ArithmeticFactor){
-			if (idTable.retrieve(((ArithmeticFactor) args).getId().spelling) == null
-					&& ((ArithmeticFactor) args).getId() != null) {
+			Object temp = idTable.retrieve(((ArithmeticFactor) args).getId().spelling);
+			if (temp == null && ((ArithmeticFactor) args).getId() != null) {
 				throw new SemanticException("A variavel "
 					+ ((ArithmeticFactor) args).getId().spelling
 					+ " nao foi declarada!");
 			} else {
-				return ((ArithmeticFactor) args).getId().type;
+				if(temp instanceof VarPIC9Declaration) {
+					return ((VarPIC9Declaration) temp).getType();
+				} else {
+					return ((VarPICBOOLDeclaration) temp).getType();
+				}
 			}
 		}
 		return null;
