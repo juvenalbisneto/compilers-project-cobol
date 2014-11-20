@@ -1,5 +1,7 @@
 package util.AST;
 
+import checker.SemanticException;
+
 public  class Identifier extends Terminal {	
 	public int kind = Types.VARIAVEL;
 	public Object declaration;
@@ -21,5 +23,8 @@ public  class Identifier extends Terminal {
 		return kind;
 	}
 
-
+	@Override
+	public Object visit(Visitor v, Object args) throws SemanticException{
+		return v.visitIdentifier(this, args);
+	}
 }

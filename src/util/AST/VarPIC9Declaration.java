@@ -7,12 +7,12 @@ public class VarPIC9Declaration extends VarDeclaration {
 
 	public VarPIC9Declaration(Identifier id){
 		super("PIC9");
-		this.id = id;
+		super.id = id;
 		this.num = new Number("0");
 	}
 	public VarPIC9Declaration(Identifier id, Number num){
 		super("PIC9");
-		this.id = id;
+		super.id = id;
 		this.num = num;
 	}
 	
