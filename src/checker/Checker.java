@@ -223,6 +223,13 @@ public class Checker implements Visitor{
 //		if (cmds.size() != function.getCommands().size())
 //			throw new SemanticException(
 //					"Nao deve haver comandos apos o retorno do procedimentos ou funcoes! [Regra extra]");
+		
+		if(function.getVarDeclarations() != null){
+			for (VarDeclaration vDec : function.getVarDeclarations()) {
+				vDec.visit(this, function);
+			}
+		}
+		
 		if(function.getCommands() != null)
 			for (Command cmd : function.getCommands()) {
 				if (temp != null) {
@@ -285,7 +292,7 @@ public class Checker implements Visitor{
 
 	public Object visitIdentifier(Identifier id, Object args)
 			throws SemanticException {
-		if (args instanceof VarDeclaration) { 
+		if (args instanceof VarPIC9Declaration || args instanceof VarPICBOOLDeclaration) { 
 			id.kind = Types.VARIAVEL;
 			id.type = ((VarDeclaration) args).getType();
 			id.declaration = args;
@@ -304,11 +311,6 @@ public class Checker implements Visitor{
 			} else {
 				return ((ArithmeticFactor) args).getId().type;
 			}
-		} else {
-			id.kind = Types.PARAMETRO;
-			id.declaration = args;
-			id.type = ((VarDeclaration) args).getType();
-			idTable.enter(id.spelling, (AST) args);
 		}
 		return null;
 	}
@@ -350,10 +352,11 @@ public class Checker implements Visitor{
 			throws SemanticException {
 		idTable.openScope();
 
-		if(main.getVarDeclarations() != null)
+		if(main.getVarDeclarations() != null){
 			for (VarDeclaration vDec : main.getVarDeclarations()) {
 				vDec.visit(this, main);
 			}
+		}
 
 		if(main.getCommands() != null)
 			for (Command cmd : main.getCommands()) {
@@ -442,16 +445,6 @@ public class Checker implements Visitor{
 				}
 			}
 		idTable.closeScope();
-		return null;
-	}
-
-	public Object visitVarDeclaration(VarDeclaration var, Object args)
-			throws SemanticException {
-		if (var instanceof VarPIC9Declaration) {
-			return ((VarPIC9Declaration) var).visit(this, args);
-		} else if (var instanceof VarPICBOOLDeclaration) {
-			return ((VarPICBOOLDeclaration) var).visit(this, args);
-		}
 		return null;
 	}
 

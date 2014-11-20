@@ -28,7 +28,6 @@ public interface Visitor {
 	public Object visitProgramDiv			(ProgramDiv pdiv, Object args)					throws SemanticException;
 	public Object visitReturn				(Return rtn, Object args)						throws SemanticException;
 	public Object visitUntil				(Until until, Object args)						throws SemanticException;
-	public Object visitVarDeclaration		(VarDeclaration var, Object args)				throws SemanticException;
 	public Object visitVarPIC9Declaration	(VarPIC9Declaration var9, Object args)			throws SemanticException;
 	public Object visitVarPICBOOLDeclaration(VarPICBOOLDeclaration varBool, Object args)	throws SemanticException;
 }
