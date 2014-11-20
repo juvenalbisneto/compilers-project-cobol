@@ -453,7 +453,7 @@ public class Checker implements Visitor{
 		if(idTable.retrieve(var9.getIdentifier().spelling) != null){
 			throw new SemanticException("Variavel " + var9.getIdentifier().spelling + " ja foi declarada");
 		} else {
-			var9.getIdentifier().visit(this, args);
+			var9.getIdentifier().visit(this, var9);
 		}
 		return null;
 	}
@@ -463,7 +463,7 @@ public class Checker implements Visitor{
 		if(idTable.retrieve(varBool.getIdentifier().spelling) != null){
 			throw new SemanticException("Variavel " + varBool.getIdentifier().spelling + " ja foi declarada");
 		} else {
-			varBool.getIdentifier().visit(this, args);
+			varBool.getIdentifier().visit(this, varBool);
 		}
 		return null;
 	}
