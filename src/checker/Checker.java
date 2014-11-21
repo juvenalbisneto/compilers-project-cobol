@@ -235,12 +235,6 @@ public class Checker implements Visitor{
 //			throw new SemanticException(
 //					"Nao deve haver comandos apos o retorno do procedimentos ou funcoes! [Regra extra]");
 		
-		if(function.getVarDeclarations() != null){
-			for (VarDeclaration vDec : function.getVarDeclarations()) {
-				vDec.visit(this, function);
-			}
-		}
-		
 		if(function.getCommands() != null)
 			for (Command cmd : function.getCommands()) {
 				if (cmd instanceof Return){
