@@ -100,10 +100,12 @@ public class Checker implements Visitor{
 	public Object visitBooleanExpression(BooleanExpression expression,
 			Object args) throws SemanticException {
 		
-		String op = expression.getOpRelational().spelling;
 		if (expression.getBooleanExpression_l() != null || 
-				(expression.getIdentifier_l() != null && expression.getIdentifier_l().type.equals("PICBOOL"))) {
-			if(op.equals("=") || op.equals("<>")){
+				(expression.getIdentifier_l() != null 
+						&& ((VarDeclaration)idTable.retrieve(expression.getIdentifier_l().spelling) instanceof VarPICBOOLDeclaration) 
+						&& ((VarPICBOOLDeclaration)idTable.retrieve(expression.getIdentifier_l().spelling)).getType().equals("PICBOOL"))) {
+			
+			if(expression.getOpRelational().spelling.equals("=") || expression.getOpRelational().spelling.equals("<>")){
 				if (expression.getBooleanExpression_r() != null){
 					return "PICBOOL";
 				} else if (expression.getIdentifier_r() != null 
@@ -116,7 +118,10 @@ public class Checker implements Visitor{
 				throw new SemanticException("Erro! Tipo de operador invalido");
 			}
 		} else if (expression.getArithmeticExpression_l() != null || 
-				(expression.getIdentifier_l() != null && expression.getIdentifier_l().type.equals("PIC9"))) {
+				(expression.getIdentifier_l() != null 
+				&& ((VarDeclaration)idTable.retrieve(expression.getIdentifier_l().spelling) instanceof VarPIC9Declaration) 
+				&& ((VarPIC9Declaration)idTable.retrieve(expression.getIdentifier_l().spelling)).getType().equals("PIC9"))) {
+			
 			if (expression.getArithmeticExpression_r() != null
 				&& expression.getArithmeticExpression_r().visit(this, args).equals("PIC9")) {
 				return "PICBOOL";
