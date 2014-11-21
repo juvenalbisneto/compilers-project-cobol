@@ -268,7 +268,6 @@ public class Checker implements Visitor{
 					+ " nao foi declarada!");
 		} else {
 			Object temp = idTable.retrieve(fcall.getId().spelling);
-			System.out.println(temp);
 			if (!(temp instanceof Function)) {
 				throw new SemanticException("Identificador "
 						+ fcall.getId().spelling
