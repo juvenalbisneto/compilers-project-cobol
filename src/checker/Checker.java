@@ -239,15 +239,11 @@ public class Checker implements Visitor{
 //			throw new SemanticException(
 //					"Nao deve haver comandos apos o retorno do procedimentos ou funcoes! [Regra extra]");
 		
-		ArrayList<Command> comandosInternos = new ArrayList<Command>();
-		
 		if(function.getCommands() != null)
 			for (Command cmd : function.getCommands()) {
 				if (cmd instanceof Return){
 					ret = (Return) cmd;
 					this.numRetornos++;
-				} else if(cmd instanceof Until || cmd instanceof IfStatement){
-					comandosInternos.add(cmd);
 				}
 				cmd.visit(this, function);
 			}
@@ -330,6 +326,17 @@ public class Checker implements Visitor{
 					return ((VarPICBOOLDeclaration) temp).getType();
 				}
 			}
+		} else if(args instanceof Display){
+			Object temp = idTable.retrieve(((Display)args).getIdentifier().spelling);
+			if (temp == null && ((Display) args).getIdentifier() != null) {
+				throw new SemanticException("A variavel "
+					+ ((Display) args).getIdentifier().spelling
+					+ " nao foi declarada!");
+			}
+		} else {
+			id.kind = Types.PARAMETRO;
+			id.declaration = args;
+			idTable.enter(id.spelling, (AST)args);
 		}
 		return null;
 	}
