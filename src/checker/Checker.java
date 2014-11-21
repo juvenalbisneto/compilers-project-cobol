@@ -296,10 +296,12 @@ public class Checker implements Visitor{
 
 	public Object visitGlobalDataDiv(GlobalDataDiv gdd, Object args)
 			throws SemanticException {
+		idTable.openScope();
 		if(gdd.getVarDeclaration() != null)
 			for (VarDeclaration vDec : gdd.getVarDeclaration()) {
 				vDec.visit(this, null);
 			}
+		idTable.closeScope();
 		return null;
 	}
 
