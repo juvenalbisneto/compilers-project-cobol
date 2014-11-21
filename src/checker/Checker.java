@@ -17,21 +17,24 @@ public class Checker implements Visitor{
 	
 	public Object visitAccept(Accept accept, Object args)
 			throws SemanticException {
-		if(idTable.retrieve(accept.getIdentifier().spelling) == null){
+		
+		Object temp = idTable.retrieve(accept.getIdentifier().spelling);
+		if(temp == null){
 			throw new SemanticException("Variavel " + accept.getIdentifier().spelling + " nao declarada!");
 		} else {
 			if (accept.getIdIn() != null) {
-				if(!accept.getIdIn().visit(this, args).equals(accept.getIdentifier().type)){
+				VarDeclaration input = ((VarDeclaration)idTable.retrieve(accept.getIdIn().spelling));
+				if(!input.getType().equals(((VarDeclaration)temp).getType())){
 					throw new SemanticException(
 							"Tipos incompativeis. O valor atribuido nao eh do tipo da variavel!");
 				}
 			} else if (accept.getFunctionCall() != null) {
-				if(!accept.getFunctionCall().visit(this, args).equals(accept.getIdentifier().type)){
+				if(!accept.getFunctionCall().visit(this, args).equals(((VarDeclaration)temp).getType())){
 					throw new SemanticException(
 							"Tipos incompativeis. O valor atribuido nao eh do tipo da variavel!");
 				}
 			} else if (accept.getExpression() != null) {
-				if(!accept.getFunctionCall().visit(this, args).equals(accept.getIdentifier().type)){
+				if(!accept.getFunctionCall().visit(this, args).equals(((VarDeclaration)temp).getType())){
 					throw new SemanticException(
 							"Tipos incompativeis. O valor atribuido nao eh do tipo da variavel!");
 				}
