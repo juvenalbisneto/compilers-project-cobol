@@ -24,7 +24,8 @@ MAIN.
 PIC9 X VALUE 10.
 PIC9 Y VALUE 11.
 
-
+CALL FuncaoTeste.
+CALL Maiorque USING X, Y.
 CALL Procedimento USING X, Y.
 
 ENDMAIN
