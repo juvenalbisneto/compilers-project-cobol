@@ -134,9 +134,12 @@ public class Checker implements Visitor{
 			} else {
 				throw new SemanticException("Erro! Nao se pode comparar um numero com um booleano");
 			}
-		} else {
-			throw new SemanticException("Erro no visitBooleanExpression!");
 		}
+		if(expression.getBooleanValue() != null){
+			return "PICBOOL";
+		}
+		
+		return null;
 	}
 
 	public Object visitBoolValue(BoolValue bool, Object args)
@@ -217,7 +220,7 @@ public class Checker implements Visitor{
 				vDec.visit(this, function);
 			}
 		
-		Object temp = null;
+		Return ret = null;
 //		ArrayList<Command> cmds = new ArrayList<Command>();
 //		for (Command cmd : function.getCommands()) {
 //			if (cmd instanceof Return) {
@@ -240,16 +243,15 @@ public class Checker implements Visitor{
 		
 		if(function.getCommands() != null)
 			for (Command cmd : function.getCommands()) {
-				if (temp != null) {
-					if (temp instanceof Return)
-						cmd.visit(this, function);
-					else
-						temp = cmd.visit(this, function);
-				} else
-					temp = cmd.visit(this, function);
+				if (cmd instanceof Return){
+					ret = (Return) cmd;
+					cmd.visit(this, function);
+				} else {
+					cmd.visit(this, function);
+				}
 			}
-
-		if (temp == null && ((function.getTipoRetorno() != null && !function.getTipoRetorno().equals("VOID")))) {
+		
+		if (ret == null && function.getTipoRetorno() != null && !function.getTipoRetorno().equals("VOID")) {
 			throw new SemanticException("A Funcao " + function.getID().spelling
 					+ " precisa retornar um valor do tipo "
 					+ function.getTipoRetorno());
@@ -418,7 +420,7 @@ public class Checker implements Visitor{
 		if (args instanceof Function) {
 			if (((Function) args).getTipoRetorno() != null && ((Function) args).getTipoRetorno().equals("VOID")) {
 				throw new SemanticException("Funcao VOID nao tem retorno");
-			} else if (args instanceof Function && ((ArithmeticExpression) args).getArithmeticParcel() == null) {
+			} else if (args instanceof Function && args instanceof ArithmeticExpression && ((ArithmeticExpression) args).getArithmeticParcel() == null) {
 				if (rtn.getExpression().visit(this, args) != null && !(rtn.getExpression().visit(this, args).equals(((Function) args).getTipoRetorno()))) {
 					throw new SemanticException(
 							"Valor retornado incompativel com o tipo de retorno da funcao!");
