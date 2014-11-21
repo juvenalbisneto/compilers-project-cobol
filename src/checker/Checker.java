@@ -9,6 +9,7 @@ import util.symbolsTable.IdentificationTable;
 
 public class Checker implements Visitor{
 	private IdentificationTable idTable;
+	private int numRetornos = 0;
 	
 	public void check(Code code) throws SemanticException {
 		idTable = new IdentificationTable();
@@ -210,6 +211,7 @@ public class Checker implements Visitor{
 			throws SemanticException {
 		function.getID().visit(this, function);
 		idTable.openScope();
+		this.numRetornos = 0;
 		
 		if(function.getParams() != null)
 			for (Identifier param : function.getParams()) {
@@ -235,17 +237,20 @@ public class Checker implements Visitor{
 //			throw new SemanticException(
 //					"Nao deve haver comandos apos o retorno do procedimentos ou funcoes! [Regra extra]");
 		
+		ArrayList<Command> comandosInternos = new ArrayList<Command>();
+		
 		if(function.getCommands() != null)
 			for (Command cmd : function.getCommands()) {
 				if (cmd instanceof Return){
 					ret = (Return) cmd;
-					cmd.visit(this, function);
-				} else {
-					cmd.visit(this, function);
+					this.numRetornos++;
+				} else if(cmd instanceof Until || cmd instanceof IfStatement){
+					comandosInternos.add(cmd);
 				}
+				cmd.visit(this, function);
 			}
 		
-		if (ret == null && function.getTipoRetorno() != null && !function.getTipoRetorno().equals("VOID")) {
+		if (this.numRetornos == 0 && ret == null && function.getTipoRetorno() != null && !function.getTipoRetorno().equals("VOID")) {
 			throw new SemanticException("A Funcao " + function.getID().spelling
 					+ " precisa retornar um valor do tipo "
 					+ function.getTipoRetorno());
@@ -262,7 +267,8 @@ public class Checker implements Visitor{
 					+ fcall.getId().spelling
 					+ " nao foi declarada!");
 		} else {
-			AST temp = idTable.retrieve(fcall.getId().spelling);
+			Object temp = idTable.retrieve(fcall.getId().spelling);
+			System.out.println(temp);
 			if (!(temp instanceof Function)) {
 				throw new SemanticException("Identificador "
 						+ fcall.getId().spelling
@@ -411,6 +417,7 @@ public class Checker implements Visitor{
 	}
 
 	public Object visitReturn(Return rtn, Object args) throws SemanticException {
+		this.numRetornos++;
 		if (args instanceof Function) {
 			if (((Function) args).getTipoRetorno() != null && ((Function) args).getTipoRetorno().equals("VOID")) {
 				throw new SemanticException("Funcao VOID nao tem retorno");
@@ -427,7 +434,7 @@ public class Checker implements Visitor{
 								+ " nao foi declarada!");
 					}
 				}
-			} else if (rtn.getExpression().visit(this, args) != null && !(rtn.getExpression().visit(this, args).equals(((Function) args).getTipoRetorno()))) {
+			} else if (rtn.getExpression() != null && !(rtn.getExpression().visit(this, args).equals(((Function) args).getTipoRetorno()))) {
 				throw new SemanticException(
 						"Valor retornado incompativel com o tipo de retorno da funcao!");
 			}
