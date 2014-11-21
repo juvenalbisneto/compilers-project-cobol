@@ -30,7 +30,8 @@ public class Checker implements Visitor{
 							"Tipos incompativeis. O valor atribuido nao eh do tipo da variavel!");
 				}
 			} else if (accept.getFunctionCall() != null) {
-				if(!accept.getFunctionCall().visit(this, args).equals(((VarDeclaration)temp).getType())){
+				Function func = (Function)idTable.retrieve(accept.getFunctionCall().getId().spelling);
+				if(!func.getTipoRetorno().equals(((VarDeclaration)temp).getType())){
 					throw new SemanticException(
 							"Tipos incompativeis. O valor atribuido nao eh do tipo da variavel!");
 				}
