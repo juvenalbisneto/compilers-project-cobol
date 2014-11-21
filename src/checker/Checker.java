@@ -10,15 +10,123 @@ import util.symbolsTable.IdentificationTable;
 public class Checker implements Visitor{
 	private IdentificationTable idTable;
 	private int numRetornos = 0;
-	
+
 	public void check(Code code) throws SemanticException {
 		idTable = new IdentificationTable();
 		code.visit(this, null);
 	}
-	
+
+	public Object visitCode(Code code, Object args) throws SemanticException {
+		if (code.getGlobalDataDiv() != null) {
+			code.getGlobalDataDiv().visit(this, args);
+		}
+		code.getProgramDiv().visit(this, args);
+
+		return null;
+	}
+
+	public Object visitGlobalDataDiv(GlobalDataDiv gdd, Object args)
+			throws SemanticException {
+		idTable.openScope();
+		if(gdd.getVarDeclaration() != null)
+			for (VarDeclaration vDec : gdd.getVarDeclaration()) {
+				vDec.visit(this, null);
+			}
+		idTable.closeScope();
+		return null;
+	}
+
+	public Object visitProgramDiv(ProgramDiv pdiv, Object args)
+			throws SemanticException {
+		if(pdiv.getArrayFunction() != null){
+			for (Function function : pdiv.getArrayFunction()) {
+				function.visit(this, null);
+			}
+		}
+		pdiv.getMainProc().visit(this, null);
+
+		return null;
+	}
+
+	public Object visitMainProc(MainProc main, Object args)
+			throws SemanticException {
+		idTable.openScope();
+		this.numRetornos = 0;
+
+		if(main.getVarDeclarations() != null){
+			for (VarDeclaration vDec : main.getVarDeclarations()) {
+				vDec.visit(this, main);
+			}
+		}
+
+		if(main.getCommands() != null)
+			for (Command cmd : main.getCommands()) {
+				if (cmd instanceof Return) {
+					throw new SemanticException("Erro! A Main nao deve possuir retorno");
+				} else {
+					cmd.visit(this, main);
+				}
+			}
+
+		idTable.closeScope();
+		return null;
+	}
+
+	//TODO Analisar parte comentada pra ver se quer essa regra (nao ter comandos apos um retorno)
+	public Object visitFunction(Function function, Object args)
+			throws SemanticException {
+		function.getID().visit(this, function);
+		idTable.openScope();
+		this.numRetornos = 0;
+
+		if(function.getParams() != null)
+			for (int i = 0; i < function.getParams().size(); i++) {
+				function.getParams().get(i).type = function.getParamsTypes().get(i);
+				function.getParams().get(i).visit(this, args);
+			}
+		if(function.getVarDeclarations() != null)
+			for (VarDeclaration vDec : function.getVarDeclarations()) {
+				vDec.visit(this, function);
+			}
+
+		Return ret = null;
+		
+		//			ArrayList<Command> cmds = new ArrayList<Command>();
+		//			for (Command cmd : function.getCommands()) {
+		//				if (cmd instanceof Return) {
+		//					temp = cmd;
+		//					cmds.add(cmd);
+		//					break;
+		//				} else
+		//					cmds.add(cmd);
+		//			}
+
+		//			if (cmds.size() != function.getCommands().size())
+		//				throw new SemanticException(
+		//						"Nao deve haver comandos apos o retorno do procedimentos ou funcoes! [Regra extra]");
+
+		if(function.getCommands() != null)
+			for (Command cmd : function.getCommands()) {
+				if (cmd instanceof Return){
+					ret = (Return) cmd;
+					this.numRetornos++;
+				}
+				cmd.visit(this, function);
+			}
+
+		if (this.numRetornos == 0 && ret == null && function.getTipoRetorno() != null && !function.getTipoRetorno().equals("VOID")) {
+			throw new SemanticException("A Funcao " + function.getID().spelling
+					+ " precisa retornar um valor do tipo "
+					+ function.getTipoRetorno());
+		}
+
+		idTable.closeScope();
+		return null;
+	}
+
 	public Object visitAccept(Accept accept, Object args)
 			throws SemanticException {
-		
+
 		Object temp = idTable.retrieve(accept.getIdentifier().spelling);
 		if(temp == null){
 			throw new SemanticException("Variavel " + accept.getIdentifier().spelling + " nao declarada!");
@@ -44,9 +152,9 @@ public class Checker implements Visitor{
 			} else {
 				throw new SemanticException("Valor nao informado!");
 			}
-			
+
 		}
-		
+
 		return null;
 	}
 
@@ -54,11 +162,12 @@ public class Checker implements Visitor{
 			Object args) throws SemanticException {
 		if (expression.getNumber() != null) {
 			return expression.getNumber().visit(this, args);
-		} else {
+		} else if (expression.getArithmeticParcel() != null){
 			return expression.getArithmeticParcel().visit(this, args);
-		}
+		} else
+			throw new SemanticException("Expressao invalida.");
 	}
-	
+
 	public Object visitArithmeticParcel(ArithmeticParcel parcel, Object args)
 			throws SemanticException {
 		ArithmeticTerm term = parcel.getArithmeticTerm();
@@ -69,9 +178,7 @@ public class Checker implements Visitor{
 		} else if (aExp.visit(this, args) != null && aExp.visit(this, args).equals(temp)) {
 			return temp;
 		} else
-			throw new SemanticException("Tipos incompativeis ( "
-					+ term.visit(this, args) + " - "
-					+ aExp.visit(this, args) + " )");
+			throw new SemanticException("Tipos incompativeis ( " + term.visit(this, args) + " - " + aExp.visit(this, args) + " )");
 	}
 
 	public Object visitArithmeticTerm(ArithmeticTerm term, Object args)
@@ -84,12 +191,10 @@ public class Checker implements Visitor{
 		} else if (termo.visit(this, args) != null && termo.visit(this, args).equals(temp)) {
 			return temp;
 		} else {
-			throw new SemanticException("Tipos incompativeis ( "
-					+ fac.visit(this, args) + " - "
-					+ termo.visit(this, args) + " )");
+			throw new SemanticException("Tipos incompativeis ( " + fac.visit(this, args) + " - " + termo.visit(this, args) + " )");
 		}
 	}
-	
+
 	public Object visitArithmeticFactor(ArithmeticFactor factor, Object args)
 			throws SemanticException {
 		if (factor.getId() != null) {
@@ -105,12 +210,12 @@ public class Checker implements Visitor{
 
 	public Object visitBooleanExpression(BooleanExpression expression,
 			Object args) throws SemanticException {
-		
+
 		if (expression.getBooleanExpression_l() != null || 
 				(expression.getIdentifier_l() != null 
-						&& ((VarDeclaration)idTable.retrieve(expression.getIdentifier_l().spelling) instanceof VarPICBOOLDeclaration) 
-						&& ((VarPICBOOLDeclaration)idTable.retrieve(expression.getIdentifier_l().spelling)).getType().equals("PICBOOL"))) {
-			
+				&& ((VarDeclaration)idTable.retrieve(expression.getIdentifier_l().spelling) instanceof VarPICBOOLDeclaration) 
+				&& ((VarPICBOOLDeclaration)idTable.retrieve(expression.getIdentifier_l().spelling)).getType().equals("PICBOOL"))) {
+
 			if(expression.getOpRelational().spelling.equals("=") || expression.getOpRelational().spelling.equals("<>")){
 				if (expression.getBooleanExpression_r() != null){
 					return "PICBOOL";
@@ -127,9 +232,9 @@ public class Checker implements Visitor{
 				(expression.getIdentifier_l() != null 
 				&& ((VarDeclaration)idTable.retrieve(expression.getIdentifier_l().spelling) instanceof VarPIC9Declaration) 
 				&& ((VarPIC9Declaration)idTable.retrieve(expression.getIdentifier_l().spelling)).getType().equals("PIC9"))) {
-			
+
 			if (expression.getArithmeticExpression_r() != null
-				&& expression.getArithmeticExpression_r().visit(this, args).equals("PIC9")) {
+					&& expression.getArithmeticExpression_r().visit(this, args).equals("PIC9")) {
 				return "PICBOOL";
 			} else if (expression.getIdentifier_r() != null 
 					&& expression.getIdentifier_r().type.equals("PIC9")) {
@@ -141,34 +246,13 @@ public class Checker implements Visitor{
 		if(expression.getBooleanValue() != null){
 			return "PICBOOL";
 		}
-		
-		return null;
-	}
 
-	public Object visitBoolValue(BoolValue bool, Object args)
-			throws SemanticException {
-		return "PICBOOL";
-	}
-
-	public Object visitBreak(Break brk, Object args) throws SemanticException {
-		if (!(args instanceof Until)) {
-			throw new SemanticException("O comando BREAK só deve ser utilizado em loops");
-		}
-		return null;
-	}
-
-	public Object visitCode(Code code, Object args) throws SemanticException {
-		if (code.getGlobalDataDiv() != null) {
-			code.getGlobalDataDiv().visit(this, args);
-		}
-		code.getProgramDiv().visit(this, args);
-		
 		return null;
 	}
 
 	public Object visitCommand(Command cmd, Object args)
 			throws SemanticException {
-		
+
 		if (cmd instanceof IfStatement) {
 			return ((IfStatement) cmd).visit(this, args);
 		} else if (cmd instanceof Until) {
@@ -185,83 +269,15 @@ public class Checker implements Visitor{
 			return ((Continue) cmd).visit(this, args);
 		} else if (cmd instanceof Return) {
 			return ((Return) cmd).visit(this, args);
-		}
-		
-		return null;
-	}
-
-	public Object visitContinue(Continue cont, Object args)
-			throws SemanticException {
-		if (!(args instanceof Until)) {
-			throw new SemanticException("O comando CONTINUE só deve ser utilizado em loops");
-		}
-		return null;
-	}
-
-	public Object visitDisplay(Display display, Object args)
-			throws SemanticException {
-		if (display.getIdentifier() != null) {
-			display.getIdentifier().visit(this, display);
 		} else {
-			display.getExpression().visit(this, display);
+			throw new SemanticException("Tipo invalido de comando.");
 		}
-		return null;
-	}
-
-	//TODO Analisar parte comentada pra ver se quer essa regra (nao ter comandos apos um retorno)
-	public Object visitFunction(Function function, Object args)
-			throws SemanticException {
-		function.getID().visit(this, function);
-		idTable.openScope();
-		this.numRetornos = 0;
-		
-		if(function.getParams() != null)
-			for (Identifier param : function.getParams()) {
-				param.visit(this, args);
-			}
-		if(function.getVarDeclarations() != null)
-			for (VarDeclaration vDec : function.getVarDeclarations()) {
-				vDec.visit(this, function);
-			}
-		
-		Return ret = null;
-//		ArrayList<Command> cmds = new ArrayList<Command>();
-//		for (Command cmd : function.getCommands()) {
-//			if (cmd instanceof Return) {
-//				temp = cmd;
-//				cmds.add(cmd);
-//				break;
-//			} else
-//				cmds.add(cmd);
-//		}
-
-//		if (cmds.size() != function.getCommands().size())
-//			throw new SemanticException(
-//					"Nao deve haver comandos apos o retorno do procedimentos ou funcoes! [Regra extra]");
-		
-		if(function.getCommands() != null)
-			for (Command cmd : function.getCommands()) {
-				if (cmd instanceof Return){
-					ret = (Return) cmd;
-					this.numRetornos++;
-				}
-				cmd.visit(this, function);
-			}
-		
-		if (this.numRetornos == 0 && ret == null && function.getTipoRetorno() != null && !function.getTipoRetorno().equals("VOID")) {
-			throw new SemanticException("A Funcao " + function.getID().spelling
-					+ " precisa retornar um valor do tipo "
-					+ function.getTipoRetorno());
-		}
-		
-		idTable.closeScope();
-		return null;
 	}
 
 	public Object visitFunctionCall(FunctionCall fcall, Object args)
 			throws SemanticException {
 		Object func = idTable.retrieve(fcall.getId().spelling);
-		
+
 		if (func == null) {
 			throw new SemanticException("A funcao " 
 					+ fcall.getId().spelling
@@ -274,7 +290,7 @@ public class Checker implements Visitor{
 			} else {
 				ArrayList<String> paramsTypesFunc = ((Function) func).getParamsTypes();
 				ArrayList<Identifier> paramsCall = fcall.getParams();
-				
+
 				if (paramsTypesFunc.size() != paramsCall.size()) {
 					throw new SemanticException(
 							"Quantidade de parametros passada diferente da quantidade de parametros requeridas pela Funcao!");
@@ -287,17 +303,6 @@ public class Checker implements Visitor{
 				}
 			}
 		}
-		return null;
-	}
-
-	public Object visitGlobalDataDiv(GlobalDataDiv gdd, Object args)
-			throws SemanticException {
-		idTable.openScope();
-		if(gdd.getVarDeclaration() != null)
-			for (VarDeclaration vDec : gdd.getVarDeclaration()) {
-				vDec.visit(this, null);
-			}
-		idTable.closeScope();
 		return null;
 	}
 
@@ -317,8 +322,8 @@ public class Checker implements Visitor{
 			Object temp = idTable.retrieve(((ArithmeticFactor) args).getId().spelling);
 			if (temp == null && ((ArithmeticFactor) args).getId() != null) {
 				throw new SemanticException("A variavel "
-					+ ((ArithmeticFactor) args).getId().spelling
-					+ " nao foi declarada!");
+						+ ((ArithmeticFactor) args).getId().spelling
+						+ " nao foi declarada!");
 			} else {
 				if(temp instanceof VarPIC9Declaration) {
 					return ((VarPIC9Declaration) temp).getType();
@@ -330,8 +335,8 @@ public class Checker implements Visitor{
 			Object temp = idTable.retrieve(((Display)args).getIdentifier().spelling);
 			if (temp == null && ((Display) args).getIdentifier() != null) {
 				throw new SemanticException("A variavel "
-					+ ((Display) args).getIdentifier().spelling
-					+ " nao foi declarada!");
+						+ ((Display) args).getIdentifier().spelling
+						+ " nao foi declarada!");
 			}
 		} else {
 			id.kind = Types.PARAMETRO;
@@ -343,113 +348,62 @@ public class Checker implements Visitor{
 
 	public Object visitIfStatement(IfStatement ifStatement, Object args)
 			throws SemanticException {
-		
+
 		Object temp = null;
-		
+
 		if(ifStatement.getBooleanExpression() instanceof BooleanExpression){
+			
 			((BooleanExpression) ifStatement.getBooleanExpression()).visit(this, args);
+			
 			idTable.openScope();
 			if(ifStatement.getCommandIF() != null)
 				for (Command ifCmd : ifStatement.getCommandIF()) {
-					if (ifCmd instanceof Break) {
-						break;
-					} else
-						temp = ifCmd.visit(this, args);
+					temp = ifCmd.visit(this, args);
 				}
 			idTable.closeScope();
+
 			idTable.openScope();
 			if(ifStatement.getCommandElse() != null)
 				for (Command elseCmd : ifStatement.getCommandElse()) {
-					if (elseCmd instanceof Break) {
-						break;
-					} else {
-						elseCmd.visit(this, args);
-					}
+					elseCmd.visit(this, args);
 				}
 			idTable.closeScope();
+
 		} else {
 			throw new SemanticException("Expressao da condicao do IF nao e booleana!");
 		}
-		
+
 		return temp;
-	}
-
-	public Object visitMainProc(MainProc main, Object args)
-			throws SemanticException {
-		idTable.openScope();
-
-		if(main.getVarDeclarations() != null){
-			for (VarDeclaration vDec : main.getVarDeclarations()) {
-				vDec.visit(this, main);
-			}
-		}
-
-		if(main.getCommands() != null)
-			for (Command cmd : main.getCommands()) {
-				if (cmd instanceof Return) {
-					throw new SemanticException("Erro! A Main nao deve possuir retorno");
-				} else {
-					cmd.visit(this, main);
-				}
-			}
-		
-		idTable.closeScope();
-		return null;
-	}
-
-	public Object visitNumber(Number number, Object args)
-			throws SemanticException {
-		return "PIC9";
-	}
-
-	public Object visitOpAdd(OpAdd opAdd, Object args) throws SemanticException {
-		return null;
-	}
-
-	public Object visitOpMult(OpMult opMult, Object args)
-			throws SemanticException {
-		return null;
-	}
-
-	public Object visitOpRelational(OpRelational opRel, Object args)
-			throws SemanticException {
-		return null;
-	}
-
-	public Object visitProgramDiv(ProgramDiv pdiv, Object args)
-			throws SemanticException {
-		if(pdiv.getArrayFunction() != null){
-			for (Function function : pdiv.getArrayFunction()) {
-				function.visit(this, null);
-			}
-		}
-		pdiv.getMainProc().visit(this, null);
-
-		return null;
 	}
 
 	public Object visitReturn(Return rtn, Object args) throws SemanticException {
 		this.numRetornos++;
+		Function func = (Function)idTable.retrieve(((Function)args).getID().spelling);
+
 		if (args instanceof Function) {
-			if (((Function) args).getTipoRetorno() != null && ((Function) args).getTipoRetorno().equals("VOID")) {
+			if (func.getTipoRetorno() != null && func.getTipoRetorno().equals("VOID")) {
 				throw new SemanticException("Funcao VOID nao tem retorno");
-			} else if (args instanceof Function && args instanceof ArithmeticExpression && ((ArithmeticExpression) args).getArithmeticParcel() == null) {
-				if (rtn.getExpression().visit(this, args) != null && !(rtn.getExpression().visit(this, args).equals(((Function) args).getTipoRetorno()))) {
-					throw new SemanticException(
-							"Valor retornado incompativel com o tipo de retorno da funcao!");
+			} else if (rtn.getExpression() != null 
+					&& rtn.getExpression() instanceof BooleanExpression 
+					&& (!rtn.getExpression().visit(this, args).equals("PICBOOL") || !func.getTipoRetorno().equals("PICBOOL"))) {
+
+				throw new SemanticException("Valor retornado incompativel com o tipo de retorno da funcao!");
+
+			} else if (rtn.getExpression() != null 
+					&& rtn.getExpression() instanceof ArithmeticExpression 
+					&& (!rtn.getExpression().visit(this, args).equals("PIC9") || !func.getTipoRetorno().equals("PIC9"))) {
+
+				throw new SemanticException("Valor retornado incompativel com o tipo de retorno da funcao!");
+
+			} else { //TODO
+				Object temp = idTable.retrieve(rtn.getIdentifier().spelling);
+				if (temp == null) {
+					throw new SemanticException("A variavel " + rtn.getIdentifier().spelling + " nao foi declarada!");
 				} else {
-					Identifier id = ((ArithmeticParcel) args).getArithmeticTerm().getArithmeticFactor()
-							.getId();
-					AST temp = idTable.retrieve(id.spelling);
-					if (temp == null) {
-						throw new SemanticException("A variavel " + id.spelling
-								+ " nao foi declarada!");
-					}
+
 				}
-			} else if (rtn.getExpression() != null && !(rtn.getExpression().visit(this, args).equals(((Function) args).getTipoRetorno()))) {
-				throw new SemanticException(
-						"Valor retornado incompativel com o tipo de retorno da funcao!");
 			}
+
 		} else {
 			throw new SemanticException(
 					"Comando de retorno deve estar dentro de uma funcao!");
@@ -461,17 +415,28 @@ public class Checker implements Visitor{
 		until.getBooleanExpression().visit(this, args);
 
 		idTable.openScope();
-		if(until.getCommand() != null)
-			for(Command cmd : until.getCommand()){
-				if (cmd instanceof Break) {
-					visitBreak((Break) cmd, args);
-				} else if (cmd instanceof Continue) {
-					visitContinue((Continue)cmd, args);
-				} else {
-					cmd.visit(this, until);
-				}
+		
+		if(until.getCommand() != null) {
+			for(Command cmd : until.getCommand()) {
+				cmd.visit(this, until);
 			}
+		}
+		
 		idTable.closeScope();
+		
+		return null;
+	}
+	public Object visitContinue(Continue cont, Object args)
+			throws SemanticException {
+		if (!(args instanceof Until)) {
+			throw new SemanticException("O comando CONTINUE só deve ser utilizado em loops");
+		}
+		return null;
+	}
+	public Object visitBreak(Break brk, Object args) throws SemanticException {
+		if (!(args instanceof Until)) {
+			throw new SemanticException("O comando BREAK só deve ser utilizado em loops");
+		}
 		return null;
 	}
 
@@ -484,7 +449,6 @@ public class Checker implements Visitor{
 		}
 		return null;
 	}
-
 	public Object visitVarPICBOOLDeclaration(VarPICBOOLDeclaration varBool,
 			Object args) throws SemanticException {
 		if(idTable.retrieve(varBool.getIdentifier().spelling) != null){
@@ -492,6 +456,39 @@ public class Checker implements Visitor{
 		} else {
 			varBool.getIdentifier().visit(this, varBool);
 		}
+		return null;
+	}
+
+	public Object visitDisplay(Display display, Object args)
+			throws SemanticException {
+		if (display.getIdentifier() != null) {
+			display.getIdentifier().visit(this, display);
+		} else if (display.getExpression() != null){
+			display.getExpression().visit(this, display);
+		} else {
+			throw new SemanticException("Elemento incompativel com o DISPLAY.");
+		}
+		return null;
+	}
+	
+	public Object visitNumber(Number number, Object args)
+			throws SemanticException {
+		return "PIC9";
+	}
+	public Object visitBoolValue(BoolValue bool, Object args)
+			throws SemanticException {
+		return "PICBOOL";
+	}
+
+	public Object visitOpAdd(OpAdd opAdd, Object args) throws SemanticException {
+		return null;
+	}
+	public Object visitOpMult(OpMult opMult, Object args)
+			throws SemanticException {
+		return null;
+	}
+	public Object visitOpRelational(OpRelational opRel, Object args)
+			throws SemanticException {
 		return null;
 	}
 }
