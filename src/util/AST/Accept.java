@@ -31,7 +31,7 @@ public class Accept extends Command {
 			return this.func;
 		}
 		public Identifier getIdIn(){
-			return this.id;
+			return this.idIn;
 		}
 		
 		@Override
