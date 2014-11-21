@@ -6,7 +6,7 @@ import checker.SemanticException;
 
 public class FunctionCall extends Command {
 	Identifier id = null;
-	ArrayList<Identifier> ids = null;
+	ArrayList<Identifier> ids = new ArrayList<Identifier>();
 	
 	public FunctionCall (Identifier nome){
 		this.id = nome;

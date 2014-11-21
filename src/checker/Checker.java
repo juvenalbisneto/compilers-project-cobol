@@ -279,9 +279,8 @@ public class Checker implements Visitor{
 				} else {
 					ArrayList<String> params = ((Function) temp).getParamsTypes();
 					for (int i = 0; i < params.size(); i++) {
-						if (params.get(i) != null && !params.get(i).equals(fcall.getParams().get(i).type)) {
-							throw new SemanticException(
-									"Tipo dos parametros informados não correspondem ao tipo esperado");
+						if (params.get(i) != null && !params.get(i).equals(((Function) temp).getParamsTypes().get(i))) {
+							throw new SemanticException("Tipo dos parametros informados não correspondem ao tipo esperado");
 						}
 					}
 				}

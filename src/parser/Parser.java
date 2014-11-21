@@ -199,8 +199,8 @@ public class Parser {
 	public Function parseFunction() throws SyntacticException, LexicalException{
 		Identifier id = null;
 		String tipoRetorno;
-		ArrayList<Identifier> params = null;
-		ArrayList<String> paramTypes = null;
+		ArrayList<Identifier> params = new ArrayList<Identifier>();
+		ArrayList<String> paramTypes = new ArrayList<String>();
 		ArrayList<VarDeclaration> declarations = null;
 		ArrayList<Command> cmds = null;
 		
@@ -221,8 +221,6 @@ public class Parser {
 		}
 
 		if(this.currentToken.getKind() == TokenType.USING){
-			params = new ArrayList<Identifier>();
-			paramTypes = new ArrayList<String>();
 			acceptIt();
 			
 			paramTypes.add(this.currentToken.getSpelling());
@@ -284,7 +282,7 @@ public class Parser {
 
 	public FunctionCall parseFunctionCall() throws SyntacticException, LexicalException{
 		Identifier id = null;
-		ArrayList<Identifier> ids = null;
+		ArrayList<Identifier> ids = new ArrayList<Identifier>();
 		
 		accept(TokenType.CALL);
 		if(this.currentToken.getKind() == TokenType.IDENTIFIER){
@@ -295,7 +293,6 @@ public class Parser {
 		}
 
 		if(this.currentToken.getKind() == TokenType.USING){
-			ids = new ArrayList<Identifier>();
 			acceptIt();
 			if(this.currentToken.getKind() == TokenType.IDENTIFIER){
 				ids.add(new Identifier(this.currentToken.getSpelling()));
@@ -316,11 +313,7 @@ public class Parser {
 		}
 		accept(TokenType.POINT);
 		
-		if(ids != null){
-			return new FunctionCall(id);
-		} else {
-			return new FunctionCall(id, ids);
-		}
+		return new FunctionCall(id, ids);
 	}
 
 	public Command parseCommand() throws SyntacticException, LexicalException{
