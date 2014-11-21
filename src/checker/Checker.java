@@ -262,24 +262,27 @@ public class Checker implements Visitor{
 
 	public Object visitFunctionCall(FunctionCall fcall, Object args)
 			throws SemanticException {
-		if (idTable.retrieve(fcall.getId().spelling) == null) {
+		Object func = idTable.retrieve(fcall.getId().spelling);
+		
+		if (func == null) {
 			throw new SemanticException("A funcao " 
 					+ fcall.getId().spelling
 					+ " nao foi declarada!");
 		} else {
-			Object temp = idTable.retrieve(fcall.getId().spelling);
-			if (!(temp instanceof Function)) {
+			if (!(func instanceof Function)) {
 				throw new SemanticException("Identificador "
 						+ fcall.getId().spelling
 						+ " nao representa uma Funcao!");
 			} else {
-				if (((Function) temp).getParamsTypes().size() != fcall.getParams().size()) {
+				ArrayList<String> paramsTypesFunc = ((Function) func).getParamsTypes();
+				ArrayList<Identifier> paramsCall = fcall.getParams();
+				
+				if (paramsTypesFunc.size() != paramsCall.size()) {
 					throw new SemanticException(
 							"Quantidade de parametros passada diferente da quantidade de parametros requeridas pela Funcao!");
-				} else {
-					ArrayList<String> params = ((Function) temp).getParamsTypes();
-					for (int i = 0; i < params.size(); i++) {
-						if (params.get(i) != null && !params.get(i).equals(((Function) temp).getParamsTypes().get(i))) {
+				} else if(paramsTypesFunc.size() > 0){
+					for (int i = 0; i < paramsTypesFunc.size(); i++) {
+						if (!paramsTypesFunc.get(i).equals( ((VarDeclaration)idTable.retrieve(paramsCall.get(i).spelling)).getType() )) {
 							throw new SemanticException("Tipo dos parametros informados não correspondem ao tipo esperado");
 						}
 					}
