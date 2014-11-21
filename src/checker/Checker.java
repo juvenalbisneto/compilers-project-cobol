@@ -35,6 +35,7 @@ public class Checker implements Visitor{
 					throw new SemanticException(
 							"Tipos incompativeis. O valor atribuido nao eh do tipo da variavel!");
 				}
+				accept.getFunctionCall().visit(this, args);
 			} else if (accept.getExpression() != null) {
 				if(!accept.getExpression().visit(this, args).equals(((VarDeclaration)temp).getType())){
 					throw new SemanticException(
