@@ -12,7 +12,6 @@ public interface Visitor {
 	public Object visitBoolValue			(BoolValue bool, Object args)					throws SemanticException;
 	public Object visitBreak				(Break brk, Object args)						throws SemanticException;
 	public Object visitCode					(Code code, Object args)						throws SemanticException;
-	public Object visitCommand				(Command cmd, Object args)						throws SemanticException;
 	public Object visitContinue				(Continue cont, Object args)					throws SemanticException;
 	public Object visitDisplay				(Display display, Object args)					throws SemanticException;
 	public Object visitFunction				(Function function, Object args)				throws SemanticException;

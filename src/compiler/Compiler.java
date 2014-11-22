@@ -56,7 +56,7 @@ public class Compiler {
 			Checker ckr = new Checker();
 			ckr.check((Code) astRoot);			
 			
-			System.out.println("\n-- Checker--");
+			System.out.println("\n-- CHECKER --");
 			
 		} catch (SemanticException e) {
 			// Shows the syntactic/lexical error stack trace 
