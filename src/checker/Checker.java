@@ -7,6 +7,19 @@ import util.AST.AST.Types;
 import util.AST.Number;
 import util.symbolsTable.IdentificationTable;
 
+
+
+// TODO
+// argumentos de funcoes ainda sao vistos como nao declarados. erro apontado em teste_func_return_wrong_type
+// teste_func_return_incompatible dando nullpointer. 
+
+
+
+
+
+
+
+
 public class Checker implements Visitor{
 	private IdentificationTable idTable;
 	private int numRetornos = 0;
