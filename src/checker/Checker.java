@@ -221,8 +221,7 @@ public class Checker implements Visitor{
 	public Object visitBooleanExpression(BooleanExpression expression,
 			Object args) throws SemanticException {
 
-		if (expression.getBooleanExpression_l() != null || 
-				(expression.getIdentifier_l() != null 
+		if (expression.getBooleanExpression_l() != null || (expression.getIdentifier_l() != null 
 				&& ((VarDeclaration)idTable.retrieve(expression.getIdentifier_l().spelling) instanceof VarPICBOOLDeclaration) 
 				&& ((VarPICBOOLDeclaration)idTable.retrieve(expression.getIdentifier_l().spelling)).getType().equals("PICBOOL"))) {
 
@@ -238,8 +237,7 @@ public class Checker implements Visitor{
 			} else {
 				throw new SemanticException("Erro! Tipo de operador invalido");
 			}
-		} else if (expression.getArithmeticExpression_l() != null || 
-				(expression.getIdentifier_l() != null 
+		} else if (expression.getArithmeticExpression_l() != null || (expression.getIdentifier_l() != null 
 				&& ((VarDeclaration)idTable.retrieve(expression.getIdentifier_l().spelling) instanceof VarPIC9Declaration) 
 				&& ((VarPIC9Declaration)idTable.retrieve(expression.getIdentifier_l().spelling)).getType().equals("PIC9"))) {
 
@@ -252,12 +250,11 @@ public class Checker implements Visitor{
 			} else {
 				throw new SemanticException("Erro! Nao se pode comparar um numero com um booleano");
 			}
-		}
-		if(expression.getBooleanValue() != null){
+		} else if(expression.getBooleanValue() != null){
 			return "PICBOOL";
+		} else {
+			throw new SemanticException("Expressao booleana invalida.");
 		}
-
-		return null;
 	}
 
 	public Object visitFunctionCall(FunctionCall fcall, Object args)
@@ -339,7 +336,7 @@ public class Checker implements Visitor{
 
 		if(ifStatement.getBooleanExpression() instanceof BooleanExpression){
 
-			((BooleanExpression) ifStatement.getBooleanExpression()).visit(this, args);
+			ifStatement.getBooleanExpression().visit(this, args);
 
 			idTable.openScope();
 			if(ifStatement.getCommandIF() != null)
