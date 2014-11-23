@@ -396,8 +396,16 @@ public class Checker implements Visitor{
 						throw new SemanticException("Valor retornado eh PICBOOL e a funcao requer retorno do tipo PIC9!");
 					}
 
-				} else if(id instanceof Identifier && !(((Identifier)id).kind == Types.VARIAVEL) && !(((Identifier)id).kind == Types.PARAMETRO)){
-					throw new SemanticException("Identifier do Retorno nao eh nem uma variavel, nem um parametro da funcao.");
+				} else if(id instanceof Identifier){
+					if(((Identifier)id).kind == Types.VARIAVEL || ((Identifier)id).kind == Types.PARAMETRO){
+						if(((Identifier)id).type.equals("PIC9") && !func.getTipoRetorno().equals("PIC9")){
+							throw new SemanticException("Valor retornado eh PIC9 e a funcao requer retorno do tipo PICBOOL!");
+						} else if(((Identifier)id).type.equals("PICBOOL")  && !func.getTipoRetorno().equals("PICBOOL")){
+							throw new SemanticException("Valor retornado eh PICBOOL e a funcao requer retorno do tipo PIC9!");
+						}
+					} else {
+						throw new SemanticException("Identifier do Retorno nao eh nem uma variavel, nem um parametro da funcao.");
+					}
 				}
 			} else {
 				throw new SemanticException("Retorno incompativel com a linguagem.");
