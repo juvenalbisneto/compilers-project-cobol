@@ -469,7 +469,9 @@ public class Checker implements Visitor{
 			throws SemanticException {
 		if (display.getIdentifier() != null) {
 			Object id = idTable.retrieve(display.getIdentifier().spelling);
-			if(id instanceof VarDeclaration || ((Identifier)id).kind == Types.VARIAVEL || ((Identifier)id).kind == Types.PARAMETRO){
+			if(id == null){
+				throw new SemanticException("Variavel " + display.getIdentifier().spelling + " nao declarada!");
+			} else if(id instanceof VarDeclaration || ((Identifier)id).kind == Types.VARIAVEL || ((Identifier)id).kind == Types.PARAMETRO){
 				display.getIdentifier().visit(this, display);
 			}
 		} else if (display.getExpression() != null){
