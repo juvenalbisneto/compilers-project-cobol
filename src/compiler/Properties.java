@@ -13,6 +13,6 @@ public interface Properties {
 	//Arthur
 	//public static final String sourceCodeLocation = "C:/Users/Arthur/Documents/compilers-project-cobol/tests/Entrega 2/teste_display";
 	//Juvenal
-	public static final String sourceCodeLocation = "/Users/juvenalbisneto/Documents/Copy/UPE/[2014.2] Compiladores/Projeto/tests/Entrega 2/teste_func_return_wrong_type";
+	public static final String sourceCodeLocation = "/Users/juvenalbisneto/Documents/Copy/UPE/[2014.2] Compiladores/Projeto/tests/Entrega 2/teste_display";
 	
 }

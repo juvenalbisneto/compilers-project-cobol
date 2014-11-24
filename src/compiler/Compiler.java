@@ -1,6 +1,7 @@
 package compiler;
 import checker.Checker;
 import checker.SemanticException;
+import encoder.Encoder;
 import parser.Parser;
 import parser.SyntacticException;
 import scanner.LexicalException;
@@ -63,7 +64,14 @@ public class Compiler {
 			e.printStackTrace();
 		}
 		
-		
+		try {
+			Encoder encoder = new Encoder();
+			encoder.encode(astRoot);
+			
+			System.out.println("\n-- ENCODER --");
+		} catch (SemanticException e) {
+			e.printStackTrace();
+		}
 		
 	}
 	

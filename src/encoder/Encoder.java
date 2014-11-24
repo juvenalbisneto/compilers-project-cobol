@@ -1,7 +1,6 @@
 package encoder;
 
 import java.io.File;
-import java.util.ArrayList;
 
 import checker.SemanticException;
 import util.Arquivo;
@@ -10,12 +9,11 @@ import util.AST.Number;
 
 public class Encoder implements Visitor {
 	
-	ArrayList<Instruction> listInstruction = new ArrayList<Instruction>();
 	int contadorIf = 1, contadorElse = 1, contadorTest = 1, contadorWhile = 1;
 	int contadorDesvioCondicional = 1;
 	int nextInstr = 0;
 	
-	File arquivo = new File("Users/juvenalbisneto/Desktop/output.asm");
+	File arquivo = new File("/Users/juvenalbisneto/Desktop/Output/output.asm");
 	Arquivo out = new Arquivo(arquivo.toString(), arquivo.toString());
 	
 	public void encode(AST code) throws SemanticException {
