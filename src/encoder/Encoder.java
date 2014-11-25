@@ -24,7 +24,7 @@ public class Encoder implements Visitor {
 	public Object visitCode(Code code, Object args) throws SemanticException {
 		
 		this.out.println("SECTION .data");
-		this.out.println("intFormat: db \"%d\", 10, 0 ;");
+		this.out.println("intFormat: db \"%d\", 10, 0");
 		if (code.getGlobalDataDiv() != null) {
 			code.getGlobalDataDiv().visit(this, null);
 		}
