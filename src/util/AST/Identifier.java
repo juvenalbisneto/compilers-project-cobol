@@ -6,6 +6,7 @@ public  class Identifier extends Terminal {
 	public int kind = Types.VARIAVEL;
 	public Object declaration;
 	public String type;
+	public int memoryPosition;
 
 	public Identifier(String spelling) { 
 		super(spelling); 

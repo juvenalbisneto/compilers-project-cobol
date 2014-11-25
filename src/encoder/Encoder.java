@@ -8,7 +8,6 @@ import util.AST.*;
 import util.AST.Number;
 
 public class Encoder implements Visitor {
-	
 	int contadorIf = 1, contadorElse = 1, contadorTest = 1, contadorWhile = 1;
 	int contadorDesvioCondicional = 1;
 	int nextInstr = 0;
@@ -17,13 +16,78 @@ public class Encoder implements Visitor {
 	Arquivo out = new Arquivo(arquivo.toString(), arquivo.toString());
 	
 	public void encode(AST code) throws SemanticException {
-		this.out.println("extern  _printf");
+		this.out.println("extern  _printf\n");
 		code.visit(this, null);
 		this.out.close();
 	}
 	
 	public Object visitCode(Code code, Object args) throws SemanticException {
-		// TODO Auto-generated method stub
+		
+		this.out.println("SECTION .data");
+		this.out.println("intFormat: db \"%d\", 10, 0 ;");
+		if (code.getGlobalDataDiv() != null) {
+			code.getGlobalDataDiv().visit(this, null);
+		}
+		this.out.println();
+		
+		code.getProgramDiv().visit(this, null);
+		
+		return null;
+	}
+	
+	public Object visitGlobalDataDiv(GlobalDataDiv gdd, Object args)
+			throws SemanticException {
+		
+		if(gdd.getVarDeclaration() != null){
+			for (VarDeclaration varDecl : gdd.getVarDeclaration()) {
+				varDecl.visit(this, gdd);
+			}
+		}
+		
+		return null;
+	}
+	
+	public Object visitProgramDiv(ProgramDiv pdiv, Object args)
+			throws SemanticException {
+		this.out.println("SECTION .text");
+		this.out.println("global _WinMain@16\n");
+		
+		if(pdiv.getArrayFunction() != null){
+			for (Function func : pdiv.getArrayFunction()) {
+				func.visit(this, null);
+			}
+		}
+		
+		pdiv.getMainProc().visit(this, null);
+		
+		return null;
+	}
+	
+	public Object visitMainProc(MainProc main, Object args)
+			throws SemanticException {
+		
+		this.out.println("_WinMain@16:");
+		this.out.println("push ebp");
+		this.out.println("mov ebp, esp");
+		this.out.println();
+		
+		if (main.getVarDeclarations() != null) {
+			for (VarDeclaration varDecl : main.getVarDeclarations()) {
+				varDecl.visit(this, null);
+			}
+		}
+		
+		if (main.getCommands() != null) {
+			for (Command cmd : main.getCommands()) {
+				cmd.visit(this, null);
+			}
+		}
+		
+		this.out.println("mov esp, ebp");
+		this.out.println("pop ebp");
+		this.out.println("mov eax, 0");
+		this.out.println("ret");
+
 		return null;
 	}
 	
@@ -98,12 +162,6 @@ public class Encoder implements Visitor {
 		// TODO Auto-generated method stub
 		return null;
 	}
-
-	public Object visitGlobalDataDiv(GlobalDataDiv gdd, Object args)
-			throws SemanticException {
-		// TODO Auto-generated method stub
-		return null;
-	}
 	
 	public Object visitIdentifier(Identifier id, Object args)
 			throws SemanticException {
@@ -112,12 +170,6 @@ public class Encoder implements Visitor {
 	}
 	
 	public Object visitIfStatement(IfStatement ifStatement, Object args)
-			throws SemanticException {
-		// TODO Auto-generated method stub
-		return null;
-	}
-	
-	public Object visitMainProc(MainProc main, Object args)
 			throws SemanticException {
 		// TODO Auto-generated method stub
 		return null;
@@ -146,12 +198,6 @@ public class Encoder implements Visitor {
 		return null;
 	}
 	
-	public Object visitProgramDiv(ProgramDiv pdiv, Object args)
-			throws SemanticException {
-		// TODO Auto-generated method stub
-		return null;
-	}
-	
 	public Object visitReturn(Return rtn, Object args) throws SemanticException {
 		// TODO Auto-generated method stub
 		return null;
@@ -164,7 +210,18 @@ public class Encoder implements Visitor {
 
 	public Object visitVarPIC9Declaration(VarPIC9Declaration var9, Object args)
 			throws SemanticException {
-		// TODO Auto-generated method stub
+		if(args instanceof GlobalDataDiv) {
+			var9.getIdentifier().memoryPosition = this.nextInstr;
+			System.out.println(var9.getIdentifier().spelling+" "+var9.getNumber().spelling);
+			this.out.println(var9.getIdentifier().spelling + ": dd 0");
+			this.nextInstr += 4;
+		} else if (args == null) {
+			var9.getIdentifier().memoryPosition = this.nextInstr;
+			//TODO Pegar expressão e imprimir no arquivo
+			this.nextInstr += 4;
+		} else {
+			throw new SemanticException("Entrada invalida para a declaracao de variaveis.");
+		}
 		return null;
 	}
 

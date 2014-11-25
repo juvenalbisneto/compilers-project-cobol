@@ -60,13 +60,12 @@ public class Compiler {
 			System.out.println("\n-- CHECKER --");
 			
 		} catch (SemanticException e) {
-			// Shows the syntactic/lexical error stack trace 
 			e.printStackTrace();
 		}
 		
 		try {
 			Encoder encoder = new Encoder();
-			encoder.encode(astRoot);
+			encoder.encode((Code) astRoot);
 			
 			System.out.println("\n-- ENCODER --");
 		} catch (SemanticException e) {
