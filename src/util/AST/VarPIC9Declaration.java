@@ -13,7 +13,11 @@ public class VarPIC9Declaration extends VarDeclaration {
 	public VarPIC9Declaration(Identifier id, Number num){
 		super("PIC9");
 		super.id = id;
-		this.num = num;
+		if (num == null) {
+			this.num = new Number("0");
+		} else {
+			this.num = num;
+		}
 	}
 	
 	public Number getNumber(){

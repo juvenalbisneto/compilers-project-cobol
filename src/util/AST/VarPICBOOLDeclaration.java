@@ -13,7 +13,11 @@ public class VarPICBOOLDeclaration extends VarDeclaration {
 	public VarPICBOOLDeclaration(Identifier id, BoolValue bool){
 		super("PICBOOL");
 		super.id = id;
-		this.bool = bool;
+		if (this.bool == null) {
+			this.bool = new BoolValue("FALSE");
+		} else {
+			this.bool = bool;
+		}
 	}
 
 	public BoolValue getBoolValue(){
