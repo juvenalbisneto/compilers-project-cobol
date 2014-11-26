@@ -63,6 +63,12 @@ public class Encoder implements Visitor {
 		return null;
 	}
 	
+	public Object visitFunction(Function function, Object args)
+			throws SemanticException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
 	public Object visitMainProc(MainProc main, Object args)
 			throws SemanticException {
 		
@@ -151,12 +157,6 @@ public class Encoder implements Visitor {
 		return null;
 	}
 	
-	public Object visitFunction(Function function, Object args)
-			throws SemanticException {
-		// TODO Auto-generated method stub
-		return null;
-	}
-	
 	public Object visitFunctionCall(FunctionCall fcall, Object args)
 			throws SemanticException {
 		// TODO Auto-generated method stub
@@ -216,8 +216,10 @@ public class Encoder implements Visitor {
 			this.nextInstr += 4;
 		} else if (args == null) {
 			var9.getIdentifier().memoryPosition = this.nextInstr;
-			//TODO Pegar expressão e imprimir no arquivo
+			this.out.println("sub esp, 4");
+			this.out.println("push dword " + var9.getNumber().spelling);
 			this.nextInstr += 4;
+			this.out.println();
 		} else {
 			throw new SemanticException("Entrada invalida para a declaracao de variaveis PIC9.");
 		}
@@ -237,8 +239,15 @@ public class Encoder implements Visitor {
 			this.nextInstr += 4;
 		} else if (args == null) {
 			varBool.getIdentifier().memoryPosition = this.nextInstr;
-			//TODO Pegar expressão e imprimir no arquivo
+			this.out.println("sub esp, 4");
+			this.out.print("push dword ");
+			if(varBool.getBoolValue().spelling.equals("TRUE")){
+				this.out.println("1");
+			} else {
+				this.out.println("0");
+			}
 			this.nextInstr += 4;
+			this.out.println();
 		} else {
 			throw new SemanticException("Entrada invalida para a declaracao de variaveis PIC9.");
 		}
