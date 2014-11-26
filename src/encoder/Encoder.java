@@ -86,7 +86,7 @@ public class Encoder implements Visitor {
 		this.out.println("mov esp, ebp");
 		this.out.println("pop ebp");
 		this.out.println("mov eax, 0");
-		this.out.println("ret");
+		this.out.print("ret");
 
 		return null;
 	}
@@ -212,22 +212,37 @@ public class Encoder implements Visitor {
 			throws SemanticException {
 		if(args instanceof GlobalDataDiv) {
 			var9.getIdentifier().memoryPosition = this.nextInstr;
-			System.out.println(var9.getIdentifier().spelling+" "+var9.getNumber().spelling);
-			this.out.println(var9.getIdentifier().spelling + ": dd 0");
+			this.out.println(var9.getIdentifier().spelling + ": dd " + var9.getNumber().spelling);
 			this.nextInstr += 4;
 		} else if (args == null) {
 			var9.getIdentifier().memoryPosition = this.nextInstr;
 			//TODO Pegar expressão e imprimir no arquivo
 			this.nextInstr += 4;
 		} else {
-			throw new SemanticException("Entrada invalida para a declaracao de variaveis.");
+			throw new SemanticException("Entrada invalida para a declaracao de variaveis PIC9.");
 		}
 		return null;
 	}
 
 	public Object visitVarPICBOOLDeclaration(VarPICBOOLDeclaration varBool,
 			Object args) throws SemanticException {
-		// TODO Auto-generated method stub
+		if(args instanceof GlobalDataDiv) {
+			varBool.getIdentifier().memoryPosition = this.nextInstr;
+			this.out.print(varBool.getIdentifier().spelling + ": dd ");
+			if(varBool.getBoolValue().spelling.equals("TRUE")){
+				this.out.println("1");
+			} else {
+				this.out.println("0");
+			}
+			this.nextInstr += 4;
+		} else if (args == null) {
+			varBool.getIdentifier().memoryPosition = this.nextInstr;
+			//TODO Pegar expressão e imprimir no arquivo
+			this.nextInstr += 4;
+		} else {
+			throw new SemanticException("Entrada invalida para a declaracao de variaveis PIC9.");
+		}
+		
 		return null;
 	}
 
