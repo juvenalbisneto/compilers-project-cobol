@@ -8,16 +8,15 @@ import util.AST.*;
 import util.AST.Number;
 
 public class Encoder implements Visitor {
-	int contadorIf = 1, contadorElse = 1, contadorTest = 1, contadorWhile = 1;
-	int contadorDesvioCondicional = 1;
+	int contadorIf = 1, contadorUntil = 1;
 	int nextInstr = 0;
 	
-	File arquivo = new File("/Users/juvenalbisneto/Desktop/Output/output.asm");
+	File arquivo = new File("/Users/juvenalbisneto/Desktop/Output/program.asm");
 	Arquivo out = new Arquivo(arquivo.toString(), arquivo.toString());
 	
-	public void encode(AST code) throws SemanticException {
+	public void encode(AST root) throws SemanticException {
 		this.out.println("extern  _printf\n");
-		code.visit(this, null);
+		root.visit(this, null);
 		this.out.close();
 	}
 	
@@ -66,12 +65,33 @@ public class Encoder implements Visitor {
 	public Object visitFunction(Function function, Object args)
 			throws SemanticException {
 		// TODO Auto-generated method stub
+		this.out.println("_"+function.getID().spelling+":");
+		this.out.println("push ebp");
+		this.out.println("mov ebp, esp");
+		this.out.println();
+		
+		if (function.getVarDeclarations() != null) {
+			for (VarDeclaration varDecl : function.getVarDeclarations()) {
+				varDecl.visit(this, null);
+			}
+		}
+		
+		if (function.getCommands() != null) {
+			for (Command cmd : function.getCommands()) {
+				cmd.visit(this, null);
+			}
+		}
+		
+		this.out.println("mov esp, ebp");
+		this.out.println("pop ebp");
+		this.out.println("ret");
 		return null;
 	}
 	
 	public Object visitMainProc(MainProc main, Object args)
 			throws SemanticException {
 		
+		this.out.println("\n; -------------------------------\n");
 		this.out.println("_WinMain@16:");
 		this.out.println("push ebp");
 		this.out.println("mov ebp, esp");
@@ -127,12 +147,6 @@ public class Encoder implements Visitor {
 		return null;
 	}
 	
-	public Object visitBooleanExpression(BooleanExpression expression,
-			Object args) throws SemanticException {
-		// TODO Auto-generated method stub
-		return null;
-	}
-	
 	public Object visitBoolValue(BoolValue bool, Object args)
 			throws SemanticException {
 		// TODO Auto-generated method stub
@@ -153,7 +167,13 @@ public class Encoder implements Visitor {
 	
 	public Object visitDisplay(Display display, Object args)
 			throws SemanticException {
-		// TODO Auto-generated method stub
+		
+		// TODO push do dado que vai ser printado
+		this.out.println("push dword intFormat");
+		this.out.println("call _printf");
+		this.out.println("add esp, 8");
+		this.out.println();
+		
 		return null;
 	}
 	
@@ -171,13 +191,34 @@ public class Encoder implements Visitor {
 	
 	public Object visitIfStatement(IfStatement ifStatement, Object args)
 			throws SemanticException {
-		// TODO Auto-generated method stub
-		return null;
-	}
-	
-	public Object visitNumber(Number number, Object args)
-			throws SemanticException {
-		// TODO Auto-generated method stub
+		
+		ifStatement.getBooleanExpression().visit(this, null);
+		this.out.println("push dword 1");
+		this.out.println("pop ebx");
+		this.out.println("pop eax");
+		this.out.println("cmp eax, ebx");
+		this.out.println("jne else_"+this.contadorIf+"_block");
+		this.out.println();
+		
+		if (ifStatement.getCommandIF() != null) {
+			for (Command cmd : ifStatement.getCommandIF()) {
+				cmd.visit(this, null);
+			}
+		}
+		
+		this.out.println("jump if_"+this.contadorIf+"_final");
+		this.out.println("else_"+this.contadorIf+"_block:");
+		
+		if (ifStatement.getCommandElse() != null) {
+			for (Command cmd : ifStatement.getCommandElse()) {
+				cmd.visit(this, null);
+			}
+		}
+		
+		this.out.println("if_"+this.contadorIf+"_final:");
+		this.out.println();
+		
+		this.contadorIf++;
 		return null;
 	}
 	
@@ -225,7 +266,6 @@ public class Encoder implements Visitor {
 		}
 		return null;
 	}
-
 	public Object visitVarPICBOOLDeclaration(VarPICBOOLDeclaration varBool,
 			Object args) throws SemanticException {
 		if(args instanceof GlobalDataDiv) {
@@ -254,5 +294,13 @@ public class Encoder implements Visitor {
 		
 		return null;
 	}
-
+	
+	public Object visitNumber(Number number, Object args)
+			throws SemanticException {
+		return "PIC9";
+	}
+	public Object visitBooleanExpression(BooleanExpression expression,
+			Object args) throws SemanticException {
+		return "PICBOOL";
+	}
 }
