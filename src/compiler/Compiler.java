@@ -42,32 +42,28 @@ public class Compiler {
 		AST astRoot = null;
 		
 		try {
-			// Parses the source code
+			System.out.println("\n-- PARSER --");
 			astRoot = p.parse();
-			System.out.println("\n-- AST STRUCTURE --");
+			System.out.print("    AST Root: ");
 			if ( astRoot != null ) {
 				System.out.println(astRoot.toString(0));
 			}
 		} catch (SyntacticException e) {
-			// Shows the syntactic/lexical error stack trace 
 			e.printStackTrace();
 		}
 				
-		try {			
+		try {
+			System.out.println("\n-- CHECKER --");
 			Checker ckr = new Checker();
 			ckr.check((Code) astRoot);			
-			
-			System.out.println("\n-- CHECKER --");
-			
 		} catch (SemanticException e) {
 			e.printStackTrace();
 		}
 		
 		try {
+			System.out.println("\n-- ENCODER --");
 			Encoder encoder = new Encoder();
 			encoder.encode((Code) astRoot);
-			
-			System.out.println("\n-- ENCODER --");
 		} catch (SemanticException e) {
 			e.printStackTrace();
 		}
