@@ -7,6 +7,7 @@ import checker.SemanticException;
 public class Until extends Command {
 	BooleanExpression bexpression = null;
 	ArrayList<Command> cmd = null;
+	public int contadorUntil = 1;
 	
 	public Until(BooleanExpression bexpression, ArrayList<Command> cmd){
 		this.bexpression = bexpression;

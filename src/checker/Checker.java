@@ -9,6 +9,7 @@ import util.symbolsTable.IdentificationTable;
 public class Checker implements Visitor{
 	private IdentificationTable idTable;
 	private int numRetornos = 0;
+	private int contadorParametros = 0;
 	private Object transmit = null;
 
 	public void check(Code code) throws SemanticException {
@@ -70,7 +71,6 @@ public class Checker implements Visitor{
 		return null;
 	}
 
-//TODO Analisar parte comentada pra ver se quer essa regra (nao ter comandos apos um retorno)
 	public Object visitFunction(Function function, Object args)
 			throws SemanticException {
 		
@@ -83,24 +83,12 @@ public class Checker implements Visitor{
 				this.transmit = function.getParamsTypes().get(i);
 				function.getParams().get(i).visit(this, function);
 			}
+		this.contadorParametros = 0;
+		
 		if(function.getVarDeclarations() != null)
 			for (VarDeclaration vDec : function.getVarDeclarations()) {
 				vDec.visit(this, function);
 			}
-
-//			ArrayList<Command> cmds = new ArrayList<Command>();
-//			for (Command cmd : function.getCommands()) {
-//				if (cmd instanceof Return) {
-//					temp = cmd;
-//					cmds.add(cmd);
-//					break;
-//				} else
-//					cmds.add(cmd);
-//			}
-//
-//			if (cmds.size() != function.getCommands().size())
-//				throw new SemanticException(
-//						"Nao deve haver comandos apos o retorno do procedimentos ou funcoes! [Regra extra]");
 
 		Return ret = null;
 		if(function.getCommands() != null)
@@ -306,6 +294,8 @@ public class Checker implements Visitor{
 				id.kind = Types.PARAMETRO;
 				id.type = (String)this.transmit;
 				id.declaration = args;
+				id.memoryPosition = this.contadorParametros;
+				this.contadorParametros++;
 				idTable.enter(id.spelling, (AST) id);
 				this.transmit = null;
 			}

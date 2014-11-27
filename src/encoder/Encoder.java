@@ -164,12 +164,12 @@ public class Encoder implements Visitor {
 			throws SemanticException {
 		
 		ifStatement.getBooleanExpression().visit(this, null);
+		
 		this.out.println("push dword 1");
 		this.out.println("pop ebx");
 		this.out.println("pop eax");
 		this.out.println("cmp eax, ebx");
 		this.out.println("jne else_"+this.contadorIf+"_begin");
-		this.out.println();
 		
 		if (ifStatement.getCommandIF() != null) {
 			for (Command cmd : ifStatement.getCommandIF()) {
@@ -177,7 +177,7 @@ public class Encoder implements Visitor {
 			}
 		}
 		
-		this.out.println("jump if_"+this.contadorIf+"_end");
+		this.out.println("jmp if_"+this.contadorIf+"_end");
 		this.out.println("else_"+this.contadorIf+"_begin:");
 		
 		if (ifStatement.getCommandElse() != null) {
@@ -187,7 +187,6 @@ public class Encoder implements Visitor {
 		}
 		
 		this.out.println("if_"+this.contadorIf+"_end:");
-		this.out.println();
 		
 		this.contadorIf++;
 		return null;
@@ -216,23 +215,44 @@ public class Encoder implements Visitor {
 	}
 	
 	public Object visitUntil(Until until, Object args) throws SemanticException {
-		// TODO Auto-generated method stub
+		
+		until.contadorUntil = this.contadorUntil;
+		this.out.println("until_"+until.contadorUntil+"_begin:");
+		
+		until.getBooleanExpression().visit(this, null);
+		
+		this.out.println("push dword 1");
+		this.out.println("pop dword ebx");
+		this.out.println("pop dword eax");
+		this.out.println("cmp eax, ebx");
+		this.out.println("jne until_"+until.contadorUntil+"_end");
+		
+		if (until.getCommand() != null) {
+			for (Command cmd : until.getCommand()) {
+				cmd.visit(this, until);
+			}
+		}
+		
+		this.out.println("jmp until_"+until.contadorUntil+"_begin");
+		this.out.println("until_"+until.contadorUntil+"_end:");
+		
+		this.contadorUntil++;
 		return null;
 	}
 	public Object visitContinue(Continue cont, Object args)
 			throws SemanticException {
 		if(args instanceof Until){
-			this.out.println("jump until_"+((Until)args).contadorUntil+"_begin");
+			this.out.println("jmp until_"+((Until)args).contadorUntil+"_begin");
 		} else {
-			throw new SemanticException("Erro no CONTINUE.");
+			throw new SemanticException("[Encoder] Erro no CONTINUE.");
 		}
 		return null;
 	}
 	public Object visitBreak(Break brk, Object args) throws SemanticException {
 		if(args instanceof Until){
-			this.out.println("jump until_"+((Until)args).contadorUntil+"_end");
+			this.out.println("jmp until_"+((Until)args).contadorUntil+"_end");
 		} else {
-			throw new SemanticException("Erro no BREAK.");
+			throw new SemanticException("[Encoder] Erro no BREAK.");
 		}
 		return null;
 	}
@@ -240,12 +260,17 @@ public class Encoder implements Visitor {
 	public Object visitDisplay(Display display, Object args)
 			throws SemanticException {
 		
-		// TODO push do dado que vai ser printado
+		if (display.getIdentifier() != null) {
+			display.getIdentifier().visit(this, display);
+		} else if(display.getExpression() != null) {
+			display.getExpression().visit(this, display);
+		} else {
+			throw new SemanticException("[Encoder] Erro no DISPLAY.");
+		}
 		
 		this.out.println("push dword intFormat");
 		this.out.println("call _printf");
 		this.out.println("add esp, 8");
-		this.out.println();
 		
 		return null;
 	}
