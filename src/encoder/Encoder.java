@@ -64,7 +64,8 @@ public class Encoder implements Visitor {
 	
 	public Object visitFunction(Function function, Object args)
 			throws SemanticException {
-		// TODO Auto-generated method stub
+		
+		this.out.println("\n; ------------------------------- ;\n");
 		this.out.println("_"+function.getID().spelling+":");
 		this.out.println("push ebp");
 		this.out.println("mov ebp, esp");
@@ -91,7 +92,7 @@ public class Encoder implements Visitor {
 	public Object visitMainProc(MainProc main, Object args)
 			throws SemanticException {
 		
-		this.out.println("\n; -------------------------------\n");
+		this.out.println("\n; ------------------------------- ;\n");
 		this.out.println("_WinMain@16:");
 		this.out.println("push ebp");
 		this.out.println("mov ebp, esp");
@@ -117,9 +118,9 @@ public class Encoder implements Visitor {
 		return null;
 	}
 	
-	public Object visitAccept(Accept accept, Object args)
-			throws SemanticException {
-		// TODO Auto-generated method stub
+	public Object visitBooleanExpression(BooleanExpression expression,
+			Object args) throws SemanticException {
+		//TODO Auto-generated method stub
 		return null;
 	}
 	
@@ -147,36 +148,6 @@ public class Encoder implements Visitor {
 		return null;
 	}
 	
-	public Object visitBoolValue(BoolValue bool, Object args)
-			throws SemanticException {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	
-	public Object visitBreak(Break brk, Object args) throws SemanticException {
-		// TODO Auto-generated method stub
-		return null;
-	}
-	
-	public Object visitContinue(Continue cont, Object args)
-			throws SemanticException {
-		// TODO Auto-generated method stub
-		return null;
-	}
-	
-	public Object visitDisplay(Display display, Object args)
-			throws SemanticException {
-		
-		// TODO push do dado que vai ser printado
-		this.out.println("push dword intFormat");
-		this.out.println("call _printf");
-		this.out.println("add esp, 8");
-		this.out.println();
-		
-		return null;
-	}
-	
 	public Object visitFunctionCall(FunctionCall fcall, Object args)
 			throws SemanticException {
 		// TODO Auto-generated method stub
@@ -197,7 +168,7 @@ public class Encoder implements Visitor {
 		this.out.println("pop ebx");
 		this.out.println("pop eax");
 		this.out.println("cmp eax, ebx");
-		this.out.println("jne else_"+this.contadorIf+"_block");
+		this.out.println("jne else_"+this.contadorIf+"_begin");
 		this.out.println();
 		
 		if (ifStatement.getCommandIF() != null) {
@@ -206,8 +177,8 @@ public class Encoder implements Visitor {
 			}
 		}
 		
-		this.out.println("jump if_"+this.contadorIf+"_final");
-		this.out.println("else_"+this.contadorIf+"_block:");
+		this.out.println("jump if_"+this.contadorIf+"_end");
+		this.out.println("else_"+this.contadorIf+"_begin:");
 		
 		if (ifStatement.getCommandElse() != null) {
 			for (Command cmd : ifStatement.getCommandElse()) {
@@ -215,7 +186,7 @@ public class Encoder implements Visitor {
 			}
 		}
 		
-		this.out.println("if_"+this.contadorIf+"_final:");
+		this.out.println("if_"+this.contadorIf+"_end:");
 		this.out.println();
 		
 		this.contadorIf++;
@@ -246,6 +217,36 @@ public class Encoder implements Visitor {
 	
 	public Object visitUntil(Until until, Object args) throws SemanticException {
 		// TODO Auto-generated method stub
+		return null;
+	}
+	public Object visitContinue(Continue cont, Object args)
+			throws SemanticException {
+		if(args instanceof Until){
+			this.out.println("jump until_"+((Until)args).contadorUntil+"_begin");
+		} else {
+			throw new SemanticException("Erro no CONTINUE.");
+		}
+		return null;
+	}
+	public Object visitBreak(Break brk, Object args) throws SemanticException {
+		if(args instanceof Until){
+			this.out.println("jump until_"+((Until)args).contadorUntil+"_end");
+		} else {
+			throw new SemanticException("Erro no BREAK.");
+		}
+		return null;
+	}
+	
+	public Object visitDisplay(Display display, Object args)
+			throws SemanticException {
+		
+		// TODO push do dado que vai ser printado
+		
+		this.out.println("push dword intFormat");
+		this.out.println("call _printf");
+		this.out.println("add esp, 8");
+		this.out.println();
+		
 		return null;
 	}
 
@@ -295,12 +296,18 @@ public class Encoder implements Visitor {
 		return null;
 	}
 	
+	public Object visitAccept(Accept accept, Object args)
+			throws SemanticException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
 	public Object visitNumber(Number number, Object args)
 			throws SemanticException {
 		return "PIC9";
 	}
-	public Object visitBooleanExpression(BooleanExpression expression,
-			Object args) throws SemanticException {
+	public Object visitBoolValue(BoolValue bool, Object args)
+			throws SemanticException {
 		return "PICBOOL";
 	}
 }
