@@ -73,7 +73,7 @@ public class Encoder implements Visitor {
 		
 		if (function.getVarDeclarations() != null) {
 			for (VarDeclaration varDecl : function.getVarDeclarations()) {
-				varDecl.visit(this, null);
+				varDecl.visit(this, function);
 			}
 		}
 		
@@ -100,7 +100,7 @@ public class Encoder implements Visitor {
 		
 		if (main.getVarDeclarations() != null) {
 			for (VarDeclaration varDecl : main.getVarDeclarations()) {
-				varDecl.visit(this, null);
+				varDecl.visit(this, main);
 			}
 		}
 		
@@ -173,7 +173,7 @@ public class Encoder implements Visitor {
 		
 		if (ifStatement.getCommandIF() != null) {
 			for (Command cmd : ifStatement.getCommandIF()) {
-				cmd.visit(this, null);
+				cmd.visit(this, args);
 			}
 		}
 		
@@ -182,30 +182,13 @@ public class Encoder implements Visitor {
 		
 		if (ifStatement.getCommandElse() != null) {
 			for (Command cmd : ifStatement.getCommandElse()) {
-				cmd.visit(this, null);
+				cmd.visit(this, args);
 			}
 		}
 		
 		this.out.println("if_"+this.contadorIf+"_end:");
 		
 		this.contadorIf++;
-		return null;
-	}
-	
-	public Object visitOpAdd(OpAdd opAdd, Object args) throws SemanticException {
-		// TODO Auto-generated method stub
-		return null;
-	}
-	
-	public Object visitOpMult(OpMult opMult, Object args)
-			throws SemanticException {
-		// TODO Auto-generated method stub
-		return null;
-	}
-	
-	public Object visitOpRelational(OpRelational opRel, Object args)
-			throws SemanticException {
-		// TODO Auto-generated method stub
 		return null;
 	}
 	
@@ -292,14 +275,14 @@ public class Encoder implements Visitor {
 			var9.getIdentifier().memoryPosition = this.nextInstr;
 			this.out.println(var9.getIdentifier().spelling + ": dd " + var9.getNumber().spelling);
 			this.nextInstr += 4;
-		} else if (args == null) {
+		} else if (args instanceof Function || args instanceof MainProc) {
 			var9.getIdentifier().memoryPosition = this.nextInstr;
 			this.out.println("sub esp, 4");
 			this.out.println("push dword " + var9.getNumber().spelling);
 			this.nextInstr += 4;
 			this.out.println();
 		} else {
-			throw new SemanticException("Entrada invalida para a declaracao de variaveis PIC9.");
+			throw new SemanticException("[Encoder] Entrada invalida para a declaracao de variaveis PIC9.");
 		}
 		return null;
 	}
@@ -314,7 +297,7 @@ public class Encoder implements Visitor {
 				this.out.println("0");
 			}
 			this.nextInstr += 4;
-		} else if (args == null) {
+		} else if (args instanceof Function || args instanceof MainProc) {
 			varBool.getIdentifier().memoryPosition = this.nextInstr;
 			this.out.println("sub esp, 4");
 			this.out.print("push dword ");
@@ -326,7 +309,7 @@ public class Encoder implements Visitor {
 			this.nextInstr += 4;
 			this.out.println();
 		} else {
-			throw new SemanticException("Entrada invalida para a declaracao de variaveis PIC9.");
+			throw new SemanticException("[Encoder] Entrada invalida para a declaracao de variaveis PIC9.");
 		}
 		
 		return null;
@@ -345,5 +328,15 @@ public class Encoder implements Visitor {
 	public Object visitBoolValue(BoolValue bool, Object args)
 			throws SemanticException {
 		return "PICBOOL";
+	}
+	
+	public Object visitOpAdd(OpAdd opAdd, Object args) throws SemanticException {
+		return null;
+	}
+	public Object visitOpMult(OpMult opMult, Object args) throws SemanticException {
+		return null;
+	}
+	public Object visitOpRelational(OpRelational opRel, Object args) throws SemanticException {
+		return null;
 	}
 }
