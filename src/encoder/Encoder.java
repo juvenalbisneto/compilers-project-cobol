@@ -210,7 +210,18 @@ public class Encoder implements Visitor {
 	}
 	
 	public Object visitReturn(Return rtn, Object args) throws SemanticException {
-		// TODO Auto-generated method stub
+
+		if (rtn.getIdentifier() != null) {
+			rtn.getIdentifier().visit(this, rtn);
+		} else if (rtn.getExpression() != null) {
+			rtn.getExpression().visit(this, rtn);
+		}
+		
+		this.out.println("pop dword eax");
+		this.out.println("mov esp, ebp");
+		this.out.println("pop ebp");
+		this.out.println("ret");
+		
 		return null;
 	}
 	
