@@ -111,6 +111,7 @@ public class Encoder implements Visitor {
 			}
 		}
 		
+		this.out.println();
 		this.out.println("mov esp, ebp");
 		this.out.println("pop ebp");
 		this.out.println("mov eax, 0");
@@ -175,14 +176,16 @@ public class Encoder implements Visitor {
 		
 		if (term.getArithmeticTerm() != null) {
 			term.getArithmeticTerm().visit(this, args);
-			
-			this.out.println("pop ebx");
-			this.out.println("pop eax");
 
 			if (term.getOpMult().spelling.equals("*")) {
-				this.out.println("imul eax, ebx");
+				this.out.println("pop ecx");
+				this.out.println("pop eax");
+				this.out.println("mul ecx");
 			} else if (term.getOpMult().spelling.equals("/")) {
-				this.out.println("div eax, ebx");
+				this.out.println("pop ecx");
+				this.out.println("mov edx, 0");
+				this.out.println("pop eax");
+				this.out.println("div ecx");
 			}
 			
 			this.out.println("push eax");
@@ -198,7 +201,6 @@ public class Encoder implements Visitor {
 		} else if (factor.getArithmeticParcel() != null) {
 			factor.getArithmeticParcel().visit(this, args);
 		} else if (factor.getId() != null) {
-			System.out.println(factor.getId().spelling + " " + factor.getId().local);
 			if (factor.getId().local) {
 				if (factor.getId().kind == Types.PARAMETRO) {
 					this.out.println("push dword [ebp+"+factor.getId().memoryPosition+"]");
@@ -233,7 +235,6 @@ public class Encoder implements Visitor {
 	public Object visitIdentifier(Identifier id, Object args)
 			throws SemanticException {
 		// TODO Auto-generated method stub
-		System.out.println(id.spelling+" "+id.local);
 		return null;
 	}
 	
@@ -358,7 +359,6 @@ public class Encoder implements Visitor {
 			this.out.println("sub esp, 4");
 			this.out.println("push dword " + var9.getNumber().spelling);
 			this.nextInstr += 4;
-			this.out.println();
 		} else {
 			throw new SemanticException("[Encoder] Entrada invalida para a declaracao de variaveis PIC9.");
 		}
@@ -386,7 +386,6 @@ public class Encoder implements Visitor {
 				this.out.println("0");
 			}
 			this.nextInstr += 4;
-			this.out.println();
 		} else {
 			throw new SemanticException("[Encoder] Entrada invalida para a declaracao de variaveis PIC9.");
 		}
