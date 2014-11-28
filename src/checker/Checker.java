@@ -31,9 +31,8 @@ public class Checker implements Visitor{
 		if(gdd.getVarDeclaration() != null)
 			for (VarDeclaration vDec : gdd.getVarDeclaration()) {
 				vDec.visit(this, null);
-				VarDeclaration temp = (VarDeclaration)idTable.retrieve(vDec.getIdentifier().spelling);
-				temp.getIdentifier().local = false;
 			}
+		
 		return null;
 	}
 
@@ -175,7 +174,7 @@ public class Checker implements Visitor{
 		ArithmeticFactor fac = term.getArithmeticFactor();
 		Object temp = fac.visit(this, args);
 		if (termo == null) {
-			return fac.visit(this, args);
+			return temp;
 		} else if (termo.visit(this, args) != null && termo.visit(this, args).equals(temp)) {
 			return temp;
 		} else {
@@ -188,10 +187,13 @@ public class Checker implements Visitor{
 		if (factor.getId() != null) {
 			Object id = idTable.retrieve(factor.getId().spelling);
 			if(id instanceof VarPIC9Declaration){
+				factor.id = ((VarPIC9Declaration)id).getIdentifier();
 				return "PIC9";
 			} else if (id instanceof VarPICBOOLDeclaration){
+				factor.id = ((VarPICBOOLDeclaration)id).getIdentifier();
 				return "PICBOOL";
 			} else if (id instanceof Identifier && ( ((Identifier)id).kind == Types.VARIAVEL || ((Identifier)id).kind == Types.PARAMETRO )){
+				factor.id = (Identifier)id;
 				return ((Identifier)id).type;
 			} else {
 				throw new SemanticException("Tipo de Identifier incompatível com o Factor.");
