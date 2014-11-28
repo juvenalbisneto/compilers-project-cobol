@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import checker.SemanticException;
 
 public class FunctionCall extends Command {
-	Identifier id = null;
+	public Identifier id = null;
 	ArrayList<Identifier> ids = new ArrayList<Identifier>();
 	
 	public FunctionCall (Identifier nome){

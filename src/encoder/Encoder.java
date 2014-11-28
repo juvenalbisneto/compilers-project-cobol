@@ -198,14 +198,15 @@ public class Encoder implements Visitor {
 		} else if (factor.getArithmeticParcel() != null) {
 			factor.getArithmeticParcel().visit(this, args);
 		} else if (factor.getId() != null) {
+			System.out.println(factor.getId().spelling + " " + factor.getId().local);
 			if (factor.getId().local) {
 				if (factor.getId().kind == Types.PARAMETRO) {
-					this.out.println("pop dword [ ebp + "+factor.getId().memoryPosition+" ]");
+					this.out.println("push dword [ebp+"+factor.getId().memoryPosition+"]");
 				} else if (factor.getId().kind == Types.VARIAVEL) {
-					this.out.println("pop dword [ ebp - "+factor.getId().memoryPosition+" ]");
+					this.out.println("push dword [ebp-"+factor.getId().memoryPosition+"]");
 				}
 			} else {
-				this.out.println("pop dword ["+factor.getId().spelling+"]");
+				this.out.println("push dword ["+factor.getId().spelling+"]");
 			}
 		}
 		return null;
@@ -348,6 +349,7 @@ public class Encoder implements Visitor {
 	public Object visitVarPIC9Declaration(VarPIC9Declaration var9, Object args)
 			throws SemanticException {
 		if(args instanceof GlobalDataDiv) {
+			var9.getIdentifier().local = false;
 			var9.getIdentifier().memoryPosition = this.nextInstr;
 			this.out.println(var9.getIdentifier().spelling + ": dd " + var9.getNumber().spelling);
 			this.nextInstr += 4;
@@ -365,6 +367,7 @@ public class Encoder implements Visitor {
 	public Object visitVarPICBOOLDeclaration(VarPICBOOLDeclaration varBool,
 			Object args) throws SemanticException {
 		if(args instanceof GlobalDataDiv) {
+			varBool.getIdentifier().local = false;
 			varBool.getIdentifier().memoryPosition = this.nextInstr;
 			this.out.print(varBool.getIdentifier().spelling + ": dd ");
 			if(varBool.getBoolValue().spelling.equals("TRUE")){
@@ -393,7 +396,6 @@ public class Encoder implements Visitor {
 	
 	public Object visitAccept(Accept accept, Object args)
 			throws SemanticException {
-		// TODO Auto-generated method stub
 		if (accept.getIdIn() != null) {
 			accept.getIdIn().visit(this, accept);
 		} else if (accept.getExpression() != null) {
@@ -404,9 +406,9 @@ public class Encoder implements Visitor {
 		
 		if (accept.getIdentifier().local) {
 			if (accept.getIdentifier().kind == Types.PARAMETRO) {
-				this.out.println("pop dword [ ebp + "+accept.getIdentifier().memoryPosition+" ]");
+				this.out.println("pop dword [ebp+"+accept.getIdentifier().memoryPosition+"]");
 			} else if (accept.getIdentifier().kind == Types.VARIAVEL) {
-				this.out.println("pop dword [ ebp - "+accept.getIdentifier().memoryPosition+" ]");
+				this.out.println("pop dword [ebp-"+accept.getIdentifier().memoryPosition+"]");
 			}
 		} else {
 			this.out.println("pop dword ["+accept.getIdentifier().spelling+"]");

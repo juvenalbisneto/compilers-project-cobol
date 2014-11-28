@@ -187,13 +187,13 @@ public class Checker implements Visitor{
 		if (factor.getId() != null) {
 			Object id = idTable.retrieve(factor.getId().spelling);
 			if(id instanceof VarPIC9Declaration){
-				factor.id = ((VarPIC9Declaration)id).getIdentifier();
+				factor.setId(((VarPIC9Declaration)id).getIdentifier());
 				return "PIC9";
 			} else if (id instanceof VarPICBOOLDeclaration){
-				factor.id = ((VarPICBOOLDeclaration)id).getIdentifier();
+				factor.setId(((VarPICBOOLDeclaration)id).getIdentifier());
 				return "PICBOOL";
 			} else if (id instanceof Identifier && ( ((Identifier)id).kind == Types.VARIAVEL || ((Identifier)id).kind == Types.PARAMETRO )){
-				factor.id = (Identifier)id;
+				factor.setId((Identifier)id);
 				return ((Identifier)id).type;
 			} else {
 				throw new SemanticException("Tipo de Identifier incompatível com o Factor.");
@@ -215,14 +215,33 @@ public class Checker implements Visitor{
 					&& (idTable.retrieve(expression.getIdentifier_l().spelling) instanceof VarPICBOOLDeclaration
 						|| (idTable.retrieve(expression.getIdentifier_l().spelling) instanceof Identifier
 							&& ((Identifier)idTable.retrieve(expression.getIdentifier_l().spelling)).type.equals("PICBOOL"))))) {
-
+			
+			if (expression.getIdentifier_l() != null) {
+				Object temp = idTable.retrieve(expression.getIdentifier_l().spelling);
+				if(temp instanceof Identifier){
+					expression.setIdentifier_l((Identifier)temp);
+				} else if (temp instanceof VarPICBOOLDeclaration){
+					expression.setIdentifier_l(((VarPICBOOLDeclaration)temp).getIdentifier());
+				}
+			}
+			
 			if(expression.getOpRelational().spelling.equals("=") || expression.getOpRelational().spelling.equals("<>")){
 				if (expression.getBooleanExpression_r() != null){
-					return "PICBOOL";
+					return expression.getBooleanExpression_r().visit(this, args);
 				} else if (expression.getIdentifier_r() != null
 						&& (idTable.retrieve(expression.getIdentifier_r().spelling) instanceof VarPICBOOLDeclaration
 								|| (idTable.retrieve(expression.getIdentifier_r().spelling) instanceof Identifier 
 										&& ((Identifier)idTable.retrieve(expression.getIdentifier_r().spelling)).type.equals("PICBOOL")))) {
+					
+					if (expression.getIdentifier_r() != null) {
+						Object temp = idTable.retrieve(expression.getIdentifier_r().spelling);
+						if(temp instanceof Identifier){
+							expression.setIdentifier_r((Identifier)temp);
+						} else if (temp instanceof VarPICBOOLDeclaration){
+							expression.setIdentifier_r(((VarPICBOOLDeclaration)temp).getIdentifier());
+						}
+					}
+					
 					return "PICBOOL";
 				} else {
 					throw new SemanticException("Erro! Nao se pode comparar um booleano com um numero");
@@ -235,7 +254,16 @@ public class Checker implements Visitor{
 					&& (idTable.retrieve(expression.getIdentifier_l().spelling) instanceof VarPIC9Declaration
 						|| (idTable.retrieve(expression.getIdentifier_l().spelling) instanceof Identifier
 							&& ((Identifier)idTable.retrieve(expression.getIdentifier_l().spelling)).type.equals("PIC9"))))) {
-
+			
+			if (expression.getIdentifier_l() != null) {
+				Object temp = idTable.retrieve(expression.getIdentifier_l().spelling);
+				if(temp instanceof Identifier){
+					expression.setIdentifier_l((Identifier)temp);
+				} else if (temp instanceof VarPIC9Declaration){
+					expression.setIdentifier_l(((VarPIC9Declaration)temp).getIdentifier());
+				}
+			}
+			
 			if (expression.getArithmeticExpression_r() != null
 					&& expression.getArithmeticExpression_r().visit(this, args).equals("PIC9")) {
 				return "PICBOOL";
@@ -243,6 +271,16 @@ public class Checker implements Visitor{
 					&& (idTable.retrieve(expression.getIdentifier_r().spelling) instanceof VarPIC9Declaration
 							|| (idTable.retrieve(expression.getIdentifier_r().spelling) instanceof Identifier 
 									&& ((Identifier)idTable.retrieve(expression.getIdentifier_r().spelling)).type.equals("PIC9")))) {
+				
+				if (expression.getIdentifier_r() != null) {
+					Object temp = idTable.retrieve(expression.getIdentifier_r().spelling);
+					if(temp instanceof Identifier){
+						expression.setIdentifier_r((Identifier)temp);
+					} else if (temp instanceof VarPIC9Declaration){
+						expression.setIdentifier_r(((VarPIC9Declaration)temp).getIdentifier());
+					}
+				}
+				
 				return "PICBOOL";
 			} else {
 				throw new SemanticException("Erro! Nao se pode comparar um numero com um booleano");
@@ -266,13 +304,23 @@ public class Checker implements Visitor{
 			} else {
 				ArrayList<String> paramsTypesFunc = ((Function) func).getParamsTypes();
 				ArrayList<Identifier> paramsCall = fcall.getParams();
+				
 
 				if (paramsTypesFunc.size() != paramsCall.size()) {
 					throw new SemanticException("Quantidade de parametros passada diferente da quantidade de parametros requeridas pela Funcao!");
 				} else if(paramsTypesFunc.size() > 0){
 					for (int i = 0; i < paramsTypesFunc.size(); i++) {
-						if (!paramsTypesFunc.get(i).equals( ((VarDeclaration)idTable.retrieve(paramsCall.get(i).spelling)).getType() )) {
-							throw new SemanticException("Tipo dos parametros informados não correspondem ao tipo esperado");
+						Object temp = idTable.retrieve(paramsCall.get(i).spelling);
+						if (temp instanceof VarDeclaration){
+							paramsCall.set(i, ((VarDeclaration)temp).getIdentifier());
+							if(!paramsTypesFunc.get(i).equals( ((VarDeclaration)temp).getType() ))
+								throw new SemanticException("Tipo dos parametros informados não correspondem ao tipo esperado");
+						} else if (temp instanceof Identifier){
+							paramsCall.set(i, (Identifier)temp);
+							if(!paramsTypesFunc.get(i).equals( ((Identifier)temp).type ))
+								throw new SemanticException("Tipo dos parametros informados não correspondem ao tipo esperado");
+						} else {
+							throw new SemanticException("Tipo de argumento invalido para o CALL");
 						}
 					}
 				}
@@ -309,9 +357,14 @@ public class Checker implements Visitor{
 				throw new SemanticException("A variavel " + id.spelling + " nao foi declarada!");
 			} else {
 				if(temp instanceof VarPIC9Declaration) {
+					id = ((VarPIC9Declaration) temp).getIdentifier();
 					return ((VarPIC9Declaration) temp).getType();
 				} else if(temp instanceof VarPICBOOLDeclaration){
+					id = ((VarPICBOOLDeclaration) temp).getIdentifier();
 					return ((VarPICBOOLDeclaration) temp).getType();
+				} else if (temp instanceof Identifier) {
+					id = (Identifier)temp;
+					return ((Identifier)temp).type;
 				}
 			}
 		} else if(args instanceof Display){
@@ -320,6 +373,16 @@ public class Checker implements Visitor{
 				throw new SemanticException("A variavel "
 						+ ((Display) args).getIdentifier().spelling
 						+ " nao foi declarada!");
+			}
+			if(temp instanceof VarPIC9Declaration) {
+				id = ((VarPIC9Declaration) temp).getIdentifier();
+				return ((VarPIC9Declaration) temp).getType();
+			} else if(temp instanceof VarPICBOOLDeclaration){
+				id = ((VarPICBOOLDeclaration) temp).getIdentifier();
+				return ((VarPICBOOLDeclaration) temp).getType();
+			} else if (temp instanceof Identifier) {
+				id = (Identifier)temp;
+				return ((Identifier)temp).type;
 			}
 		} else {
 			throw new SemanticException("Identificador invalido.");
@@ -381,7 +444,8 @@ public class Checker implements Visitor{
 					throw new SemanticException("A variavel " + rtn.getIdentifier().spelling + " nao foi declarada!");
 
 				} else if(id instanceof VarDeclaration){
-
+					rtn.setIdentifier(((VarDeclaration)id).getIdentifier());
+					
 					if(id instanceof VarPIC9Declaration && !func.getTipoRetorno().equals("PIC9")){
 						throw new SemanticException("Valor retornado eh PIC9 e a funcao requer retorno do tipo PICBOOL!");
 					} else if(id instanceof VarPICBOOLDeclaration  && !func.getTipoRetorno().equals("PICBOOL")){
@@ -389,6 +453,8 @@ public class Checker implements Visitor{
 					}
 
 				} else if(id instanceof Identifier){
+					rtn.setIdentifier((Identifier)id);
+					
 					if(((Identifier)id).kind == Types.VARIAVEL || ((Identifier)id).kind == Types.PARAMETRO){
 						if(((Identifier)id).type.equals("PIC9") && !func.getTipoRetorno().equals("PIC9")){
 							throw new SemanticException("Valor retornado eh PIC9 e a funcao requer retorno do tipo PICBOOL!");
@@ -464,6 +530,11 @@ public class Checker implements Visitor{
 			if(id == null){
 				throw new SemanticException("Variavel " + display.getIdentifier().spelling + " nao declarada!");
 			} else if(id instanceof VarDeclaration || ((Identifier)id).kind == Types.VARIAVEL || ((Identifier)id).kind == Types.PARAMETRO){
+				if (id instanceof VarDeclaration) {
+					display.setIdentifier(((VarDeclaration)id).getIdentifier());
+				} else {
+					display.setIdentifier((Identifier)id);
+				}
 				display.getIdentifier().visit(this, display);
 			}
 		} else if (display.getExpression() != null){

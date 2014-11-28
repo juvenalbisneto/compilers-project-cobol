@@ -92,8 +92,14 @@ public class BooleanExpression extends Expression {
 	public Identifier getIdentifier_l(){
 		return this.id_l;
 	}
+	public void setIdentifier_l(Identifier id){
+		this.id_l = id;
+	}
 	public Identifier getIdentifier_r(){
 		return this.id_r;
+	}
+	public void setIdentifier_r(Identifier id){
+		this.id_r = id;
 	}
 	
 	@Override

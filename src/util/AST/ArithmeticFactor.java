@@ -20,6 +20,9 @@ public class ArithmeticFactor extends AST {
 	public Identifier getId(){
 		return this.id;
 	}
+	public void setId(Identifier id){
+		this.id = id;
+	}
 	public Number getNumber(){
 		return this.num;
 	}
