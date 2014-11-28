@@ -121,7 +121,16 @@ public class Encoder implements Visitor {
 	
 	public Object visitBooleanExpression(BooleanExpression expression,
 			Object args) throws SemanticException {
-		//TODO Auto-generated method stub
+		
+		if (expression.getBooleanValue() != null) {
+			if (expression.getBooleanValue().spelling.equals("TRUE")) {
+				this.out.println("push dword 1");
+			} else {
+				this.out.println("push dword 0");
+			}
+		} else if (true) {
+			//TODO
+		}
 		return null;
 	}
 	
@@ -190,7 +199,15 @@ public class Encoder implements Visitor {
 		} else if (factor.getArithmeticParcel() != null) {
 			factor.getArithmeticParcel().visit(this, args);
 		} else if (factor.getId() != null) {
-			
+			if (factor.getId().local) {
+				if (factor.getId().kind == Types.PARAMETRO) {
+					this.out.println("pop dword [ ebp + "+factor.getId().memoryPosition+" ]");
+				} else if (factor.getId().kind == Types.VARIAVEL) {
+					this.out.println("pop dword [ ebp - "+factor.getId().memoryPosition+" ]");
+				}
+			} else {
+				this.out.println("pop dword ["+factor.getId().spelling+"]");
+			}
 		}
 		return null;
 	}
