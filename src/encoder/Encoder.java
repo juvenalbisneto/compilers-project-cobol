@@ -176,7 +176,6 @@ public class Encoder implements Visitor {
 		if (term.getArithmeticTerm() != null) {
 			term.getArithmeticTerm().visit(this, args);
 			
-			term.getArithmeticTerm().visit(this, args);
 			this.out.println("pop ebx");
 			this.out.println("pop eax");
 
