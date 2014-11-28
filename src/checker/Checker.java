@@ -31,6 +31,8 @@ public class Checker implements Visitor{
 		if(gdd.getVarDeclaration() != null)
 			for (VarDeclaration vDec : gdd.getVarDeclaration()) {
 				vDec.visit(this, null);
+				VarDeclaration temp = (VarDeclaration)idTable.retrieve(vDec.getIdentifier().spelling);
+				temp.getIdentifier().local = false;
 			}
 		return null;
 	}

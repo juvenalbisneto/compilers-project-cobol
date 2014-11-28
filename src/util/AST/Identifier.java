@@ -7,6 +7,7 @@ public  class Identifier extends Terminal {
 	public Object declaration;
 	public String type;
 	public int memoryPosition;
+	public boolean local = true;
 
 	public Identifier(String spelling) { 
 		super(spelling); 

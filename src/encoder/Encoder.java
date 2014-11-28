@@ -5,6 +5,7 @@ import java.io.File;
 import checker.SemanticException;
 import util.Arquivo;
 import util.AST.*;
+import util.AST.AST.Types;
 import util.AST.Number;
 
 public class Encoder implements Visitor {
@@ -126,37 +127,96 @@ public class Encoder implements Visitor {
 	
 	public Object visitArithmeticExpression(ArithmeticExpression expression,
 			Object args) throws SemanticException {
-		// TODO Auto-generated method stub
+		
+		if (expression.getNumber() != null) {
+			this.out.println("push dword "+expression.getNumber().spelling);
+		} else if (expression.getArithmeticParcel() != null) {
+			expression.getArithmeticParcel().visit(this, args);
+		}
+		
 		return null;
 	}
 	
 	public Object visitArithmeticParcel(ArithmeticParcel parcel, Object args)
 			throws SemanticException {
-		// TODO Auto-generated method stub
+		
+		parcel.getArithmeticTerm().visit(this, args);
+		
+		if (parcel.getArithmeticParcel() != null) {
+			parcel.getArithmeticParcel().visit(this, args);
+			this.out.println("pop ebx");
+			this.out.println("pop eax");
+			
+			if (parcel.getOpAdd().spelling.equals("+")) {
+				this.out.println("add eax, ebx");
+			} else if (parcel.getOpAdd().spelling.equals("-")) {
+				this.out.println("sub eax, ebx");
+			}
+			
+			this.out.println("push eax");
+		}
+		
 		return null;
 	}
 	
 	public Object visitArithmeticTerm(ArithmeticTerm term, Object args)
 			throws SemanticException {
-		// TODO Auto-generated method stub
+		
+		term.getArithmeticFactor().visit(this, args);
+		
+		if (term.getArithmeticTerm() != null) {
+			term.getArithmeticTerm().visit(this, args);
+			
+			term.getArithmeticTerm().visit(this, args);
+			this.out.println("pop ebx");
+			this.out.println("pop eax");
+
+			if (term.getOpMult().spelling.equals("*")) {
+				this.out.println("imul eax, ebx");
+			} else if (term.getOpMult().spelling.equals("/")) {
+				this.out.println("div eax, ebx");
+			}
+			
+			this.out.println("push eax");
+		}
 		return null;
 	}
 	
 	public Object visitArithmeticFactor(ArithmeticFactor factor, Object args)
 			throws SemanticException {
-		// TODO Auto-generated method stub
+		
+		if (factor.getNumber() != null) {
+			this.out.println("push dword "+factor.getNumber().spelling);
+		} else if (factor.getArithmeticParcel() != null) {
+			factor.getArithmeticParcel().visit(this, args);
+		} else if (factor.getId() != null) {
+			
+		}
 		return null;
 	}
 	
 	public Object visitFunctionCall(FunctionCall fcall, Object args)
 			throws SemanticException {
-		// TODO Auto-generated method stub
+		
+		for (Identifier id : fcall.getParams()) {
+			id.visit(this, fcall);
+		}
+		
+		this.out.println("call _"+fcall.getId().spelling);
+		this.out.println("add esp, " + (fcall.getParams().size() * 4));
+		if (fcall.getId().type != null) {
+			if (!(fcall.getId().equals("VOID"))) {
+				this.out.println("push eax");
+			}
+		}
+		// (?)
 		return null;
 	}
 	
 	public Object visitIdentifier(Identifier id, Object args)
 			throws SemanticException {
 		// TODO Auto-generated method stub
+		System.out.println(id.spelling+" "+id.local);
 		return null;
 	}
 	
@@ -318,6 +378,23 @@ public class Encoder implements Visitor {
 	public Object visitAccept(Accept accept, Object args)
 			throws SemanticException {
 		// TODO Auto-generated method stub
+		if (accept.getIdIn() != null) {
+			accept.getIdIn().visit(this, accept);
+		} else if (accept.getExpression() != null) {
+			accept.getExpression().visit(this, null);
+		} else if (accept.getFunctionCall() != null) {
+			accept.getFunctionCall().visit(this, null);
+		}
+		
+		if (accept.getIdentifier().local) {
+			if (accept.getIdentifier().kind == Types.PARAMETRO) {
+				this.out.println("pop dword [ ebp + "+accept.getIdentifier().memoryPosition+" ]");
+			} else if (accept.getIdentifier().kind == Types.VARIAVEL) {
+				this.out.println("pop dword [ ebp - "+accept.getIdentifier().memoryPosition+" ]");
+			}
+		} else {
+			this.out.println("pop dword ["+accept.getIdentifier().spelling+"]");
+		}
 		return null;
 	}
 	
