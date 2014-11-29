@@ -217,9 +217,9 @@ public class Encoder implements Visitor {
 	
 	public Object visitFunctionCall(FunctionCall fcall, Object args)
 			throws SemanticException {
-		//TODO Corrigir
-		for (Identifier id : fcall.getParams()) {
-			id.visit(this, fcall);
+		
+		for (int i = fcall.getParams().size()-1; i >= 0; i--) {
+			fcall.getParams().get(i).visit(this, fcall);
 		}
 		
 		this.out.println("call _"+fcall.getId().spelling);
@@ -235,10 +235,9 @@ public class Encoder implements Visitor {
 	public Object visitIdentifier(Identifier id, Object args)
 			throws SemanticException {
 		// TODO Auto-generated method stub
-		// Accept | Display | FunctionCall | Return
 		// (?) BoolExp
 		
-		if (args instanceof Accept || args instanceof Display) {
+		if (args instanceof Accept || args instanceof Display || args instanceof Return || args instanceof FunctionCall) {
 			if (id.local) {
 				if (id.kind == Types.PARAMETRO) {
 					this.out.println("push dword [ebp+"+id.memoryPosition+"]");
@@ -248,6 +247,8 @@ public class Encoder implements Visitor {
 			} else {
 				this.out.println("push dword ["+id.spelling+"]");
 			}
+		} else {
+			throw new SemanticException("visitIdentifier nao definido para o visit chamador");
 		}
 		
 		return null;
