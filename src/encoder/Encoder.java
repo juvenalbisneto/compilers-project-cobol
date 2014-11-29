@@ -238,7 +238,7 @@ public class Encoder implements Visitor {
 		// Accept | Display | FunctionCall | Return
 		// (?) BoolExp
 		
-		if (args instanceof Accept) {
+		if (args instanceof Accept || args instanceof Display) {
 			if (id.local) {
 				if (id.kind == Types.PARAMETRO) {
 					this.out.println("push dword [ebp+"+id.memoryPosition+"]");
@@ -411,8 +411,7 @@ public class Encoder implements Visitor {
 		} else if (accept.getFunctionCall() != null) {
 			accept.getFunctionCall().visit(this, null);
 		}
-		System.out.println(accept.getIdentifier().spelling+" "+accept.getIdentifier().local);
-		System.out.println(accept.getIdIn().spelling+" "+accept.getIdIn().local);
+		
 		if (accept.getIdentifier().local) {
 			if (accept.getIdentifier().kind == Types.PARAMETRO) {
 				this.out.println("pop dword [ebp+"+accept.getIdentifier().memoryPosition+"]");

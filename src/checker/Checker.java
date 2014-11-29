@@ -115,6 +115,13 @@ public class Checker implements Visitor{
 			throws SemanticException {
 
 		Object temp = idTable.retrieve(accept.getIdentifier().spelling);
+		
+		if (temp instanceof VarDeclaration) {
+			accept.setIdentifier(((VarDeclaration)temp).getIdentifier());
+		} else if (temp instanceof Identifier) {
+			accept.setIdentifier((Identifier)temp);
+		}
+		
 		if(temp == null){
 			throw new SemanticException("Variavel " + accept.getIdentifier().spelling + " nao declarada!");
 		} else {

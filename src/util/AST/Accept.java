@@ -24,6 +24,9 @@ public class Accept extends Command {
 		public Identifier getIdentifier(){
 			return this.id;
 		}
+		public void setIdentifier(Identifier id){
+			this.id = id;
+		}
 		public Expression getExpression(){
 			return this.exp;
 		}
