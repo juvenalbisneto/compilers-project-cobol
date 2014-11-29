@@ -216,7 +216,7 @@ public class Encoder implements Visitor {
 	
 	public Object visitFunctionCall(FunctionCall fcall, Object args)
 			throws SemanticException {
-		
+		//TODO Corrigir
 		for (Identifier id : fcall.getParams()) {
 			id.visit(this, fcall);
 		}
@@ -228,13 +228,14 @@ public class Encoder implements Visitor {
 				this.out.println("push eax");
 			}
 		}
-		// (?)
 		return null;
 	}
 	
 	public Object visitIdentifier(Identifier id, Object args)
 			throws SemanticException {
 		// TODO Auto-generated method stub
+		// Accept | Display | FunctionCall | Return
+		// (?) BoolExp
 		return null;
 	}
 	
