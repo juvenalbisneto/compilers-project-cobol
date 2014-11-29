@@ -1,4 +1,6 @@
 package compiler;
+import java.io.IOException;
+
 import checker.Checker;
 import checker.SemanticException;
 import encoder.Encoder;
@@ -29,8 +31,9 @@ public class Compiler {
 	 * @param args - none
 	 * @throws LexicalException 
 	 * @throws SemanticException 
+	 * @throws IOException 
 	 */
-	public static void main(String[] args) throws LexicalException, SemanticException {
+	public static void main(String[] args) throws LexicalException, SemanticException, IOException {
 		testScanner();
 		// Initializes the identification table with the reserved words 
 		Compiler.initIdentificationTable();

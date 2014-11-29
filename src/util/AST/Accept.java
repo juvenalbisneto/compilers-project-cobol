@@ -33,6 +33,9 @@ public class Accept extends Command {
 		public Identifier getIdIn(){
 			return this.idIn;
 		}
+		public void setIdIn(Identifier id){
+			this.idIn = id;
+		}
 		
 		@Override
 		public String toString(int level) {

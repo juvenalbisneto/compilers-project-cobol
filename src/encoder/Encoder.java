@@ -1,6 +1,7 @@
 package encoder;
 
 import java.io.File;
+import java.io.IOException;
 
 import checker.SemanticException;
 import util.Arquivo;
@@ -13,9 +14,12 @@ public class Encoder implements Visitor {
 	private int nextInstr = 4;
 	
 	File arquivo = new File("/Users/juvenalbisneto/Desktop/Output/program.asm");
-	Arquivo out = new Arquivo(arquivo.toString(), arquivo.toString());
+	Arquivo out = null;
 	
-	public void encode(AST root) throws SemanticException {
+	public void encode(AST root) throws SemanticException, IOException {
+		arquivo.getParentFile().mkdirs();
+		arquivo.createNewFile();
+		out = new Arquivo(arquivo.toString(), arquivo.toString());
 		this.out.println("extern  _printf\n");
 		root.visit(this, null);
 		this.out.close();
@@ -146,7 +150,6 @@ public class Encoder implements Visitor {
 		
 		return null;
 	}
-	
 	public Object visitArithmeticParcel(ArithmeticParcel parcel, Object args)
 			throws SemanticException {
 		
@@ -168,7 +171,6 @@ public class Encoder implements Visitor {
 		
 		return null;
 	}
-	
 	public Object visitArithmeticTerm(ArithmeticTerm term, Object args)
 			throws SemanticException {
 		
@@ -192,7 +194,6 @@ public class Encoder implements Visitor {
 		}
 		return null;
 	}
-	
 	public Object visitArithmeticFactor(ArithmeticFactor factor, Object args)
 			throws SemanticException {
 		
@@ -236,6 +237,19 @@ public class Encoder implements Visitor {
 		// TODO Auto-generated method stub
 		// Accept | Display | FunctionCall | Return
 		// (?) BoolExp
+		
+		if (args instanceof Accept) {
+			if (id.local) {
+				if (id.kind == Types.PARAMETRO) {
+					this.out.println("push dword [ebp+"+id.memoryPosition+"]");
+				} else if (id.kind == Types.VARIAVEL) {
+					this.out.println("push dword [ebp-"+id.memoryPosition+"]");
+				}
+			} else {
+				this.out.println("push dword ["+id.spelling+"]");
+			}
+		}
+		
 		return null;
 	}
 	
@@ -397,7 +411,8 @@ public class Encoder implements Visitor {
 		} else if (accept.getFunctionCall() != null) {
 			accept.getFunctionCall().visit(this, null);
 		}
-		
+		System.out.println(accept.getIdentifier().spelling+" "+accept.getIdentifier().local);
+		System.out.println(accept.getIdIn().spelling+" "+accept.getIdIn().local);
 		if (accept.getIdentifier().local) {
 			if (accept.getIdentifier().kind == Types.PARAMETRO) {
 				this.out.println("pop dword [ebp+"+accept.getIdentifier().memoryPosition+"]");

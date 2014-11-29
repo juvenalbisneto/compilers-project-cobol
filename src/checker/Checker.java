@@ -119,11 +119,21 @@ public class Checker implements Visitor{
 			throw new SemanticException("Variavel " + accept.getIdentifier().spelling + " nao declarada!");
 		} else {
 			if (accept.getIdIn() != null) {
-				VarDeclaration input = ((VarDeclaration)idTable.retrieve(accept.getIdIn().spelling));
-				if(!input.getType().equals(((VarDeclaration)temp).getType())){
-					throw new SemanticException(
-							"Tipos incompativeis. O valor atribuido nao eh do tipo da variavel!");
+				Object input = idTable.retrieve(accept.getIdIn().spelling);
+				if (input instanceof VarDeclaration) {
+					accept.setIdIn(((VarDeclaration)input).getIdentifier());
+					if(!((VarDeclaration)input).getType().equals(((VarDeclaration)temp).getType())){
+						throw new SemanticException(
+								"Tipos incompativeis. O valor atribuido nao eh do tipo da variavel!");
+					}
+				} else if (input instanceof Identifier) {
+					accept.setIdIn((Identifier)input);
+					if(!((Identifier)input).type.equals(((VarDeclaration)temp).getType())){
+						throw new SemanticException(
+								"Tipos incompativeis. O valor atribuido nao eh do tipo da variavel!");
+					}
 				}
+				
 			} else if (accept.getFunctionCall() != null) {
 				Function func = (Function)idTable.retrieve(accept.getFunctionCall().getId().spelling);
 				if(!func.getTipoRetorno().equals(((VarDeclaration)temp).getType())){
