@@ -9,8 +9,8 @@ import util.AST.AST.Types;
 import util.AST.Number;
 
 public class Encoder implements Visitor {
-	int contadorIf = 1, contadorUntil = 1;
-	int nextInstr = 0;
+	private int contadorIf = 1, contadorUntil = 1;
+	private int nextInstr = 0;
 	
 	File arquivo = new File("/Users/juvenalbisneto/Desktop/Output/program.asm");
 	Arquivo out = new Arquivo(arquivo.toString(), arquivo.toString());
@@ -356,7 +356,6 @@ public class Encoder implements Visitor {
 			this.nextInstr += 4;
 		} else if (args instanceof Function || args instanceof MainProc) {
 			var9.getIdentifier().memoryPosition = this.nextInstr;
-			this.out.println("sub esp, 4");
 			this.out.println("push dword " + var9.getNumber().spelling);
 			this.nextInstr += 4;
 		} else {
@@ -368,17 +367,14 @@ public class Encoder implements Visitor {
 			Object args) throws SemanticException {
 		if(args instanceof GlobalDataDiv) {
 			varBool.getIdentifier().local = false;
-			varBool.getIdentifier().memoryPosition = this.nextInstr;
 			this.out.print(varBool.getIdentifier().spelling + ": dd ");
 			if(varBool.getBoolValue().spelling.equals("TRUE")){
 				this.out.println("1");
 			} else {
 				this.out.println("0");
 			}
-			this.nextInstr += 4;
 		} else if (args instanceof Function || args instanceof MainProc) {
 			varBool.getIdentifier().memoryPosition = this.nextInstr;
-			this.out.println("sub esp, 4");
 			this.out.print("push dword ");
 			if(varBool.getBoolValue().spelling.equals("TRUE")){
 				this.out.println("1");
