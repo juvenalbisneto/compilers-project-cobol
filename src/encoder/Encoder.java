@@ -10,7 +10,7 @@ import util.AST.Number;
 
 public class Encoder implements Visitor {
 	private int contadorIf = 1, contadorUntil = 1;
-	private int nextInstr = 0;
+	private int nextInstr = 4;
 	
 	File arquivo = new File("/Users/juvenalbisneto/Desktop/Output/program.asm");
 	Arquivo out = new Arquivo(arquivo.toString(), arquivo.toString());
@@ -351,9 +351,7 @@ public class Encoder implements Visitor {
 			throws SemanticException {
 		if(args instanceof GlobalDataDiv) {
 			var9.getIdentifier().local = false;
-			var9.getIdentifier().memoryPosition = this.nextInstr;
 			this.out.println(var9.getIdentifier().spelling + ": dd " + var9.getNumber().spelling);
-			this.nextInstr += 4;
 		} else if (args instanceof Function || args instanceof MainProc) {
 			var9.getIdentifier().memoryPosition = this.nextInstr;
 			this.out.println("push dword " + var9.getNumber().spelling);
