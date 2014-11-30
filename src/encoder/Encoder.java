@@ -208,7 +208,7 @@ public class Encoder implements Visitor {
 		} else if (factor.getArithmeticParcel() != null) {
 			factor.getArithmeticParcel().visit(this, args);
 		} else if (factor.getId() != null) {
-			factor.getId().visit(this, factor);
+			factor.getId().visit(this, null);
 		}
 		return null;
 	}
@@ -217,7 +217,7 @@ public class Encoder implements Visitor {
 			throws SemanticException {
 		
 		for (int i = fcall.getParams().size()-1; i >= 0; i--) {
-			fcall.getParams().get(i).visit(this, fcall);
+			fcall.getParams().get(i).visit(this, null);
 		}
 		
 		this.out.println("call _"+fcall.getId().spelling);
@@ -234,28 +234,20 @@ public class Encoder implements Visitor {
 	
 	public Object visitIdentifier(Identifier id, Object args)
 			throws SemanticException {
-		// TODO Auto-generated method stub
-		// BoolExp
-		if (args instanceof Accept) {
-			if (id.local) {
-				if (id.kind == Types.PARAMETRO) {
-					this.out.println("pop dword [ebp+"+(id.memoryPosition*4+8)+"]");
-				} else if (id.kind == Types.VARIAVEL) {
-					this.out.println("pop dword [ebp-"+id.memoryPosition+"]");
-				}
-			} else {
-				this.out.println("pop dword ["+id.spelling+"]");
+		
+		if (args instanceof Accept)
+			this.out.print("pop ");
+		else
+			this.out.print("push ");
+		
+		if (id.local) {
+			if (id.kind == Types.PARAMETRO) {
+				this.out.println("dword [ebp+"+(id.memoryPosition*4+8)+"]");
+			} else if (id.kind == Types.VARIAVEL) {
+				this.out.println("dword [ebp-"+id.memoryPosition+"]");
 			}
 		} else {
-			if (id.local) {
-				if (id.kind == Types.PARAMETRO) {
-					this.out.println("push dword [ebp+"+(id.memoryPosition*4+8)+"]");
-				} else if (id.kind == Types.VARIAVEL) {
-					this.out.println("push dword [ebp-"+id.memoryPosition+"]");
-				}
-			} else {
-				this.out.println("push dword ["+id.spelling+"]");
-			}
+			this.out.println("dword ["+id.spelling+"]");
 		}
 		
 		return null;
