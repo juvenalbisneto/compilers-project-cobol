@@ -10,7 +10,7 @@ import util.AST.AST.Types;
 import util.AST.Number;
 
 public class Encoder implements Visitor {
-	private int contadorIf = 1, contadorUntil = 1;
+	private int contadorIf = 1, contadorUntil = 1, contadorBool = 1;
 	private int nextInstr = 4;
 	//juvenal
 	//File arquivo = new File("/Users/juvenalbisneto/Desktop/Output/program.asm");
@@ -132,14 +132,56 @@ public class Encoder implements Visitor {
 	
 	public Object visitBooleanExpression(BooleanExpression expression,
 			Object args) throws SemanticException {
-		
+
 		if (expression.getBooleanValue() != null) {
 			expression.getBooleanValue().visit(this, null);
-		} else if (true) {
-			//TODO
+		} else {
+			if (expression.getIdentifier_l() != null) {
+				expression.getIdentifier_l().visit(this, null);
+			} else if (expression.getArithmeticExpression_l() != null) {
+				expression.getArithmeticExpression_l().visit(this, null);
+			} else if (expression.getBooleanExpression_l() != null) {
+				expression.getBooleanExpression_l().visit(this, null);
+			}
+			
+			if (expression.getIdentifier_r() != null) {
+				expression.getIdentifier_r().visit(this, null);
+			} else if (expression.getArithmeticExpression_r() != null) {
+				expression.getArithmeticExpression_r().visit(this, null);
+			} else if (expression.getBooleanExpression_r() != null) {
+				expression.getBooleanExpression_r().visit(this, null);
+			}
+			
+			this.out.println("pop dword ebx");
+			this.out.println("pop dword eax");
+			this.out.println("cmp eax, ebx");
+			
+			if (expression.getOpRelational().spelling.equals("<=")) {
+				this.out.print("jle");
+			} else if (expression.getOpRelational().spelling.equals(">=")) {
+				this.out.print("jge");
+			} else if (expression.getOpRelational().spelling.equals("<")) {
+				this.out.print("jl");
+			} else if (expression.getOpRelational().spelling.equals(">")) {
+				this.out.print("jg");
+			} else if (expression.getOpRelational().spelling.equals("=")) {
+				this.out.print("je");
+			} else if (expression.getOpRelational().spelling.equals("<>")) {
+				this.out.print("jne");
+			}
+			
+			this.out.println(" .comp_"+this.contadorBool+"_true");
+			this.out.println("push dword 0");
+			this.out.println("jmp .comp_"+this.contadorBool+"_end");
+			this.out.println(".comp_"+this.contadorBool+"_true:");
+			this.out.println("push dword 1");			
+			this.out.println(".comp_"+this.contadorBool+"_end:");
+			
+			this.contadorBool++;
 		}
-		return null;
-	}
+		
+	return null;
+}
 	
 	public Object visitArithmeticExpression(ArithmeticExpression expression,
 			Object args) throws SemanticException {
