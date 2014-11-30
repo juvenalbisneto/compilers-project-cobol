@@ -235,11 +235,11 @@ public class Encoder implements Visitor {
 	public Object visitIdentifier(Identifier id, Object args)
 			throws SemanticException {
 		// TODO Auto-generated method stub
-		// BoolExp ArithmeticFactor
+		// BoolExp
 		if (args instanceof Accept) {
 			if (id.local) {
 				if (id.kind == Types.PARAMETRO) {
-					this.out.println("pop dword [ebp+"+id.memoryPosition+"]");
+					this.out.println("pop dword [ebp+"+(id.memoryPosition*4+8)+"]");
 				} else if (id.kind == Types.VARIAVEL) {
 					this.out.println("pop dword [ebp-"+id.memoryPosition+"]");
 				}
