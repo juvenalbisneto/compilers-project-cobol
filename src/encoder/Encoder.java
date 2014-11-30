@@ -76,6 +76,7 @@ public class Encoder implements Visitor {
 		this.out.println("mov ebp, esp");
 		this.out.println();
 		
+		this.nextInstr = 4;
 		if (function.getVarDeclarations() != null) {
 			for (VarDeclaration varDecl : function.getVarDeclarations()) {
 				varDecl.visit(this, function);
@@ -103,6 +104,7 @@ public class Encoder implements Visitor {
 		this.out.println("mov ebp, esp");
 		this.out.println();
 		
+		this.nextInstr = 4;
 		if (main.getVarDeclarations() != null) {
 			for (VarDeclaration varDecl : main.getVarDeclarations()) {
 				varDecl.visit(this, main);
@@ -202,15 +204,7 @@ public class Encoder implements Visitor {
 		} else if (factor.getArithmeticParcel() != null) {
 			factor.getArithmeticParcel().visit(this, args);
 		} else if (factor.getId() != null) {
-			if (factor.getId().local) {
-				if (factor.getId().kind == Types.PARAMETRO) {
-					this.out.println("push dword [ebp+"+factor.getId().memoryPosition+"]");
-				} else if (factor.getId().kind == Types.VARIAVEL) {
-					this.out.println("push dword [ebp-"+factor.getId().memoryPosition+"]");
-				}
-			} else {
-				this.out.println("push dword ["+factor.getId().spelling+"]");
-			}
+			factor.getId().visit(this, factor);
 		}
 		return null;
 	}
@@ -223,10 +217,12 @@ public class Encoder implements Visitor {
 		}
 		
 		this.out.println("call _"+fcall.getId().spelling);
-		this.out.println("add esp, " + (fcall.getParams().size() * 4));
+		if (fcall.getParams().size() > 0) {
+			this.out.println("add esp, " + (fcall.getParams().size() * 4));
+		}
 		if (fcall.getId().type != null) {
 			if (!(fcall.getId().equals("VOID"))) {
-				this.out.println("push eax");
+				this.out.println("push dword eax");
 			}
 		}
 		return null;
@@ -235,20 +231,27 @@ public class Encoder implements Visitor {
 	public Object visitIdentifier(Identifier id, Object args)
 			throws SemanticException {
 		// TODO Auto-generated method stub
-		// (?) BoolExp
-		
-		if (args instanceof Accept || args instanceof Display || args instanceof Return || args instanceof FunctionCall) {
+		// BoolExp ArithmeticFactor
+		if (args instanceof Accept) {
 			if (id.local) {
 				if (id.kind == Types.PARAMETRO) {
-					this.out.println("push dword [ebp+"+id.memoryPosition+"]");
+					this.out.println("pop dword [ebp+"+id.memoryPosition+"]");
+				} else if (id.kind == Types.VARIAVEL) {
+					this.out.println("pop dword [ebp-"+id.memoryPosition+"]");
+				}
+			} else {
+				this.out.println("pop dword ["+id.spelling+"]");
+			}
+		} else {
+			if (id.local) {
+				if (id.kind == Types.PARAMETRO) {
+					this.out.println("push dword [ebp+"+(id.memoryPosition*4+8)+"]");
 				} else if (id.kind == Types.VARIAVEL) {
 					this.out.println("push dword [ebp-"+id.memoryPosition+"]");
 				}
 			} else {
 				this.out.println("push dword ["+id.spelling+"]");
 			}
-		} else {
-			throw new SemanticException("visitIdentifier nao definido para o visit chamador");
 		}
 		
 		return null;
@@ -289,7 +292,7 @@ public class Encoder implements Visitor {
 	public Object visitReturn(Return rtn, Object args) throws SemanticException {
 
 		if (rtn.getIdentifier() != null) {
-			rtn.getIdentifier().visit(this, rtn);
+			rtn.getIdentifier().visit(this, null);
 		} else if (rtn.getExpression() != null) {
 			rtn.getExpression().visit(this, rtn);
 		}
@@ -406,22 +409,15 @@ public class Encoder implements Visitor {
 	public Object visitAccept(Accept accept, Object args)
 			throws SemanticException {
 		if (accept.getIdIn() != null) {
-			accept.getIdIn().visit(this, accept);
+			accept.getIdIn().visit(this, null);
 		} else if (accept.getExpression() != null) {
 			accept.getExpression().visit(this, null);
 		} else if (accept.getFunctionCall() != null) {
 			accept.getFunctionCall().visit(this, null);
 		}
 		
-		if (accept.getIdentifier().local) {
-			if (accept.getIdentifier().kind == Types.PARAMETRO) {
-				this.out.println("pop dword [ebp+"+accept.getIdentifier().memoryPosition+"]");
-			} else if (accept.getIdentifier().kind == Types.VARIAVEL) {
-				this.out.println("pop dword [ebp-"+accept.getIdentifier().memoryPosition+"]");
-			}
-		} else {
-			this.out.println("pop dword ["+accept.getIdentifier().spelling+"]");
-		}
+		accept.getIdentifier().visit(this, accept);
+		
 		return null;
 	}
 	
