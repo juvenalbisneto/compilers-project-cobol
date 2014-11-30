@@ -295,8 +295,6 @@ public class Scanner {
 						throw new LexicalException("Lexical ERROR: Invalid Number", this.currentChar, this.line, this.column);
 					}
 					return TokenType.NUMBER;
-//				} else if(this.currentSpelling.charAt(0) != '(' && this.currentChar == ')') {
-//					throw new LexicalException("Lexical ERROR: Invalid Number syntax", this.currentChar, this.line, this.column);
 				} else {
 					return TokenType.NUMBER;
 				}
