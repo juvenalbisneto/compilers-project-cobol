@@ -319,6 +319,7 @@ public class Checker implements Visitor{
 			if (!(func instanceof Function)) {
 				throw new SemanticException("Identificador "+ fcall.getId().spelling + " nao representa uma Funcao!");
 			} else {
+				fcall.setId(((Function)func).getID());
 				ArrayList<String> paramsTypesFunc = ((Function) func).getParamsTypes();
 				ArrayList<Identifier> paramsCall = fcall.getParams();
 				
