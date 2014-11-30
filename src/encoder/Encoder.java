@@ -134,11 +134,7 @@ public class Encoder implements Visitor {
 			Object args) throws SemanticException {
 		
 		if (expression.getBooleanValue() != null) {
-			if (expression.getBooleanValue().spelling.equals("TRUE")) {
-				this.out.println("push dword 1");
-			} else {
-				this.out.println("push dword 0");
-			}
+			expression.getBooleanValue().visit(this, null);
 		} else if (true) {
 			//TODO
 		}
@@ -149,7 +145,7 @@ public class Encoder implements Visitor {
 			Object args) throws SemanticException {
 		
 		if (expression.getNumber() != null) {
-			this.out.println("push dword "+expression.getNumber().spelling);
+			expression.getNumber().visit(this, null);
 		} else if (expression.getArithmeticParcel() != null) {
 			expression.getArithmeticParcel().visit(this, args);
 		}
@@ -204,7 +200,7 @@ public class Encoder implements Visitor {
 			throws SemanticException {
 		
 		if (factor.getNumber() != null) {
-			this.out.println("push dword "+factor.getNumber().spelling);
+			factor.getNumber().visit(this, null);
 		} else if (factor.getArithmeticParcel() != null) {
 			factor.getArithmeticParcel().visit(this, args);
 		} else if (factor.getId() != null) {
@@ -419,10 +415,16 @@ public class Encoder implements Visitor {
 	
 	public Object visitNumber(Number number, Object args)
 			throws SemanticException {
-		return "PIC9";
+		this.out.println("push dword "+number.spelling);
+		return null;
 	}
 	public Object visitBoolValue(BoolValue bool, Object args)
 			throws SemanticException {
-		return "PICBOOL";
+		if (bool.spelling.equals("TRUE")) {
+			this.out.println("push dword 1");
+		} else {
+			this.out.println("push dword 0");
+		}
+		return null;
 	}
 }
