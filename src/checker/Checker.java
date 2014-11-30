@@ -571,16 +571,4 @@ public class Checker implements Visitor{
 			throws SemanticException {
 		return "PICBOOL";
 	}
-
-	public Object visitOpAdd(OpAdd opAdd, Object args) throws SemanticException {
-		return null;
-	}
-	public Object visitOpMult(OpMult opMult, Object args)
-			throws SemanticException {
-		return null;
-	}
-	public Object visitOpRelational(OpRelational opRel, Object args)
-			throws SemanticException {
-		return null;
-	}
 }

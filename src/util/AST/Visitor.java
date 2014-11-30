@@ -21,9 +21,6 @@ public interface Visitor {
 	public Object visitIfStatement			(IfStatement ifStatement, Object args)			throws SemanticException;
 	public Object visitMainProc				(MainProc main, Object args)					throws SemanticException;
 	public Object visitNumber				(Number number, Object args)					throws SemanticException;
-	public Object visitOpAdd				(OpAdd opAdd, Object args)						throws SemanticException;
-	public Object visitOpMult				(OpMult opMult, Object args)					throws SemanticException;
-	public Object visitOpRelational			(OpRelational opRel, Object args)				throws SemanticException;
 	public Object visitProgramDiv			(ProgramDiv pdiv, Object args)					throws SemanticException;
 	public Object visitReturn				(Return rtn, Object args)						throws SemanticException;
 	public Object visitUntil				(Until until, Object args)						throws SemanticException;
