@@ -185,8 +185,11 @@ public class Scanner {
 						this.getNextChar();
 						return TokenType.COMMA;
 					} else if (this.currentChar == '('){
+						s = TokenType.L_PAR;
 						this.getNextChar();
-						return TokenType.L_PAR;
+						break;
+//						this.getNextChar();
+//						return TokenType.L_PAR;
 					} else if (this.currentChar == ')'){
 						this.getNextChar();
 						return TokenType.R_PAR;
@@ -282,8 +285,25 @@ public class Scanner {
 					s = TokenType.NUMBER;
 					this.getNextChar();
 					break;
+				} else if(this.currentSpelling.charAt(0) == '(' && this.currentChar == ')'){
+					this.getNextChar();
+					this.currentSpelling.deleteCharAt(0);
+					this.currentSpelling.deleteCharAt(this.currentSpelling.length()-1);
+					if(this.currentSpelling.charAt(0) == '+')
+						this.currentSpelling.deleteCharAt(0);
+					return TokenType.NUMBER;
+				} else if(this.currentSpelling.charAt(0) != '(' && this.currentChar == ')') {
+					throw new LexicalException("Lexical ERROR: Invalid Number syntax", this.currentChar, this.line, this.column);
 				} else {
 					return TokenType.NUMBER;
+				}
+			case TokenType.L_PAR:
+				if (this.currentChar == '+' || this.currentChar == '-') {
+					s = TokenType.NUMBER;
+					this.getNextChar();
+					break;
+				} else {
+					return TokenType.L_PAR;
 				}
 			case TokenType.MAJOR:
 				if (this.currentChar == '='){
