@@ -12,8 +12,12 @@ import util.AST.Number;
 public class Encoder implements Visitor {
 	private int contadorIf = 1, contadorUntil = 1;
 	private int nextInstr = 4;
+	//juvenal
+	//File arquivo = new File("/Users/juvenalbisneto/Desktop/Output/program.asm");
 	
-	File arquivo = new File("/Users/juvenalbisneto/Desktop/Output/program.asm");
+	//arthur
+	File arquivo = new File("C:/Users/Arthur/Desktop/program.asm");
+	
 	Arquivo out = null;
 	
 	public void encode(AST root) throws SemanticException, IOException {
