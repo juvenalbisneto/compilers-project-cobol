@@ -10,7 +10,7 @@ import util.AST.AST.Types;
 import util.AST.Number;
 
 public class Encoder implements Visitor {
-	private int contadorIf = 1, contadorUntil = 1, contadorBool = 1;
+	private int contadorIf = 1, contadorUntil = 1, contadorBool = 1, contadorDiv = 1;
 	private int nextInstr = 4;
 	//juvenal
 	//File arquivo = new File("/Users/juvenalbisneto/Desktop/Output/program.asm");
@@ -229,9 +229,23 @@ public class Encoder implements Visitor {
 				this.out.println("mul ecx");
 			} else if (term.getOpMult().spelling.equals("/")) {
 				this.out.println("pop ecx");
-				this.out.println("mov edx, 0");
 				this.out.println("pop eax");
-				this.out.println("div ecx");
+				
+				this.out.println("push dword [esp-4]");
+				this.out.println("push dword 0");
+				this.out.println("pop ebx");
+				this.out.println("pop eax");
+				this.out.println("cmp eax, ebx");
+				this.out.println("jl _div_"+this.contadorDiv+"_else");
+				this.out.println("mov edx, 0");
+				this.out.println("jmp _div_"+this.contadorDiv+"_end");
+				this.out.println("_div_"+this.contadorDiv+"_else:");
+				this.out.println("mov edx, -1");
+				this.out.println("_div_"+this.contadorDiv+"_end:");
+				this.contadorDiv++;
+				
+				
+				this.out.println("idiv ecx");
 			}
 			
 			this.out.println("push eax");
