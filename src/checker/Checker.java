@@ -142,8 +142,12 @@ public class Checker implements Visitor{
 				}
 				
 			} else if (accept.getFunctionCall() != null) {
-				Function func = (Function)idTable.retrieve(accept.getFunctionCall().getId().spelling);
-				if(!func.getTipoRetorno().equals(accept.getIdentifier().type)){
+				Object func = idTable.retrieve(accept.getFunctionCall().getId().spelling);
+				if (func == null){
+					throw new SemanticException("Funcao nao declarada!");
+				} else if(!(func instanceof Function)){
+					throw new SemanticException("O nome informado nao pertence a uma funcao.");
+				} else if (!((Function)func).getTipoRetorno().equals(accept.getIdentifier().type)){
 					throw new SemanticException(
 							"Tipos incompativeis. O valor atribuido nao eh do tipo da variavel!");
 				}
