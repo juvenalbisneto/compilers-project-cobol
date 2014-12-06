@@ -11,7 +11,7 @@ public interface Properties {
 
 	// The source code file
 	//Arthur
-	public static final String sourceCodeLocation = "C:/Users/Arthur/Documents/GitHub/compilers-project-cobol/tests/Entrega 2/teste_display";
+	public static final String sourceCodeLocation = "C:/Users/Arthur/Documents/GitHub/compilers-project-cobol/tests/Entrega 3/FIBONACCI";
 	//Juvenal
 	//public static final String sourceCodeLocation = "/Users/juvenalbisneto/Documents/Copy/UPE/[2014.2] Compiladores/Projeto/tests/Entrega 3/teste";
 	

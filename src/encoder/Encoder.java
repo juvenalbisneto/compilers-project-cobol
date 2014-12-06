@@ -16,7 +16,7 @@ public class Encoder implements Visitor {
 	//File arquivo = new File("/Users/juvenalbisneto/Desktop/Output/program.asm");
 	
 	//arthur
-	File arquivo = new File("C:/Users/Arthur/Desktop/program.asm");
+	File arquivo = new File("C:/NASM/program.asm");
 	
 	Arquivo out = null;
 	

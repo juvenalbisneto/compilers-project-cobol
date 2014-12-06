@@ -1,5 +1,5 @@
 @echo off
-cd C:\Users\Juvenal Bisneto\AppData\Local\nasm\
+cd C:\NASM
 cls
 echo # Inicializando... #
 set batchPath=%~dp0
