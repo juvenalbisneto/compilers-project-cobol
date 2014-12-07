@@ -504,7 +504,7 @@ public class Checker implements Visitor{
 
 		if(until.getCommand() != null) {
 			for(Command cmd : until.getCommand()) {
-				cmd.visit(this, args);
+				cmd.visit(this, until);
 			}
 		}
 
